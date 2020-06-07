@@ -17,7 +17,10 @@
             <div class = "row">
                 <div class="col-6">
                     <h2>Stores</h2>
-                    <a href="https://www.butik.ru/"> > Бутик.ру </a>
+                    {%for store in store_all %}
+                    <img src = "{{store.store_icon}}" alt = "Лого магазина">
+                    <a href={{store.store_url}}, title = "{{store.store_title}}"> > {{store.store_name}} </a>
+                    {%endfor%}
                        <hr />
                     <a href="https://www.rendez-vous.ru/"> > Рандеву </a>
                        <hr />

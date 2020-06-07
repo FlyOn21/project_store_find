@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 import locale
-from webapp_stores.model import db
+from webapp_stores.model import db,Model_stores
 
 
 def create_app():
@@ -18,7 +18,8 @@ def create_app():
     @app.route('/store')
     def store():
         locale.setlocale(locale.LC_ALL, "ru")
-        return render_template('store_page.html')
+        store_all = Model_stores.query.all()
+        return render_template('store_page.html',store_all = store_all)
 
 
     @app.route('/admin')
