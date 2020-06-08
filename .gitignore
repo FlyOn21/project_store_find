@@ -126,3 +126,6 @@ dmypy.json
 .pyre/
 /setings.py
 /lesson_3
+
+nat_notes.txt
+nat_attempts.py
