@@ -1,18 +1,12 @@
 import requests
-import os
+from webapp_stores import standard_icon,save_data_store
 from bs4 import BeautifulSoup
-from webapp_stores.model import db, Model_stores
 
 
 class Rendezvous():
 
-    def __init__(self, url='https://www.rendez-vous.ru/'):
+    def __init__(self, url='https://www.rendez-vous.ru'):
         self.url = url
-
-    def standard_icon(self):
-        basedir = os.path.abspath(os.path.dirname(__file__))
-        standard_icon_path =  basedir +'\\images\\'+'smile.png'
-        return standard_icon_path
 
     def get_rendezvous(self):
         try:
@@ -31,29 +25,18 @@ class Rendezvous():
             store_icon = soup.find('meta',property="og:image",)['content']
             store_online = True
             store_url = self.url
-            self.save_data(store_title=store_title, store_online=store_online, store_url=store_url,
+            save_data_store.save_data(store_title=store_title, store_online=store_online, store_url=store_url,
                            store_name = store_name, store_icon = store_icon )
         else:
             store_online = False
             store_url = self.url
             store_name = 'Rendezvous'
             store_title = 'Магазин временно недоступен'
-            store_icon = self.standard_icon()
-            self.save_data(store_title=store_title, store_online=store_online, store_url=store_url,
+            store_icon = standard_icon.standard_icon()
+            save_data_store.save_data(store_title=store_title, store_online=store_online, store_url=store_url,
                            store_name = store_name,store_icon = store_icon)
 
-    def save_data(self, store_title, store_online, store_url,store_name,store_icon):
-        if Model_stores.query.filter(Model_stores.store_url == store_url,
-                                          Model_stores.store_name == store_name).count():
-            Model_stores.query.filter(Model_stores.store_online != store_online).update({'store_online': store_online })
-            Model_stores.query.filter(Model_stores.store_title != store_title).update({'store_title': store_title})
-            Model_stores.query.filter(Model_stores.store_icon != store_icon ).update({'store_icon': store_icon})
-            db.session.commit()
-        else:
-            base_update = Model_stores(store_title=store_title, store_online=store_online, store_url=store_url,
-                                       store_name = store_name, store_icon = store_icon)
-            db.session.add(base_update)
-            db.session.commit()
+
 
 
 if __name__ == '__main__':

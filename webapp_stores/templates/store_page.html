@@ -1,4 +1,4 @@
-<html>
+<html lang="ru">
     <!doctype html>
     <html lang="ru">
       <head>
@@ -18,14 +18,9 @@
                 <div class="col-6">
                     <h2>Stores</h2>
                     {%for store in store_all %}
-                    <img src = "{{store.store_icon}}" alt = "Лого магазина">
-                    <a href={{store.store_url}}, title = "{{store.store_title}}"> > {{store.store_name}} </a>
+                    <img alt="Лого магазина" height=32px src="{{store.store_icon}}" width=32px>
+                    <a href={{store.store_url}} title="{{store.store_title}}"> > {{store.store_name}} </a>
                     {%endfor%}
-                       <hr />
-                    <a href="https://www.rendez-vous.ru/"> > Рандеву </a>
-                       <hr />
-                    <a href="https://best.aliexpress.com/"> > Алиекспресс </a>
-                       <hr />
                 </div>
                 <div class="col-6">
 

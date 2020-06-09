@@ -4,12 +4,12 @@ from bs4 import BeautifulSoup
 
 
 
-class Butik_ru():
+class Aliexpress():
 
-    def __init__(self, url='https://www.butik.ru'):
+    def __init__(self, url='https://aliexpress.ru/'):
         self.url = url
 
-    def get_butik_ru(self):
+    def get_aliexpress(self):
         try:
             result = requests.get(self.url)
             result.raise_for_status()
@@ -18,13 +18,12 @@ class Butik_ru():
             return False
 
     def get_butik_data(self):
-        html = self.get_butik_ru()
+        html = self.get_aliexpress()
         if html:
             soup = BeautifulSoup(html, 'html.parser')
             store_title = soup.title.string
-            store_name = 'Butik.ru'
-            link = soup.find('link', rel="icon", type="image/png")
-            store_icon = self.url + (link['href'])
+            store_name = 'Aliexpress'
+            store_icon = soup.find('meta',property="og:image",)['content']
             store_online = True
             store_url = self.url
             save_data_store.save_data(store_title=store_title, store_online=store_online, store_url=store_url,
@@ -32,7 +31,7 @@ class Butik_ru():
         else:
             store_online = False
             store_url = self.url
-            store_name = 'Butik.ru'
+            store_name = 'Aliexpress'
             store_title = 'Магазин временно недоступен'
             store_icon = standard_icon.standard_icon()
             save_data_store.save_data(store_title=store_title, store_online=store_online, store_url=store_url,
@@ -42,6 +41,5 @@ class Butik_ru():
 
 
 if __name__ == '__main__':
-    c = Butik_ru()
-    print(c.get_butik_ru())
-
+    c = Aliexpress()
+    print(c.get_aliexpress())
