@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,request
 import locale
-from webapp_stores.model import db,Model_stores
+from webapp_stores.model import db,Stores
+from webapp_stores import store_parser_by_link
 
 
 def create_app():
@@ -8,23 +9,28 @@ def create_app():
     app.config.from_pyfile('config.py')
     db.init_app(app)
 
-
-    @app.route('/')
+    @app.route('/', methods=['GET', 'POST'])
     def index():
-        locale.setlocale(locale.LC_ALL, "ru")
-        return render_template('index.html')
-
+        locale.setlocale(locale.LC_ALL, "ru_RU")
+        try:
+            link = request.form['link']
+            print(link)
+            info = store_parser_by_link.get_store_randevu(link)
+            print(info)
+        except:
+            info = None
+        return render_template('index.html', info=info)
 
     @app.route('/store')
     def store():
-        locale.setlocale(locale.LC_ALL, "ru")
-        store_all = Model_stores.query.all()
+        locale.setlocale(locale.LC_ALL, "ru_RU")
+        store_all = Stores.query.all()
         return render_template('store_page.html',store_all = store_all)
 
 
     @app.route('/admin')
     def admin_panel():
-        locale.setlocale(locale.LC_ALL, "ru")
+        locale.setlocale(locale.LC_ALL, "ru_RU")
         return render_template('admin_panel.html')
 
     return app

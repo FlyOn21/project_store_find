@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from pprint import PrettyPrinter # красиво выводит результат из словарей и списков
+# from pprint import PrettyPrinter # красиво выводит результат из словарей и списков
 import ast
 
 URL_randevu ='https://www.rendez-vous.ru/catalog/female/krossovki/ash_eclipse_bis_chernyy-2230884/' # Общий пример

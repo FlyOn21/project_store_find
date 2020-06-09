@@ -37,8 +37,6 @@ class Rendezvous():
                            store_name = store_name,store_icon = store_icon)
 
 
-
-
 if __name__ == '__main__':
     c = Rendezvous()
     print(c.get_butik_data())

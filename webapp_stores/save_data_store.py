@@ -1,15 +1,16 @@
-from webapp_stores.model import db, Model_stores
+from webapp_stores.model import db, Stores
 
 def save_data(store_title, store_online, store_url, store_name, store_icon):
-    if Model_stores.query.filter(Model_stores.store_url == store_url, Model_stores.store_name == store_name).count() \
-            and Model_stores.query.filter(Model_stores.store_online!=store_online) :
-
-        # Model_stores.query.filter(Model_stores.store_online!=store_online).update({'store_online': store_online})
-        # Model_stores.query.filter(Model_stores.store_title!=store_title).update({'store_title': store_title})
-        # Model_stores.query.filter(Model_stores.store_icon!=store_icon).update({'store_icon': store_icon})
-        # db.session.commit()
+    if Stores.query.filter(Stores.store_url == store_url, Stores.store_name == store_name).count() and Stores.query.filter(Stores.store_online != store_online):
+        store = Stores.query.filter(Stores.store_url == store_url,Stores.store_name == store_name).first()
+        # print(store)
+        store.store_online = store_online
+        store.store_title = store_title
+        store.store_icon = store_icon
+        db.session.add(store)
+        db.session.commit()
     else:
-        base_update = Model_stores(store_title=store_title, store_online=store_online, store_url=store_url,
+        base_update = Stores(store_title=store_title, store_online=store_online, store_url=store_url,
                                    store_name=store_name, store_icon=store_icon)
         db.session.add(base_update)
         db.session.commit()
