@@ -18,7 +18,7 @@
                 <div class="col-6">
                     <h2>Stores</h2>
                     {%for store in store_all %}
-                    <img alt="Лого магазина" height=32px src="{{store.store_icon}}" width=32px>
+                    <img alt="Лого магазина"  src="{{store.store_icon}}" height=32px width=32px>
                     <a href={{store.store_url}} title="{{store.store_title}}"> > {{store.store_name}} </a>
                     {%endfor%}
                 </div>

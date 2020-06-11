@@ -36,7 +36,9 @@
                                     <label for="formGroupExampleInput"></label><input class="form-control" id="formGroupExampleInput" name="link" placeholder="Вставь ссылку" type="text">
                                     <p></p>
                                     {% if info!=None %}
-                                    <img alt="Cinque Terre" class="img-thumbnail" src="{{ info['image'] }}">
+                                        {%for image in info.image %}
+                                        <img alt="Cinque Terre" class="img-thumbnail" src="{{image}}" height=160px width=160px>
+                                        {% endfor %}
                                     <p> Цена товара: {{ info['price'] }} </p>
                                     <p> Доступные размеры: {{ info['sizes'] }} </p>
                                     <p> Бренд: {{ info['brand'] }} </p>

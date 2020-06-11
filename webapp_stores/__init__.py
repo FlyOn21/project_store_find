@@ -1,7 +1,8 @@
 from flask import Flask, render_template,request
 import locale
 from webapp_stores.model import db,Stores
-from webapp_stores import store_parser_by_link
+from webapp_stores import store_parser_by_link,store_parser_bylink_ali
+
 
 
 def create_app():
@@ -14,8 +15,8 @@ def create_app():
         locale.setlocale(locale.LC_ALL, "ru_RU")
         try:
             link = request.form['link']
-            print(link)
-            info = store_parser_by_link.get_store_butik(link)
+            # print(link)
+            info = store_parser_bylink_ali.parser_product_result(link)
             print(info)
         except:
             info = None
