@@ -15,7 +15,7 @@ def create_app():
         try:
             link = request.form['link']
             print(link)
-            info = store_parser_by_link.get_store_randevu(link)
+            info = store_parser_by_link.get_store_butik(link)
             print(info)
         except:
             info = None
