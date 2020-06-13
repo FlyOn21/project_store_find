@@ -2,6 +2,19 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+class product(db.Model):
+    product_id = db.Column(db.Integer,primary_key=True)
+    product_name = db.Column(db.String,nullable=False,unique=True)
+    product_id_store = db.Column(db.String, nullable=True)
+    product_prise_full =db.Column(db.Integer,nullable=False)
+    product_prise_discount = db.Column(db.Integer, nullable=True)
+    product_brand = db.Column(db.String,nullable=False,unique=True)
+    product_category = db.Column(db.Integer, nullable=True)
+    product_color = db.Column(db.String,nullable=True)
+    product_size = db.Column(db.String,nullable=True)
+
+
+
 
 class Stores(db.Model):
     store_id = db.Column(db.Integer, primary_key=True)
