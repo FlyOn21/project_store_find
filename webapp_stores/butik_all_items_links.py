@@ -45,9 +45,6 @@ def pages_in_category(url):
         number_of_products = int(re.findall('\d+', number_of_products)[0])
         number_of_pages = math.ceil(number_of_products / 100)
 
-        # pp = PrettyPrinter(indent=2)
-        # pp.pprint(number_of_products)
-        # pp.pprint(number_of_pages)
         return number_of_pages
 
 # Парсит линки всех товаров все товары
