@@ -115,5 +115,5 @@ def get_store_butik(url):
     return dict
 
 
-print(get_store_randevu(URL_randevu))
-print(get_store_butik(URL_butik))
+# print(get_store_randevu(URL_randevu))
+# print(get_store_butik(URL_butik))

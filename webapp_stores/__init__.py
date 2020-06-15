@@ -1,6 +1,6 @@
 from flask import Flask, render_template,request
 import locale
-from webapp_stores.model import db,Stores
+from webapp_stores.model import db,Stores,Product
 from webapp_stores import store_parser_by_link,store_parser_bylink_ali
 
 
@@ -26,6 +26,7 @@ def create_app():
     def store():
         locale.setlocale(locale.LC_ALL, "ru_RU")
         store_all = Stores.query.all()
+        # Product.query.all()
         return render_template('store_page.html',store_all = store_all)
 
 
