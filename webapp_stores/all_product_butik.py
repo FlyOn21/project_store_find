@@ -3,6 +3,15 @@ from bs4 import BeautifulSoup
 import json
 from webapp_stores.save_data_store import save_data_product_butik
 
+full_butik_man = ['https://www.butik.ru/catalog/zhenshchinam/obuv/',
+                    'https://www.butik.ru/catalog/zhenshchinam/sumki/',
+                    'https://www.butik.ru/catalog/zhenshchinam/odezhda/',
+                    'https://www.butik.ru/catalog/zhenshchinam/aksessuary/']
+full_butik_women = ['https://www.butik.ru/new/muzhchinam/odezhda/',
+                      'https://www.butik.ru/new/muzhchinam/sumki/',
+                      'https://www.butik.ru/new/muzhchinam/obuv/',
+                      'https://www.butik.ru/new/muzhchinam/aksessuary/']
+
 
 def get_html(url):
     try:
@@ -14,15 +23,8 @@ def get_html(url):
         return False
 
 
-def page_number_url():
-    full_randevu = ['https://www.butik.ru/catalog/zhenshchinam/obuv/',
-                    'https://www.butik.ru/catalog/zhenshchinam/sumki/',
-                    'https://www.butik.ru/catalog/zhenshchinam/odezhda/',
-                    'https://www.butik.ru/catalog/zhenshchinam/aksessuary/',
-                    'https://www.butik.ru/new/muzhchinam/odezhda/',
-                    'https://www.butik.ru/new/muzhchinam/sumki/',
-                    'https://www.butik.ru/new/muzhchinam/obuv/',
-                    'https://www.butik.ru/new/muzhchinam/aksessuary/']
+def page_number_url(full_butik_man, full_butik_women):
+    full_randevu = full_butik_man + full_butik_women
     for category in full_randevu:
         request_page = valid_url(url=category)
         p = 1
@@ -47,7 +49,6 @@ def valid_url(url):
             return False
     except(req.RequestException, ValueError):
         return False
-
 
 
 def preparation_json(raw_data):
@@ -78,11 +79,11 @@ def product_id_store(item):
 
 
 def product_prise_full(item):
-    return float(item['price'])
+    return str(item['price'])
 
 
 def product_prise_discount(item):
-    return float(item['price_with_discount'])
+    return str(item['price_with_discount'])
 
 
 def product_brand(item):
@@ -118,6 +119,14 @@ def product_image(item):
     return image_list
 
 
+def product_gender(final_link):
+    category = final_link.split('?')
+    if category in full_butik_man:
+        return 'Мужское'
+    else:
+        return 'Женское'
+
+
 def butik_product_collection(final_link):
     html = get_html(url=final_link)
     if html:
@@ -143,11 +152,12 @@ def butik_product_collection(final_link):
                     butik_product_dict['size'] = str(product_size(item))
                     butik_product_dict['product_url'] = product_url(item)
                     butik_product_dict['product_image'] = str(product_image(item))
-                    # print(butik_product_dict)
+                    butik_product_dict['gender'] = product_gender(final_link)
                     save_data_product_butik(butik_product_dict)
+                    # print(butik_product_dict)
                 except(KeyError, TypeError):
                     pass
 
 
 if __name__ == '__main__':
-    page_number_url()
+    page_number_url(full_butik_man, full_butik_women)

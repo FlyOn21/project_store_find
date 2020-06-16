@@ -93,7 +93,7 @@ def product_url(data_1):
     return url
 
 
-def parser_product_result(link):
+def parser_product_result(link = None):
     data = ali(link)
     if data == False:
         return "Упс что то пошло нет так, попробуйте еще раз"

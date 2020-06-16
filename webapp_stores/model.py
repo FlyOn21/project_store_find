@@ -6,15 +6,18 @@ class Product(db.Model):
     product_id = db.Column(db.Integer,primary_key=True)
     product_store = db.Column(db.String,nullable=False)
     product_name = db.Column(db.String,nullable=False)
-    product_id_store = db.Column(db.String, nullable=False,unique=True)
-    product_prise_full =db.Column(db.Float,nullable=False)
-    product_prise_discount = db.Column(db.Float,nullable=True)
-    product_brand = db.Column(db.String,nullable=False)
+    product_id_store = db.Column(db.String,nullable=False,unique=True)
+    product_prise_full =db.Column(db.String,nullable=False)
+    product_prise_discount = db.Column(db.String,nullable=True)
+    product_brand = db.Column(db.String,nullable=True)
     product_category = db.Column(db.String, nullable=True)
     product_color = db.Column(db.String,nullable=True)
     product_size = db.Column(db.String,nullable=True)
     product_url = db.Column(db.Text,nullable=False)
     product_image = db.Column(db.Text,nullable=True)
+    product_gender = db.Column(db.String,nullable=True)
+    product_delivery = db.Column(db.String,nullable=True)
+    product_other = db.Column(db.Text,nullable=True)
 
     def __repr__(self):
         return f'Store ID: {self.product_id_store}, brand: {self.product_brand},' \

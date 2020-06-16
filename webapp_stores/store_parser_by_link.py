@@ -79,7 +79,7 @@ def get_store_butik(url):
     if html:
         soup = BeautifulSoup(html, 'html.parser')
 
-    raw_data = soup.find_all('script')[-1].contents[0]
+    raw_data = soup.find_all('script')[-1]
     raw_data = str(raw_data).replace('    window.__DATA__ = ', '')
 
     replace = '''window.globalUtils = {}
