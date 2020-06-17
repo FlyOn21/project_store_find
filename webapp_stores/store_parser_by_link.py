@@ -10,6 +10,7 @@ URL_randevu ='https://www.rendez-vous.ru/catalog/female/kedy/geox_d92fba_belyy-2
 URL_randevu = 'https://www.rendez-vous.ru/catalog/female/bosonoghki/vagabond_4738_040_chernyy-2034463/'
 
 URL_butik = 'https://www.butik.ru/products/zhenshchinam-obuv-bosonozhki-na-kabluke-vagabond-4738-040-20-bosonozhki/'
+URL_butik ='https://www.butik.ru/products/zhenshchinam-obuv-botinki-vysokie-dr-martens-11821006-black-smooth-botinki/'
 
 URL_ali='https://aliexpress.ru/item/4001023889599.html?spm=a2g0o.productlist.0.0.16c82a4aREnhrb&algo_pvid=54eaa039-b5e2-4514-9555-3c8004722209&algo_expid=54eaa039-b5e2-4514-9555-3c8004722209-9&btsid=0b8b035c15916224144315135ebccb&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_'
 
