@@ -1,8 +1,10 @@
 import requests as req
 from bs4 import BeautifulSoup
 import json
-from webapp_stores.save_data_store import save_data_product_ali
+from webapp_stores.db_functions import save_data_product_ali
 
+
+# Парсер товаров с алиэкспресс в базу данных
 category_dir = {'202005148': 'Платья', '202003912': 'Блузки,рубашки', '202001904': 'Толстовки,свитшоты',
                 '202003500': 'Кардиганы', '202003502': 'Водолазки', '202003503': 'Джемпера', '202061873': 'Пончо',
                 '202003530': 'Куртки', '202005126': 'Парки', '202005127': 'Куртки из искусственного меха',
@@ -109,7 +111,7 @@ def preparation_json(raw_data):
     data = json.loads(raw_data_2)
     return data
 
-
+# Функции, отвечающие за парсинг
 def product_name(item):
     return item['title']
 

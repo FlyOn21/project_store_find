@@ -1,7 +1,7 @@
 from flask import Flask, render_template,request
 import locale
 from webapp_stores.model import db,Stores,Product
-from webapp_stores import store_parser_by_link,store_parser_bylink_ali
+from webapp_stores import store_parser_bylink_ali
 
 
 

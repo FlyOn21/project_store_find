@@ -1,7 +1,7 @@
 import requests as req
 from bs4 import BeautifulSoup
 import json
-from webapp_stores.save_data_store import save_data_product_butik
+from webapp_stores.db_functions import save_data_product_butik
 
 full_butik_man = ['https://www.butik.ru/catalog/zhenshchinam/obuv/',
                     'https://www.butik.ru/catalog/zhenshchinam/sumki/',
@@ -37,7 +37,7 @@ def page_number_url(full_butik_man, full_butik_women):
             p += 1
             print(final_link)
         else:
-            print(f'Оброботка катигории {category} сайта Рандеву окончена')
+            print(f'Оброботка категории {category} сайта Рандеву окончена')
 
 
 def valid_url(url):
@@ -159,5 +159,15 @@ def butik_product_collection(final_link):
                     pass
 
 
-if __name__ == '__main__':
-    page_number_url(full_butik_man, full_butik_women)
+# if __name__ == '__main__':
+#     page_number_url(full_butik_man, full_butik_women)
+
+#butik_product_collection('https://www.butik.ru/products/muzhchinam-odezhda-verkhnyaya-odezhda-dzhinsovye-kurtki-levis-7737900000-kurtka/')
+butik_product_collection('https://www.butik.ru/catalog/muzhchinam/odezhda/')
+
+
+{'code': '3HZP11 ZNCQZ 1704', 'price': 6493.0, 'brand': 'ARMANI EXCHANGE', 'color': 'бежевый',
+ 'category_detailed': 'Брюки', 'category': 'Мужчинам Одежда',
+ 'image': 'https://cdn.butik.ru/imgstore/5/1/f/8/51f843ed-5664-4a63-ac1b-1beeb98f774e-orig.jpg?height=907&width=576',
+ 'sizes': ['36', 'б/р', '38', 'б/р', '40', '42'],
+ 'url': 'https://www.butik.ru/products/muzhchinam-odezhda-bryuki-chinosy-armani-exchange-3hzp11-zncqz-1704-bryuki/'}

@@ -1,7 +1,7 @@
 import requests as req
 from bs4 import BeautifulSoup
 import ast
-from webapp_stores.save_data_store import save_data_product_randevouz
+from webapp_stores.db_functions import save_data_product_randevouz
 
 
 full_randevu_man = ['https://www.rendez-vous.ru/catalog/male/',
