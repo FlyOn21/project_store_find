@@ -1,16 +1,16 @@
 import requests as req
 from bs4 import BeautifulSoup
 import json
-from webapp_stores.save_data_store import save_data_product_butik
+from webapp_stores.db_functions import save_data_product_butik
 
 full_butik_man = ['https://www.butik.ru/catalog/zhenshchinam/obuv/',
-                    'https://www.butik.ru/catalog/zhenshchinam/sumki/',
-                    'https://www.butik.ru/catalog/zhenshchinam/odezhda/',
-                    'https://www.butik.ru/catalog/zhenshchinam/aksessuary/']
+                  'https://www.butik.ru/catalog/zhenshchinam/sumki/',
+                  'https://www.butik.ru/catalog/zhenshchinam/odezhda/',
+                  'https://www.butik.ru/catalog/zhenshchinam/aksessuary/']
 full_butik_women = ['https://www.butik.ru/new/muzhchinam/odezhda/',
-                      'https://www.butik.ru/new/muzhchinam/sumki/',
-                      'https://www.butik.ru/new/muzhchinam/obuv/',
-                      'https://www.butik.ru/new/muzhchinam/aksessuary/']
+                    'https://www.butik.ru/new/muzhchinam/sumki/',
+                    'https://www.butik.ru/new/muzhchinam/obuv/',
+                    'https://www.butik.ru/new/muzhchinam/aksessuary/']
 
 
 def get_html(url):
@@ -21,6 +21,32 @@ def get_html(url):
     except(req.RequestException, ValueError):
         print('Сетевая ошибка')
         return False
+
+
+def get_parser_url(url_product):
+    html = get_html(url_product)
+    if html:
+        soup = BeautifulSoup(html, 'html.parser')
+        raw_data = soup.find_all('script')[-1].contents[0]
+        data = preparation_json(raw_data)
+
+        price = data['data']['card'][0]['value']['value']['price_with_discount']
+        color = data['data']['card'][0]['value']['value']['color']
+        brand = data['data']['card'][0]['value']['value']['brand']['name']
+        category_detailed = data['data']['card'][0]['value']['value']['name']
+        category = data['data']['card'][0]['value']['value']['breadcrumbs']['full_ru_array'][0]['text'] + ' ' + \
+                   data['data']['card'][0]['value']['value']['breadcrumbs']['full_ru_array'][1]['text']
+        code = data['data']['card'][0]['value']['value']['sku']
+        image = data['seoData']['ogImage']
+        url_store = url_product
+        sizes_available = [i['size']['brand_size'] for i in
+                           data['data']['card'][0]['value']['value']['product_variations'] if
+                           i['size']['stock_with_reserve']]
+
+        dict = {'code': code, 'price': price, 'brand': brand, 'color': color,
+                'category_detailed': category_detailed, 'category': category, 'image': image,
+                'sizes': sizes_available, 'url': url_store}
+        return dict
 
 
 def page_number_url(full_butik_man, full_butik_women):
@@ -74,10 +100,6 @@ def product_name(item):
     return item['seo_name']
 
 
-def product_id_store(item):
-    return str(item['photobank_id'])
-
-
 def product_prise_full(item):
     return str(item['price'])
 
@@ -94,10 +116,6 @@ def product_category(item):
     return item['seo_name']
 
 
-def product_color():
-    return None
-
-
 def product_size(item):
     size_dict = {}
     for size in item['product_variations']:
@@ -112,19 +130,12 @@ def product_url(item):
     return url
 
 
-def product_image(item):
-    image_list = []
-    for image_url in item['images_origin']:
-        image_list.append(image_url)
-    return image_list
-
-
 def product_gender(final_link):
     category = final_link.split('?')
     if category in full_butik_man:
-        return 'Мужское'
+        return 'Man'
     else:
-        return 'Женское'
+        return 'Woman'
 
 
 def butik_product_collection(final_link):
@@ -143,20 +154,26 @@ def butik_product_collection(final_link):
                     butik_product_dict = {}
                     butik_product_dict['product_store'] = 'Butik.ru'
                     butik_product_dict['name'] = product_name(item)
-                    butik_product_dict['id'] = product_id_store(item)
+                    butik_product_dict['product_url'] = product_url(item)
+                    current_product = get_parser_url(url_product=butik_product_dict['product_url'])
+                    butik_product_dict['id'] = current_product['code']
                     butik_product_dict['price'] = product_prise_full(item)
                     butik_product_dict['product_discount'] = product_prise_discount(item)
                     butik_product_dict['brand'] = product_brand(item)
-                    butik_product_dict['category'] = product_category(item)
-                    butik_product_dict['variant'] = product_color()
+                    butik_product_dict['category'] = current_product['category']
+                    butik_product_dict['category_detailed'] = current_product['category_detailed']
+                    butik_product_dict['color'] = current_product['color']
                     butik_product_dict['size'] = str(product_size(item))
-                    butik_product_dict['product_url'] = product_url(item)
-                    butik_product_dict['product_image'] = str(product_image(item))
+                    butik_product_dict['product_image'] = current_product['image']
                     butik_product_dict['gender'] = product_gender(final_link)
                     save_data_product_butik(butik_product_dict)
-                    # print(butik_product_dict)
+                    print(butik_product_dict)
                 except(KeyError, TypeError):
                     pass
+
+                # dict = {'code': code, 'price': price, 'brand': brand, 'color': color,
+                #         'category_detailed': category_detailed, 'category': category, 'image': image,
+                #         'sizes': sizes_available, 'url': url_store}
 
 
 if __name__ == '__main__':
