@@ -60,11 +60,12 @@ class Rendezvous():
                 url_store = url
                 image = soup.find('div', class_='item-info').find('div', class_='carousel-image-list').find('img')[
                     'data-src']
-                id = ((soup.find('span', class_="item-vendor-code").text).split())[1]
+                id = (((soup.find('span', class_="item-vendor-code").text).split())[1]).strip(',')
 
                 code = \
                     ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
                         'name']
+
 
                 brand = ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
                     'brand']
@@ -130,6 +131,8 @@ class Rendezvous():
 
     def prod_store(self):
         return 'Рандеву'
+    def prod_delivery(self):
+        return None
 
     def product_name(self, product):
         name = ((product.find('div', class_="item-name")).text).strip()
@@ -180,11 +183,12 @@ class Rendezvous():
                     product_randevoyz['category_detailed'] = current_product['category_detailed']
                     product_randevoyz['product_url'] = product_url
                     product_randevoyz['size'] = str(current_product['sizes'])
-                    product_randevoyz['product_image'] = current_product['image']
+                    product_randevoyz['product_image'] = str(current_product['image'])
                     product_randevoyz['product_discount'] = self.prod_discount(product)
                     product_randevoyz['gender'] = self.product_gender(final_link)
                     product_randevoyz['other'] = product_randevoyz['id']
                     product_randevoyz['id'] = current_product['id']
+                    product_randevoyz['delivery'] = self.prod_delivery()
                     print(product_randevoyz)
                     time.sleep(3.0)
                     db_functions.save_data_product(product_randevoyz)

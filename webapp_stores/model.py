@@ -12,7 +12,7 @@ class Product(db.Model):
     brand = db.Column(db.String,nullable=True)
     category = db.Column(db.String, nullable=True)
     category_detailed = db.Column(db.Text, nullable=True)
-    color = db.Column(db.String,nullable=True)
+    color = db.Column(db.Text,nullable=True)
     size = db.Column(db.String,nullable=True)
     url = db.Column(db.Text,nullable=False)
     image = db.Column(db.Text,nullable=True)
