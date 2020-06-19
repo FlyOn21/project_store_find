@@ -28,6 +28,7 @@ def save_data_product(product_dict):
         product_b.size = product_dict['size']
         product_b.url = product_dict['product_url']
         product_b.image = product_dict['product_image']
+        product_b.image = product_dict['delivery']
 
         db.session.add(product_b)
         db.session.commit()
@@ -44,6 +45,8 @@ def save_data_product(product_dict):
                                 size=product_dict['size'],
                                 url=product_dict['product_url'],
                                 image=product_dict['product_image'],
+                                delivery =product_dict['delivery'],
+                                other= product_dict['other'],
                                 gender=product_dict['gender'])
         db.session.add(add_product_1)
         db.session.commit()

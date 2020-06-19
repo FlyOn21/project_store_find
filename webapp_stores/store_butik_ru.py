@@ -145,6 +145,12 @@ class Butik_ru():
         url = 'https://www.butik.ru/' + item['url_name']
         return url
 
+    def product_delivery(self):
+        return None
+
+    def product_other(self):
+        return None
+
     def product_gender(self,final_link):
         category = final_link.split('?')
         if category in self.full_butik_man:
@@ -181,6 +187,8 @@ class Butik_ru():
                         butik_product_dict['size'] = str(self.product_size(item))
                         butik_product_dict['product_image'] = current_product['image']
                         butik_product_dict['gender'] = self.product_gender(final_link)
+                        butik_product_dict['delivery'] = self.product_delivery()
+                        butik_product_dict['other'] = self.product_other()
                         print(butik_product_dict)
                         db_functions.save_data_product(product_dict= butik_product_dict)
                     except(KeyError, TypeError):
