@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
 import json
 import math
-import pandas as pd
-import os
 from pprint import PrettyPrinter  # красиво выводит результат из словарей и списков
 import re
 import requests
+from webapp_stores.db_functions import save_data_product
+
 
 
 def get_html(url):
@@ -21,7 +21,7 @@ def get_html(url):
 def get_items(url):
     """
     Функция получает все ссылки товары со страницы url (список urls органичен и
-    указан в get_full_butik) и сохраняет их в csv файл
+    указан в get_full_butik)
     """
     html = get_html(url)
     if html:
@@ -30,13 +30,13 @@ def get_items(url):
         # pp = PrettyPrinter(indent=2)
         # pp.pprint(soup)
 
-        df = pd.read_csv('data/butik_all_items.csv', sep=',', encoding="utf-8")
         products = soup.find('div', id='catalog-top').find_all('a', {'data-test': "product-link"})
+        links=[]
         for product in products:
             link = 'https://www.butik.ru' + product['href']
-            if not link in df['Link'].values:
-                df = df.append({'Link': link}, ignore_index=True)
-        df['Link'].to_csv(os.path.join(os.path.dirname(__file__), "data/butik_all_items.csv"))
+            links.append(link)
+
+        return links
 
 
 def pages_in_category(url):
@@ -54,7 +54,8 @@ def pages_in_category(url):
 
         return number_of_pages
 
-# Парсинг всех ссылок на товары
+
+# Парсинг всех товаров и занесение в базу данных
 def get_full_butik():
     """
     Функция запускает функции : pages_in_category и  get_items (иными словами, парсит ссылки на все товары магазина Бутик.ру)
@@ -70,12 +71,22 @@ def get_full_butik():
                   'https://www.butik.ru/catalog/muzhchinam/obuv/',
                   'https://www.butik.ru/catalog/muzhchinam/aksessuary/']
 
+
     for category in full_butik:
         pages = pages_in_category(category)
+        links=[]
         for p in range(1, pages + 1):
-            final_link = category + '?page=' + str(p) + '&per_page=100'
-            get_items(final_link)
-            print(final_link)
+            final_link=category+'?page='+str(p)+'&per_page=100'
+            print('\nCategory :' + final_link + ' ' +str(p) + '/' + str(pages))
+            links=get_items(final_link)
+            for link in links:
+                try:
+                    dict = get_butik_product(link)
+                    save_data_product(dict)
+                except:
+                    print('I cant get data from '+link)
+
+
 
 
 # Парсинг данных об одном товаре по ссылке на него
@@ -102,7 +113,7 @@ def get_butik_product(url):
 
     data = json.loads(raw_data)
     pp = PrettyPrinter(indent=2)
-    #pp.pprint(soup)
+    #pp.pprint(data)
 
     store = 'Butik.ru'
     name = data['data']['card'][0]['value']['value']['seo_name']
@@ -118,22 +129,17 @@ def get_butik_product(url):
     image = soup.find('div', class_='card-sticky').find('img')['src']
     # image = data['seoData']['ogImage']
     url_store = url
-    sizes_available = [i['size']['rus_size'] for i in
-                       data['data']['card'][0]['value']['value']['product_variations'] if
-                       i['size']['stock_with_reserve']]
+
+    sizes_available={}
+    for i in data['data']['card'][0]['value']['value']['product_variations']:
+        if i['size']['stock_with_reserve']:
+            sizes_available[i['size']['rus_size'][0]]=i['size']['stock_with_reserve']
     gender = 'Мужское' if 'muzhchinam/' in url else 'Женское'
-    dict = {'name':name, 'id': id, 'price': price, 'discount' : discount,'brand': brand, 'color': color,
-            'category_detailed': category_detailed, 'category': category, 'image': image,
-            'sizes': sizes_available,'gender':gender ,'url': url_store, 'store':store}
+    dict = {'name':name, 'id': id, 'price': price, 'product_discount' : discount,'brand': brand, 'color': color,
+            'category_detailed': category_detailed, 'category': category, 'product_image': image,
+            'size': sizes_available,'gender':gender ,'product_url': url_store, 'product_store':store}
+
     return dict
 
 
 
-
-
-# if __name__ == '__main__':
-#     get_full_butik()
-
-#print(get_butik_product('https://www.butik.ru/products/muzhchinam-odezhda-futbolki-i-mayki-korotkiy-rukav-armani-exchange-3hztfy-zjbvz-6293-futbolka/'))
-#print(get_butik_product('https://www.butik.ru/products/zhenshchinam-obuv-krossovki-reebok-classic-ar2799-krossovki/'))
-print(get_butik_product('https://www.butik.ru/products/zhenshchinam-obuv-bosonozhki-na-kabluke-vagabond-4738-040-25-bosonozhki/'))

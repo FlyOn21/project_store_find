@@ -1,9 +1,8 @@
 import ast
 from bs4 import BeautifulSoup
-import pandas as pd
-import os
 from pprint import PrettyPrinter  # красиво выводит результат из словарей и списков
 import requests
+from webapp_stores.db_functions import save_data_product
 
 
 def get_html(url):
@@ -28,16 +27,16 @@ def get_items(url):
         # pp = PrettyPrinter(indent=2)
         # pp.pprint(soup)
 
-        df = pd.read_csv('data/randevu_all_items.csv', sep=',', encoding="utf-8")
         products = soup.find('ul', id='list-items').find_all('li', class_='item')
+        links = []
         for product in products:
             try:
                 link = 'https://www.rendez-vous.ru' + product.find('a', class_='item-link')['href']
-                if not link in df['Link'].values:
-                    df = df.append({'Link': link}, ignore_index=True)
+                links.append(link)
             except:
                 pass
-        df['Link'].to_csv(os.path.join(os.path.dirname(__file__), "data/randevu_all_items.csv"))
+
+        return links
 
 
 def pages_in_category(url):
@@ -75,10 +74,17 @@ def get_full_randevu():
 
     for category in full_randevu:
         pages = pages_in_category(category)
+        links=[]
         for p in range(1, pages + 1):
             final_link = category + 'page/' + str(p) + '/'
-            get_items(final_link)
-            print(final_link)
+            print('\nCategory :' + final_link + ' ' + str(p) + '/' + str(pages))
+            links = get_items(final_link)
+            for link in links:
+                try:
+                    dict = get_randevu_product(link)
+                    save_data_product(dict)
+                except:
+                    print('I cant get data from ' + link)
 
 
 # Парсинг данных об одном товаре по ссылке на него
@@ -90,55 +96,56 @@ def get_randevu_product(url):
     if html:
         soup = BeautifulSoup(html, 'html.parser')
 
-        pp=PrettyPrinter(indent=2)
-        # pp.pprint(soup)
+        pp = PrettyPrinter(indent=2)
+        #pp.pprint(soup)
+
 
         # if product is available
+        store = 'Randevu'
+        url_store = url
+        image = soup.find('div', class_='item-info').find('div', class_='carousel-image-list').find('img')[
+            'data-src']
+
+        name= ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])['name']
+        id = soup.find('section', id='catalog-item')['data-model']
+
+        price = float(
+            ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])['price']) if \
+            ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])[
+                'price'] else None
+        discount = float(ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])['priceFromCart']) if 'priceFromCart' in ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo']) else None
+
+        brand = ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
+            'brand']
+        color = ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
+            'variant']
+        category_detailed = \
+            ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
+                'category'].split(
+                '/')[0]
+        category = soup.find('div', class_='breadcrumbs').find_all('li')[1].find('a').text
+
+        # sizes
         try:
-            url_store = url
-            image = soup.find('div', class_='item-info').find('div', class_='carousel-image-list').find('img')[
-                'data-src']
-
-            # code =  \
-            # ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
-            #    'name']
-
-            code = soup.find('section', id='catalog-item')['data-model']
-
-            # price = float(ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
-            #     'priceFromCart'])
-            price = float(soup.find('span', class_='item-price-value')['content'])
-
-            brand = ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
-                'brand']
-            color = ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
-                'variant']
-            category_detailed = \
-                ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
-                    'category'].split(
-                    '/')[0]
-            category = soup.find('div', class_='breadcrumbs').find_all('li')[1].find('a').text
-
-            # sizes
-            try:
-                sizes = soup.find('ul', class_='form-select-list scrollbar scrollbar-y').find_all('li')
-                sizes_available = []
-                for size in sizes:
-                    sizes_available.append(size.text.strip())
-            except:
-                sizes_available = ['one-size']
-
-            dict = {'code': code, 'price': price, 'brand': brand, 'color': color,
-                    'category_detailed': category_detailed, 'category': category, 'image': image,
-                    'sizes': sizes_available, 'url': url_store}
-
-        # if the product is not available in the store
+            sizes = soup.find('ul', class_='form-select-list scrollbar scrollbar-y').find_all('li')
+            sizes_available = []
+            for size in sizes:
+                sizes_available.append(size.text.strip())
         except:
-            dict = {}
+            sizes_available = ['one-size']
+
+        # gender = 'Мужское' if 'muzhchinam/' in url else 'Женское'
+        if 'female' in url:
+            gender = 'Женское'
+        elif 'girls' in url:
+            gender = 'Девочки'
+        elif 'boys' in url:
+            gender = 'Мальчики'
+        else:
+            gender = 'Мужское'
+
+        dict = {'id': id, 'name': name, 'price': price, 'product_discount': discount, 'brand': brand, 'color': color,
+                'category_detailed': category_detailed, 'category': category, 'product_image': image,
+                'size': sizes_available, 'product_url': url_store, 'gender': gender, 'product_store': store}
 
         return dict
-
-
-# if __name__ == '__main__':
-# get_full_randevu()
-

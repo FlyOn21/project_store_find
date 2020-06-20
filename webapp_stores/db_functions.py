@@ -1,5 +1,6 @@
 from webapp_stores.model import db, Stores,Product
 
+
 def save_data(title, online, url, name, icon):
     if Stores.query.filter(Stores.url == url, Stores.name == name).count() \
             and Stores.query.filter(Stores.online != online):
@@ -20,16 +21,16 @@ def save_data(title, online, url, name, icon):
 
 
 def save_data_product(product_dict):
+
     if Product.query.filter(Product.id_store == product_dict['id']).count():
         product_b = Product.query.filter(Product.id_store == product_dict['id']).first()
         product_b.prise_full = product_dict['price']
         product_b.prise_discount = product_dict['product_discount']
         product_b.color = product_dict['color']
-        product_b.size = product_dict['size']
+        product_b.size = str(product_dict['size'])
         product_b.url = product_dict['product_url']
         product_b.image = product_dict['product_image']
-        product_b.image = product_dict['delivery']
-
+        product_b.delivery = (product_dict['delivery'] if 'delivery' in product_dict else None)
         db.session.add(product_b)
         db.session.commit()
     else:
@@ -42,11 +43,13 @@ def save_data_product(product_dict):
                                 category=product_dict['category'],
                                 category_detailed=product_dict['category_detailed'],
                                 color=product_dict['color'],
-                                size=product_dict['size'],
+                                size=str(product_dict['size']),
                                 url=product_dict['product_url'],
                                 image=product_dict['product_image'],
-                                delivery =product_dict['delivery'],
-                                other= product_dict['other'],
+                                delivery=(product_dict['delivery'] if 'delivery' in product_dict else None),
+                                other=(product_dict['other'] if 'other' in product_dict else None),
                                 gender=product_dict['gender'])
         db.session.add(add_product_1)
         db.session.commit()
+
+
