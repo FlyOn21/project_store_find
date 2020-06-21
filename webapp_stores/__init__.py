@@ -2,13 +2,15 @@ from flask import Flask, render_template,request
 import locale
 from webapp_stores.model import db,Stores,Product
 from webapp_stores import store_parser_bylink_ali
-
+from celery import Celery
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
     db.init_app(app)
+    celery = Celery(broker='redis://localhost:6379/0')
+
 
     @app.route('/', methods=['GET', 'POST'])
     def index():

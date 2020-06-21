@@ -8,14 +8,7 @@ class Butik_ru():
 
     def __init__(self):
         self.url = 'https://www.butik.ru'
-        self.full_butik_man = ['https://www.butik.ru/catalog/zhenshchinam/obuv/',
-                      'https://www.butik.ru/catalog/zhenshchinam/sumki/',
-                      'https://www.butik.ru/catalog/zhenshchinam/odezhda/',
-                      'https://www.butik.ru/catalog/zhenshchinam/aksessuary/']
-        self.full_butik_woman = ['https://www.butik.ru/new/muzhchinam/odezhda/',
-                        'https://www.butik.ru/new/muzhchinam/sumki/',
-                        'https://www.butik.ru/new/muzhchinam/obuv/',
-                        'https://www.butik.ru/new/muzhchinam/aksessuary/']
+
 
     def get_butik_data(self):
         html = self.get_html(url = self.url)
@@ -52,17 +45,7 @@ class Rendezvous():
 
     def __init__(self):
         self.url = 'https://www.rendez-vous.ru'
-        self.full_randevu_man = ['https://www.rendez-vous.ru/catalog/male/',
-                                 'https://www.rendez-vous.ru/catalog/bags_male/',
-                                 'https://www.rendez-vous.ru/catalog/muzhskaya_odezhda/',
-                                 'https://www.rendez-vous.ru/catalog/accessories_male/']
-        self.full_randevu_women = ['https://www.rendez-vous.ru/catalog/female/',
-                                   'https://www.rendez-vous.ru/catalog/bags_female/',
-                                   'https://www.rendez-vous.ru/catalog/zhenskaya_odezhda/',
-                                   'https://www.rendez-vous.ru/catalog/accessories_female/']
-        self.full_randevu_chaildren = ['https://www.rendez-vous.ru/catalog/girls/',
-                                       'https://www.rendez-vous.ru/catalog/boys/']
-        self.full_randevu_unisex = ['https://www.rendez-vous.ru/catalog/tools/']
+
 
     def get_randevu_data(self):
         html = self.get_html(self.url)

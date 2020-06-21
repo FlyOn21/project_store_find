@@ -1,17 +1,22 @@
 from webapp_stores import create_app
-
-from webapp_stores.stores.butik import get_full_butik, get_butik_product
-from webapp_stores.stores.randevu import get_full_randevu, get_randevu_product
-from webapp_stores.db_functions import save_data_product
+from webapp_stores.stores.ali import Aliexpress
+from webapp_stores.stores.butik import get_full_butik
+from webapp_stores.stores.randevu import get_full_randevu
 from webapp_stores.stores.stores import Butik_ru, Rendezvous
+
 
 
 
 app = create_app()
 with app.app_context():
-     #ali = Aliexpress().get_ali_data()
-     randezvous = Rendezvous().get_randevu_data()
-     butik = Butik_ru().get_butik_data()
+     ali = Aliexpress().get_ali_data()
+
+     randezvous_status = Rendezvous().get_randevu_data()
+     randezvous_prod = get_full_randevu()
+
+     butik_status = Butik_ru().get_butik_data()
+     butik_prod = get_full_butik()
+
 
 
      # Добавление в базу данных Product по ссылке - Бутик
