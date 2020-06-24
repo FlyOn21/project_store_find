@@ -1,7 +1,7 @@
 from flask import Flask, render_template,request
 import locale
 from webapp_stores.model import db,Stores,Product
-from webapp_stores import store_parser_bylink_ali
+from webapp_stores.stores.ali import Aliexpress
 from celery import Celery
 
 
@@ -18,7 +18,7 @@ def create_app():
         try:
             link = request.form['link']
             # print(link)
-            info = store_parser_bylink_ali.parser_product_result(link)
+            info = Aliexpress.parser_product_result(link)
             print(info)
         except:
             info = None

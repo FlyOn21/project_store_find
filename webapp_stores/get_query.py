@@ -4,7 +4,8 @@ import random
 import time
 
 def open_proxy_list():
-    with open(r'c:\Users\zhogo\PycharmProjects\shop_parser\webapp_stores\proxy.txt','r', encoding='utf-8') as file:
+    with open(r'/home/pasha/PycharmProjects/project_store_find/webapp_stores/proxy/proxy.txt', 'r',
+              encoding='utf-8') as file:
         m = [lins.strip() for lins in file]
         f = [clear_line for clear_line in m if clear_line != '']
         return f

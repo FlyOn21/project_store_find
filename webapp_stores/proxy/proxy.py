@@ -6,7 +6,7 @@ def proxy():
     try:
         proxy_json = re.get(conf.PROXY_API_URL)
         pr = proxy_json.text
-        with open('proxy.txt','w',encoding='utf-8') as file:
+        with open('proxy.txt', 'w', encoding='utf-8') as file:
             file.writelines(str(pr))
             file.close()
     except(re.RequestException,ValueError):

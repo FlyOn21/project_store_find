@@ -280,7 +280,7 @@ class Aliexpress():
                         ali_product_dict['product_store'] = 'Aliexpress'
                         ali_product_dict['product_url'] = self.product_url(item)
                         current_product = self.parser_product_result(ali_product_dict['product_url'])
-                        # print(current_product)
+
                         ali_product_dict['name'] = self.product_name(item)
                         ali_product_dict['id'] = self.product_id_store(item)
                         ali_product_dict['price'] = str([current_product['price']['trade_min_price'],

@@ -4,6 +4,7 @@ db = SQLAlchemy()
 
 class Product(db.Model):
     id = db.Column(db.Integer,primary_key=True)
+    # store_id = db.Column(db.Integer, db.ForeignKey('stores.id'))
     store = db.Column(db.String,nullable=False)
     name = db.Column(db.String,nullable=False)
     id_store = db.Column(db.String,nullable=False,unique=True)
@@ -33,6 +34,8 @@ class Stores(db.Model):
     url = db.Column(db.String, nullable=False, unique=True)
     title = db.Column(db.String, nullable=False)
     icon = db.Column(db.String, nullable=True)
+    # product = db.relationship('Product', backref='stores')
+
 
     def __repr__(self):
         if self.store_online == True:
