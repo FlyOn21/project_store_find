@@ -2,7 +2,7 @@ import ast
 from bs4 import BeautifulSoup
 from pprint import PrettyPrinter  # красиво выводит результат из словарей и списков
 import requests
-from webapp_stores.db_functions import save_data_product
+# from webapp_stores.db_functions import save_data_product
 
 
 def get_html(url):
@@ -82,7 +82,7 @@ def get_full_randevu():
             for link in links:
                 try:
                     dict = get_randevu_product(link)
-                    save_data_product(dict)
+                    # save_data_product(dict)
                 except:
                     print('I cant get data from ' + link)
 
@@ -147,5 +147,10 @@ def get_randevu_product(url):
         dict = {'id': id, 'name': name, 'price': price, 'product_discount': discount, 'brand': brand, 'color': color,
                 'category_detailed': category_detailed, 'category': category, 'product_image': image,
                 'size': sizes_available, 'product_url': url_store, 'gender': gender, 'product_store': store}
+        print(dict)
 
         return dict
+
+if __name__ == '__main__':
+    c = get_full_randevu()
+    print(c)

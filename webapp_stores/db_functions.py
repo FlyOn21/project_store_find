@@ -11,19 +11,19 @@ def save_data(title, online, url, name, icon):
         db.session.add(store)
         db.session.commit()
     else:
-        base_update = Stores(title=title,
+        stores = Stores(title=title,
                              online=online,
                              url=url,
                              name=name,
                              icon=icon)
-        db.session.add(base_update)
+        db.session.add(stores)
         db.session.commit()
 
 
 def save_data_product(product_dict):
 
-    if Product.query.filter(Product.id_store == product_dict['id']).count():
-        product_b = Product.query.filter(Product.id_store == product_dict['id']).first()
+    if Product.query.filter(Product.id_product == product_dict['id']).count():
+        product_b = Product.query.filter(Product.id_product == product_dict['id']).first()
         product_b.prise_full = product_dict['price']
         product_b.prise_discount = product_dict['product_discount']
         product_b.color = product_dict['color']
@@ -34,8 +34,14 @@ def save_data_product(product_dict):
         db.session.add(product_b)
         db.session.commit()
     else:
-        add_product_1 = Product(id_store=product_dict['id'],
-                                store=product_dict['product_store'],
+        if product_dict['product_store'] == 'Aliexpress':
+            store = 1
+        elif product_dict['product_store'] == 'Butik.ru':
+            store = 3
+        elif product_dict['product_store'] == "Randevu":
+            store = 2
+        add_product_1 = Product(id_product=product_dict['id'],
+                                store_id=store,
                                 name=product_dict['name'],
                                 prise_full=product_dict['price'],
                                 prise_discount=product_dict['product_discount'],

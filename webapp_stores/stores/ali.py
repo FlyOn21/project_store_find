@@ -83,34 +83,33 @@ count = 0
 
 class Aliexpress():
 
-    def __init__(self, url='https://aliexpress.ru/'):
-        self.url = url
+    def __init__(self):
         self.category_dir = category_dir
         self.full_ali_woman = full_ali_woman
         self.full_ali_man = full_ali_man
         self.count = count
 
-    def get_ali_data(self):
-        html = get_query.get_html(url=self.url)
-        if html:
-            soup = BeautifulSoup(html, 'html.parser')
-            title = soup.title.string
-            name = 'Aliexpress'
-            icon = soup.find('meta', property="og:image", )['content']
-            online = True
-            url = self.url
-            db_functions.save_data(title=title, online=online, url=url,
-                                   name=name, icon=icon)
-            self.page_ali()
-
-        else:
-            online = False
-            url = self.url
-            name = 'Aliexpress'
-            title = 'Магазин временно недоступен'
-            icon = standard_icon.standard_icon()
-            db_functions.save_data(title=title, online=online, url=url,
-                                   name=name, icon=icon)
+    # def get_ali_data(self):
+    #     html = get_query.get_html(url=self.url)
+    #     if html:
+    #         soup = BeautifulSoup(html, 'html.parser')
+    #         title = soup.title.string
+    #         name = 'Aliexpress'
+    #         icon = soup.find('meta', property="og:image", )['content']
+    #         online = True
+    #         url = self.url
+    #         db_functions.save_data(title=title, online=online, url=url,
+    #                                name=name, icon=icon)
+    #         self.page_ali()
+    #
+    #     else:
+    #         online = False
+    #         url = self.url
+    #         name = 'Aliexpress'
+    #         title = 'Магазин временно недоступен'
+    #         icon = standard_icon.standard_icon()
+    #         db_functions.save_data(title=title, online=online, url=url,
+    #                                name=name, icon=icon)
 
     def page_ali(self):
         full_ali = self.full_ali_man + self.full_ali_woman

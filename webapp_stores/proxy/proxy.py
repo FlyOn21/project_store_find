@@ -1,6 +1,6 @@
 import requests as re
 import webapp_stores.config as conf
-import json
+
 
 def proxy():
     try:
