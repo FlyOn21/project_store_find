@@ -125,7 +125,7 @@ def get_randevu_product(url):
                 '/')[0]
         category = soup.find('div', class_='breadcrumbs').find_all('li')[1].find('a').text
 
-        # sizes
+        # sizes-available
         try:
             sizes = soup.find('ul', class_='form-select-list scrollbar scrollbar-y').find_all('li')
             sizes_available = []
@@ -133,6 +133,7 @@ def get_randevu_product(url):
                 sizes_available.append(size.text.strip())
         except:
             sizes_available = ['one-size']
+
 
         # gender = 'Мужское' if 'muzhchinam/' in url else 'Женское'
         if 'female' in url:
@@ -149,3 +150,4 @@ def get_randevu_product(url):
                 'size': sizes_available, 'product_url': url_store, 'gender': gender, 'product_store': store}
 
         return dict
+

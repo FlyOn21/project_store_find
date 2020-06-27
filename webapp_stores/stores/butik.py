@@ -7,7 +7,6 @@ import requests
 from webapp_stores.db_functions import save_data_product
 
 
-
 def get_html(url):
     try:
         result = requests.get(url)
@@ -62,7 +61,7 @@ def get_full_butik():
     Список urls точно определен.
     """
 
-    full_butik = ['https://www.butik.ru/catalog/zhenshchinam/odezhda/',
+    full_butik = [#'https://www.butik.ru/catalog/zhenshchinam/odezhda/',
                   'https://www.butik.ru/catalog/zhenshchinam/sumki/',
                   'https://www.butik.ru/catalog/zhenshchinam/obuv/',
                   'https://www.butik.ru/catalog/zhenshchinam/aksessuary/',
@@ -74,7 +73,6 @@ def get_full_butik():
 
     for category in full_butik:
         pages = pages_in_category(category)
-        links=[]
         for p in range(1, pages + 1):
             final_link=category+'?page='+str(p)+'&per_page=100'
             print('\nCategory :' + final_link + ' ' +str(p) + '/' + str(pages))
@@ -117,7 +115,7 @@ def get_butik_product(url):
 
     store = 'Butik.ru'
     name = data['data']['card'][0]['value']['value']['seo_name']
-    price = float(data['data']['card'][0]['value']['value']['price_with_discount'])
+    price = float(data['data']['card'][0]['value']['value']['price'])
     discount = float(data['data']['card'][0]['value']['value']['price_with_discount'])
     color = data['data']['card'][0]['value']['value']['color']
     brand = data['data']['card'][0]['value']['value']['brand']['name']
@@ -130,16 +128,22 @@ def get_butik_product(url):
     # image = data['seoData']['ogImage']
     url_store = url
 
-    sizes_available={}
-    for i in data['data']['card'][0]['value']['value']['product_variations']:
-        if i['size']['stock_with_reserve']:
-            sizes_available[i['size']['rus_size'][0]]=i['size']['stock_with_reserve']
+
+    #sizes_available
+    main_criteria = data['data']['card'][0]['value']['value']['product_variations'][0]['size']['main_size']
+    product_variations = data['data']['card'][0]['value']['value']['product_variations']
+    sizes_available = [str(i['size'][main_criteria]).replace('[', '').replace(']', '').replace("'", '') for i in product_variations if i['size'][
+            'stock_with_reserve']]
+
+    # sizes_possible
+    sizes_possible = [str(i['size'][main_criteria]).replace('[', '').replace(']', '').replace("'", '') for i in
+                       product_variations]
+
     gender = 'Мужское' if 'muzhchinam/' in url else 'Женское'
     dict = {'name':name, 'id': id, 'price': price, 'product_discount' : discount,'brand': brand, 'color': color,
             'category_detailed': category_detailed, 'category': category, 'product_image': image,
-            'size': sizes_available,'gender':gender ,'product_url': url_store, 'product_store':store}
+            'size': sizes_available,'size_possible':sizes_possible,'gender':gender ,'product_url': url_store, 'product_store':store}
+
 
     return dict
-
-
 
