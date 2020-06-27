@@ -74,7 +74,7 @@ def get_full_randevu():
 
     for category in full_randevu:
         pages = pages_in_category(category)
-        links=[]
+        # links=[]
         for p in range(1, pages + 1):
             final_link = category + 'page/' + str(p) + '/'
             print('\nCategory :' + final_link + ' ' + str(p) + '/' + str(pages))
@@ -125,7 +125,7 @@ def get_randevu_product(url):
                 '/')[0]
         category = soup.find('div', class_='breadcrumbs').find_all('li')[1].find('a').text
 
-        # sizes-available
+        # sizes
         try:
             sizes = soup.find('ul', class_='form-select-list scrollbar scrollbar-y').find_all('li')
             sizes_available = []
@@ -133,7 +133,6 @@ def get_randevu_product(url):
                 sizes_available.append(size.text.strip())
         except:
             sizes_available = ['one-size']
-
 
         # gender = 'Мужское' if 'muzhchinam/' in url else 'Женское'
         if 'female' in url:
@@ -148,6 +147,10 @@ def get_randevu_product(url):
         dict = {'id': id, 'name': name, 'price': price, 'product_discount': discount, 'brand': brand, 'color': color,
                 'category_detailed': category_detailed, 'category': category, 'product_image': image,
                 'size': sizes_available, 'product_url': url_store, 'gender': gender, 'product_store': store}
+        print(dict)
 
         return dict
 
+if __name__ == '__main__':
+    c = get_full_randevu()
+    print(c)
