@@ -3,6 +3,7 @@ from webapp_stores.stores.ali import Aliexpress
 from webapp_stores.stores.butik import get_full_butik
 from webapp_stores.stores.randevu import get_full_randevu
 from webapp_stores.stores.stores import get_ali_data, get_butik_data, get_randevu_data
+from webapp_stores.db_functions import save_data_product
 
 def run():
     app = create_app()
@@ -10,21 +11,23 @@ def run():
         ali_status = get_ali_data()
         randezvous_status = get_randevu_data()
         butik_status = get_butik_data()
-        # if ali_status is not False:
-        #     ali = Aliexpress()
-        #     ali.page_ali()
-        # else:
-        #     print('Алиекспрес был недоступен, обновление базы не выполнено')
-        #     pass
+        if ali_status is not False:
+            ali = Aliexpress()
+            ali.page_ali()
+        else:
+            print('Алиекспрес был недоступен, обновление базы не выполнено')
+            pass
 
         if randezvous_status is not False:
             get_full_randevu()
+            # save_data_product(get_full_randevu())
         else:
             print('Рандеву был недоступен, обновление базы не выполнено')
             pass
 
         if butik_status is not False:
             get_full_butik()
+            # save_data_product(get_full_butik())
         else:
             print('Бутик был недоступен, обновление базы не выполнено')
             pass

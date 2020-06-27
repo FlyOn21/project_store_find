@@ -4,7 +4,7 @@ import math
 from pprint import PrettyPrinter  # красиво выводит результат из словарей и списков
 import re
 import requests
-# from webapp_stores.db_functions import save_data_product
+from webapp_stores.db_functions import save_data_product
 
 
 
@@ -82,7 +82,7 @@ def get_full_butik():
             for link in links:
                 try:
                     dict = get_butik_product(link)
-                    # save_data_product(dict)
+                    save_data_product(dict)
                 except:
                     print('I cant get data from '+link)
 

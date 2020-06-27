@@ -1,6 +1,6 @@
 import requests as req
 from webapp_stores import db_functions
-from webapp_stores.proxy import get_query
+from webapp_stores.proxy import get_query,curs
 from bs4 import BeautifulSoup
 import time
 import json
@@ -185,7 +185,7 @@ class Aliexpress():
     def product_url(self, item):
         url = str(item['productDetailUrl'])
         url_f = url.split('?')
-        return url_f[0]
+        return ('https'+url_f[0])
 
     def product_store_other(self, item):
         return str(item['store'])
@@ -195,16 +195,18 @@ class Aliexpress():
         id = data_1['data']['productInfo']['productId']
         return id
 
+
     def price_product_usd(self, data_1):
         price_all = {}
+        curs_usd = curs.get_curs_usd()
         sale_max_price = data_1['data']['priceInfo']['saleMaxPrice']['value']
-        price_all['sale_max_price'] = sale_max_price
+        price_all['sale_max_price'] = round((sale_max_price*curs_usd),3)
         sale_min_price = data_1['data']['priceInfo']['saleMinPrice']['value']
-        price_all['sale_min_price'] = sale_min_price
+        price_all['sale_min_price'] = round((sale_min_price*curs_usd),3)
         trade_max_price = data_1['data']['priceInfo']['tradeMaxPrice']['value']
-        price_all['trade_max_price'] = trade_max_price
+        price_all['trade_max_price'] = round((trade_max_price*curs_usd),3)
         trade_min_price = data_1['data']['priceInfo']['tradeMinPrice']['value']
-        price_all['trade_min_price'] = trade_min_price
+        price_all['trade_min_price'] = round((trade_min_price*curs_usd),3)
         return price_all
 
     def delivery_in_country(self, data_2):
@@ -317,4 +319,4 @@ class Aliexpress():
 
 if __name__ == '__main__':
     c = Aliexpress()
-    print(c.page_ali())
+    print(c.get_curs())
