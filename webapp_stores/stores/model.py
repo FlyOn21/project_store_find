@@ -2,11 +2,29 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+class Stores(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False, unique=True)
+    online = db.Column(db.Boolean, nullable=False)
+    url = db.Column(db.String, nullable=False, unique=True)
+    title = db.Column(db.String, nullable=False)
+    icon = db.Column(db.String, nullable=True)
+    # products = db.relationship('Product', backref='stores')
+
+
+    def __repr__(self):
+        if self.store_online == True:
+            store_online = 'ON-LINE'
+        else:
+            store_online = 'CLOSE'
+        return f'Store ID: {self.id}, title: {self.title}, ' \
+               f'url: {self.url}, {store_online},{self.icon} '
+
 class Product(db.Model):
     id = db.Column(db.Integer,primary_key=True)
-    store = db.Column(db.String,nullable=False)
+    store = db.Column(db.Integer, db.ForeignKey('stores.id'))
     name = db.Column(db.String,nullable=False)
-    id_store = db.Column(db.String,nullable=False,unique=True)
+    id_product= db.Column(db.String,nullable=False,unique=True)
     prise_full =db.Column(db.String,nullable=False)
     prise_discount = db.Column(db.String,nullable=True)
     brand = db.Column(db.String,nullable=True)
@@ -19,28 +37,11 @@ class Product(db.Model):
     gender = db.Column(db.String,nullable=True)
     delivery = db.Column(db.String,nullable=True)
     other = db.Column(db.Text,nullable=True)
+    stores = db.relationship('Stores', backref='products')
 
     def __repr__(self):
-        return f'Store ID: {self.product_id_store}, brand: {self.product_brand},' \
-               f' url: {self.product_url},{self.product_category}'
-
-
-
-class Stores(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False, unique=True)
-    online = db.Column(db.Boolean, nullable=False)
-    url = db.Column(db.String, nullable=False, unique=True)
-    title = db.Column(db.String, nullable=False)
-    icon = db.Column(db.String, nullable=True)
-
-    def __repr__(self):
-        if self.store_online == True:
-            store_online = 'ON-LINE'
-        else:
-            store_online = 'CLOSE'
-        return f'Store ID: {self.id}, title: {self.title}, ' \
-               f'url: {self.url}, {store_online},{self.icon} '
+        return f'Store ID: {self.id}, brand: {self.brand},' \
+               f' url: {self.url}, category: {self.category}, image: {self.image}!'
 
 
 class InterestingProduct(db.Model):
