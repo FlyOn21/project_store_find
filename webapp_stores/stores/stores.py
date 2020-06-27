@@ -1,8 +1,7 @@
-from webapp_stores import standard_icon, db_functions
+from webapp_stores import db_functions
+from webapp_stores.images import standard_icon
 from bs4 import BeautifulSoup
-from webapp_stores import get_query
-
-
+from webapp_stores.proxy import get_query
 
 
 # Butik

@@ -1,5 +1,6 @@
 import requests as req
-from webapp_stores import standard_icon, db_functions
+from webapp_stores import db_functions
+from webapp_stores.images import standard_icon
 from bs4 import BeautifulSoup
 import ast
 import time

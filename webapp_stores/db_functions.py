@@ -1,4 +1,4 @@
-from webapp_stores.model import db, Stores,Product
+from webapp_stores.stores.model import db, Stores,Product
 
 
 def save_data(title, online, url, name, icon):
@@ -41,7 +41,7 @@ def save_data_product(product_dict):
         elif product_dict['product_store'] == "Randevu":
             store = 2
         add_product_1 = Product(id_product=product_dict['id'],
-                                store_id=store,
+                                store=store,
                                 name=product_dict['name'],
                                 prise_full=product_dict['price'],
                                 prise_discount=product_dict['product_discount'],

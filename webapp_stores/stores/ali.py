@@ -1,5 +1,6 @@
 import requests as req
-from webapp_stores import standard_icon, db_functions, get_query
+from webapp_stores import db_functions
+from webapp_stores.proxy import get_query
 from bs4 import BeautifulSoup
 import time
 import json
@@ -131,18 +132,6 @@ class Aliexpress():
         data = json.loads(raw_data_2)
         return data
 
-    def product_name(self, item):
-        return item['title']
-
-    def product_id_store(self, item):
-        return str(item['productId'])
-
-    def product_url(self, item):
-        url = item['productDetailUrl']
-        return url
-
-    def product_store_other(self, item):
-        return str(item['store'])
 
     def product_gender(self, final_link):
         category = final_link.split('?')
@@ -153,8 +142,8 @@ class Aliexpress():
 
     def take_id(self, link=None):  # Функция для определения ID товара
         try:
-            index_first_step = link.index('?')
-            first_step_clear = link[:index_first_step]
+            # index_first_step = link.index('?')
+            first_step_clear = link   #[:index_first_step]
             second_step_clear = re.findall('\d', first_step_clear)
             product_id = ''.join(second_step_clear)
             return product_id
@@ -186,6 +175,21 @@ class Aliexpress():
                 'propertyValueName']
             all_color.append(color)
         return all_color
+
+    def product_name(self, item):
+        return item['title']
+
+    def product_id_store(self, item):
+        return str(item['productId'])
+
+    def product_url(self, item):
+        url = str(item['productDetailUrl'])
+        url_f = url.split('?')
+        return url_f[0]
+
+    def product_store_other(self, item):
+        return str(item['store'])
+
 
     def product_id(self, data_1):
         id = data_1['data']['productInfo']['productId']
@@ -313,4 +317,4 @@ class Aliexpress():
 
 if __name__ == '__main__':
     c = Aliexpress()
-    print(c.get_ali_data())
+    print(c.page_ali())

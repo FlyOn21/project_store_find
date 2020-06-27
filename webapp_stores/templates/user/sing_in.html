@@ -1,0 +1,51 @@
+{%extends "base.html"%}
+
+{%block content%}
+<div class = "col-4">
+    {%with messages = get_flashed_messages() %}
+    {%if messages%}
+    <div class="alert alert-warning" role="alert">
+        {%for message in messages%}
+            {{message}}<br>
+        {%endfor%}
+    </div>
+    {%endif%}
+    {%endwith%}
+    <form action="{{url_for('users.register_do')}}" method="POST">
+          {{form.hidden_tag() }}
+        <div class="form-group" >
+            {{form.name.label}}
+            {{form.name()}}
+        </div>
+        <div class="form-group" >
+            {{form.surname.label}}
+            {{form.surname()}}
+        </div>
+        <div class="form-group"  >
+            {{form.email.label}}
+            {{form.email()}}
+        </div>
+          <div class="form-group">
+              {{form.username.label}}
+              {{form.username()}}
+          </div>
+        <div class="form-group">
+            {{form.password.label}}
+            {{form.password()}}
+        </div>
+        <div class="form-group">
+            {{form.confirm.label}}
+            {{form.confirm()}}
+        </div>
+        <div  class="form-group form-chack">
+            {{form.accept_tos()}}
+            {{form.accept_tos.label(class_="form-check-label")}}
+        </div>
+        <p>{{form.submit}}</p>
+     </form>
+<div class  = "col-8">
+
+</div>
+
+</div>
+{%endblock%}

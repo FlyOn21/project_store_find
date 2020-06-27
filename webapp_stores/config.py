@@ -7,4 +7,5 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 base = os.path.join(basedir,'..','webapp_store.db')
 print(base)
 SQLALCHEMY_DATABASE_URI = 'sqlite:///'+ base
+SECRET_KEY = "k;lkl;wkermw;emr.,wmerl;k;lm/.ml;';l';lm/.m,;lk;lk;lkm,m"
 
