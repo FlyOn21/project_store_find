@@ -90,28 +90,6 @@ class Aliexpress():
         self.full_ali_man = full_ali_man
         self.count = count
 
-    # def get_ali_data(self):
-    #     html = get_query.get_html(url=self.url)
-    #     if html:
-    #         soup = BeautifulSoup(html, 'html.parser')
-    #         title = soup.title.string
-    #         name = 'Aliexpress'
-    #         icon = soup.find('meta', property="og:image", )['content']
-    #         online = True
-    #         url = self.url
-    #         db_functions.save_data(title=title, online=online, url=url,
-    #                                name=name, icon=icon)
-    #         self.page_ali()
-    #
-    #     else:
-    #         online = False
-    #         url = self.url
-    #         name = 'Aliexpress'
-    #         title = 'Магазин временно недоступен'
-    #         icon = standard_icon.standard_icon()
-    #         db_functions.save_data(title=title, online=online, url=url,
-    #                                name=name, icon=icon)
-
     def page_ali(self):
         full_ali = self.full_ali_man + self.full_ali_woman
         for category in full_ali:
@@ -133,8 +111,8 @@ class Aliexpress():
         return data
 
 
-    def product_gender(self, final_link):
-        category = final_link.split('?')
+    def product_gender(self, link):
+        category = link.split('?')
         if category[0] in self.full_ali_woman:
             return 'Женское'
         else:
@@ -142,15 +120,18 @@ class Aliexpress():
 
     def take_id(self, link=None):  # Функция для определения ID товара
         try:
-            # index_first_step = link.index('?')
-            first_step_clear = link   #[:index_first_step]
+            if '?' in link:
+                index_first_step = link.index('?')
+                first_step_clear = link[:index_first_step]
+            else:
+                first_step_clear = link   #[:index_first_step]
             second_step_clear = re.findall('\d', first_step_clear)
             product_id = ''.join(second_step_clear)
             return product_id
         except(TypeError, AttributeError):
             return False
 
-    def ali(self, link):  # Получение словарей параметров товара с Алиеспресс
+    def ali(self, link=None):  # Получение словарей параметров товара с Алиеспресс
         try:
             id_doc = self.take_id(link)
             if id_doc:
@@ -185,7 +166,7 @@ class Aliexpress():
     def product_url(self, item):
         url = str(item['productDetailUrl'])
         url_f = url.split('?')
-        return ('https'+url_f[0])
+        return 'https:'+ url_f[0]
 
     def product_store_other(self, item):
         return str(item['store'])
@@ -256,8 +237,10 @@ class Aliexpress():
             return "Упс что то пошло нет так, попробуйте еще раз"
         else:
             data_1, data_2 = data
-            code = self.product_id(data_1)
-            price = self.price_product_usd(data_1)
+            id = self.product_id(data_1)
+            price_all = [price for price in (self.price_product_usd(data_1)).values()]
+            price = price_all[0:2]
+            product_discount = price_all[2:5]
             delivery = self.delivery_in_country(data_2)
             brand = self.product_brand(data_1)
             color = self.color_list(data_1)
@@ -266,10 +249,17 @@ class Aliexpress():
             image = self.product_image_p(data_1)
             sizes_available = self.product_size(data_1)
             url_store = self.product_url_p(data_1)
-            ali_dict = {'code': code, 'price': price, 'brand': brand, 'color': color,
-                        'category_detailed': category_detailed, 'category': category, 'image': image,
-                        'sizes': sizes_available, 'url': url_store, 'delivery': delivery}
-            print(ali_dict)
+            product_store = 'Aliexpress'
+            gender = self.product_gender(link)
+            ali_dict = {'id': id,'name':category,'product_store':product_store, 'price': str(price),'product_discount': str(product_discount),
+                        'brand': brand, 'color': str(color),'category_detailed': category_detailed,
+                        'category': category, 'product_image': str(image),'size': str(sizes_available), 'url': url_store,
+                        'delivery': str(delivery),'product_url':link,'gender':gender,'size_possible':''}
+            # {'name': name, 'id': id, 'price': price, 'product_discount': discount, 'brand': brand, 'color': color,
+            #  'category_detailed': category_detailed, 'category': category, 'product_image': image,
+            #  'size': sizes_available, 'size_possible': sizes_possible, 'gender': gender, 'product_url': url_store,
+            #  'product_store': store}
+            # print(ali_dict)
             return ali_dict
 
     def ali_product_collection(self, final_link):
@@ -288,23 +278,22 @@ class Aliexpress():
 
                         ali_product_dict['name'] = self.product_name(item)
                         ali_product_dict['id'] = self.product_id_store(item)
-                        ali_product_dict['price'] = str([current_product['price']['trade_min_price'],
-                                                         (current_product['price'])['trade_max_price']])
-                        ali_product_dict['product_discount'] = str([current_product['price']['sale_min_price'],
-                                                                    (current_product['price'])['sale_max_price']])
+                        ali_product_dict['price'] = str(current_product['price'])
+                        ali_product_dict['product_discount'] = str(current_product['product_discount'])
                         ali_product_dict['brand'] = current_product['brand']
                         ali_product_dict['delivery'] = str(current_product['delivery'])
                         ali_product_dict['category'] = current_product['category']
                         ali_product_dict['category_detailed'] = current_product['category_detailed']
                         ali_product_dict['color'] = str(current_product['color'])
-                        ali_product_dict['size'] = str(current_product['sizes'])
-                        ali_product_dict['product_image'] = str(current_product['image'])
+                        ali_product_dict['size'] = str(current_product['size'])
+                        ali_product_dict['product_image'] = str(current_product['product_image'])
                         ali_product_dict['other'] = str(self.product_store_other(item))
-                        ali_product_dict['gender'] = self.product_gender(final_link)
+                        ali_product_dict['gender'] = self.product_gender(link = final_link)
                         print('------------------------------------------------')
                         print(ali_product_dict)
                         print('------------------------------------------------')
                         db_functions.save_data_product(product_dict=ali_product_dict)
+                        # return ali_product_dict
                     except(KeyError, TypeError):
                         pass
             except(IndexError):
@@ -319,4 +308,4 @@ class Aliexpress():
 
 if __name__ == '__main__':
     c = Aliexpress()
-    print(c.get_curs())
+    print(c.page_ali())

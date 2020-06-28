@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
-  <a class="navbar-brand" href="http://127.0.0.1:5000/">"My first web app"</a>
+  <a class="navbar-brand" href="http://127.0.0.1:5000/">Store Parser</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -10,7 +10,10 @@
         <a class="nav-link" href="http://127.0.0.1:5000/">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="">Link</a>
+        <a class="nav-link" href="http://127.0.0.1:5000/store">Store</a>
+      </li>
+        <li class="nav-item active">
+        <a class="nav-link" href="http://127.0.0.1:5000/users/register">Registration</a>
       </li>
 
       <li class="nav-item dropdown active">
@@ -29,15 +32,15 @@
 
     <form action="/link" method="POST" class="form-inline my-2 my-lg-0">
 
-            <div class="col-7">
+            <div class="col-8">
                 <div class="form-group">
                     <label for="formGroupExampleInput"></label>
-                    <input class="form-control mr-sm-2" id="formGroupExampleInput" name="link" placeholder="Вставь ссылку" type="text">
+                    <input class="form-control mr-sm-2" id="formGroupExampleInput" name="link" type="text">
                 </div>
             </div>
             <div class="col-2">
                 <div class="form-group">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Отследить</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
                 </div>
             </div>
 

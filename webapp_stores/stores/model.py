@@ -40,36 +40,35 @@ class Product(db.Model):
     stores = db.relationship('Stores', backref='products')
 
     def __repr__(self):
-        return f'Store ID: {self.id}, brand: {self.brand},' \
-               f' url: {self.url}, category: {self.category}, image: {self.image}!'
+        return "{'Store ID':%s,'brand':%s, 'url':%s, 'category':%s, 'image':%s}" %(self.id,self.brand,self.url,self.category,self.image)
 
 
-class InterestingProduct(db.Model):
-    __tablename__ = 'interesting_products'
-    id = db.Column(db.Integer, primary_key=True)
-    store = db.Column(db.String, nullable=False)
-    name = db.Column(db.String, nullable=False)
-    id_store = db.Column(db.String, nullable=False)
-
-    url = db.Column(db.Text, nullable=False)
-
-    prise_full = db.Column(db.String, nullable=False)
-    prise_discount = db.Column(db.String, nullable=True)
-    price_interesting = db.Column(db.String, nullable=True)
-
-    size_available = db.Column(db.String, nullable=True)
-    size_possible=db.Column(db.String, nullable=True)
-    size_interesting=db.Column(db.String, nullable=True)
-
-    color = db.Column(db.Text, nullable=True)
-    color_possible=db.Column(db.Text, nullable=True)
-    color_interesting=db.Column(db.Text, nullable=True)
-
-    user_email=db.Column(db.String, nullable=False)
-
-    def __repr__(self):
-        return f'Store : {self.store}, name: {self.name},' \
-               f' url: {self.url}'
+# class InterestingProduct(db.Model):
+#     __tablename__ = 'interesting_products'
+#     id = db.Column(db.Integer, primary_key=True)
+#     store = db.Column(db.String, nullable=False)
+#     name = db.Column(db.String, nullable=False)
+#     id_store = db.Column(db.String, nullable=False)
+#
+#     url = db.Column(db.Text, nullable=False)
+#
+#     prise_full = db.Column(db.String, nullable=False)
+#     prise_discount = db.Column(db.String, nullable=True)
+#     price_interesting = db.Column(db.String, nullable=True)
+#
+#     size_available = db.Column(db.String, nullable=True)
+#     size_possible=db.Column(db.String, nullable=True)
+#     size_interesting=db.Column(db.String, nullable=True)
+#
+#     color = db.Column(db.Text, nullable=True)
+#     color_possible=db.Column(db.Text, nullable=True)
+#     color_interesting=db.Column(db.Text, nullable=True)
+#
+#     user_email=db.Column(db.String, nullable=False)
+#
+#     def __repr__(self):
+#         return f'Store : {self.store}, name: {self.name},' \
+#                f' url: {self.url}'
 
 
 

@@ -1,4 +1,5 @@
-from webapp_stores.stores.model import db, Stores, Product, InterestingProduct
+from webapp_stores.stores.model import db, Stores, Product
+from webapp_stores.user.model import InterestingProduct
 
 
 def save_data(title, online, url, name, icon):

@@ -43,17 +43,17 @@ def register():
 def register_do():
     form = Registration_user()
     if form.validate_on_submit():
-        User.query.filter(User.email == form.email.data).first()
-        flash('You are already registered. Please log in using your username and password')
-        return redirect(url_for('users.login'))
-    else:
-        new_user = User(name=form.name.data, email=form.email.data, surname=form.surname.data,
-                        username=form.username.data, is_active=True, role='user')
-        new_user.save_password(form.password.data)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('You registred')
-        return redirect(url_for('index'))
+        if User.query.filter(User.email == form.email.data).first():
+            flash('You are already registered. Please log in using your username and password')
+            return redirect(url_for('users.login'))
+        else:
+            new_user = User(name=form.name.data, email=form.email.data, surname=form.surname.data,
+                            username=form.username.data, is_active=True, role='user')
+            new_user.save_password(form.password.data)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('You registred')
+            return redirect(url_for('index'))
 
 
 @blueprint.route('/logout')

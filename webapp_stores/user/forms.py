@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo
 
 
 class Login_form(FlaskForm):
-    username = StringField('User name', validators=[DataRequired()], render_kw={'class': "form-control"})
+    email = StringField('E-mail', validators=[DataRequired(),Email()], render_kw={'class': "form-control"})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={'class': "form-control"})
     hidden_f = HiddenField()
     remember_me = BooleanField('Запомни меня', default=True, render_kw={'class': "form-check-input"})

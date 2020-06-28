@@ -147,7 +147,7 @@ def get_randevu_product(url):
         dict = {'id': id, 'name': name, 'price': price, 'product_discount': discount, 'brand': brand, 'color': color,
                 'category_detailed': category_detailed, 'category': category, 'product_image': image,
                 'size': sizes_available, 'product_url': url_store, 'gender': gender, 'product_store': store}
-        print(dict)
+        # print(dict)
 
         return dict
 
