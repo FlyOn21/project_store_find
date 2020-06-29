@@ -3,15 +3,28 @@
 {%block content%}
         <body>
             <div class = "container">
+                <h2>Список магазинов в базе</h2>
+                <div class="col-6">
+                <table class="table table-borderless ">
+                  <thead>
+                    <tr>
+                      <th scope="col">Лого</th>
+                      <th scope="col">Название магазина</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {%for store in store_all %}
 
-            <div class = "row">
-                <div class="col-10">
-                    <h2>Stores</h2>
-                    {%for store in store_all %}
-                   <p>
-                    <img alt="Лого магазина"  src="{{store.icon}}" height=50px width=50px>
-                    <a href={{store.url}} title="{{store.title}}"> > {{store.name}} </a>
-                   </p>
-                    {%endfor%}
-                </div>
+                    <tr>
+
+                        <td class="align-baseline"><img class="img-fluid" alt="Лого магазина"  src="{{store.icon}}" height=32px width=32px></td>
+                        <td class="align-baseline"><a class="badge badge-light"  href={{store.url}} title="{{store.title}}"> {{store.name}} </a></td>
+
+                    </tr>
+
+
+                   {%endfor%}
+                  </tbody>
+                </table>
+                    </div>
 {%endblock%}

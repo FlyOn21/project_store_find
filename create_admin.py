@@ -19,7 +19,7 @@ with app.app_context():
     if not password_1 == password_2:
         print('password is not confirm')
         sys.exit(0)
-    new_user = User(username = username, role = 'admin',is_active=True,name = name, surname = surname)
+    new_user = User(username = username, role = 'admin',is_active=True,name = name, surname = surname, email = email)
     new_user.save_password(password_1)
 
     db.session.add(new_user)

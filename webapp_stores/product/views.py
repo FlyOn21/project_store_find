@@ -1,36 +1,84 @@
-from flask import Blueprint, render_template, flash, url_for
-from werkzeug.utils import redirect
+from flask import Blueprint, render_template, flash, url_for,current_app
+# from webapp_stores import config
+# from werkzeug.utils import redirect
 from webapp_stores.stores.model import Product
-from webapp_stores import create_app
-import json
+# from webapp_stores import create_app
 
 
-blueprint = Blueprint('product', __name__,)
+
+blueprint = Blueprint('product', __name__,url_prefix='/p')
+
 
 
 @blueprint.route("/products")
-def products():
-    app = create_app()
+def products(start = 0):
+    app = current_app.config.from_pyfile('config.py')
     with app.app_context():
-        product = Product.query.offset(0).limit(10).all()
+        all_product = Product.query.count()
+        count_pages = int(all_product/12)
+        product = Product.query.offset(start).limit(12).all()
         all_product = []
-        for index in range(0,10):
-            all_product.append(str(product[index]))
-        print(all_product[0])
-        f = json.loads(all_product[0])
-        print(f)
+        for index in range(0,12):
+            f = (str(product[index])).split('|')
+            all_product.append(f)
+        result = dict_p(all_product)
+        print(result)
+        return render_template('product/all_product.html', dict = result)
+
+
+
+def dict_p(all_product):
+    page = []
+    for product_ind in range(0,12):
+        dict_page = {}
+        product_1 = all_product[product_ind]
+        dict_page['name'] = product_1[1]
+        dict_page['category'] = product_1[3]
+        dict_page['image'] = clear_img(product_1)
+        dict_page['brand'] = brand_name(product_1)
+        page.append(dict_page)
+    return page
+
+def clear_img(product_1):
+    img = (product_1[4].strip("['")).strip("']")
+    img_2 = img.split(',')
+    img_fin = (img_2[0]).strip("'")
+    return img_fin
+
+def brand_name(product_1):
+    brand = product_1[5]
+    print(type(brand))
+    if brand == 'Без рукавов' or 'Полная' is True:
+       return 'Бренд неизвестен'
+    else:
+        return brand
+
 
 
 @blueprint.route("/next_page", methods=['POST'])
 def next_page():
-    pass
+    with open('count.txt','r',encoding='utf-8') as file:
+        data = file.read()
+        index = int(data)
+    products(index)
+    index+=12
+    with open('count.txt','w',encoding='utf-8') as f:
+        f.write(str(index))
+
 
 @blueprint.route("/prev_page", methods=['POST'])
 def prev_page():
-    pass
+    with open('count.txt', 'r', encoding='utf-8') as file:
+        data = file.read()
+        index = int(data)
+    products(index)
+    index -= 12
+    with open('count.txt', 'w', encoding='utf-8') as f:
+        f.write(str(index))
 
 if __name__ == "__main__":
-    products()
+    prev_page()
+
 
 
 

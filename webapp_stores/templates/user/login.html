@@ -1,8 +1,8 @@
 {%extends "base.html"%}
 
 {%block content%}
-<div class = "col-4">
-    {%with messages = get_flashed_messages() %}
+
+{%with messages = get_flashed_messages() %}
     {%if messages%}
     <div class="alert alert-warning" role="alert">
         {%for message in messages%}
@@ -11,6 +11,11 @@
     </div>
     {%endif%}
     {%endwith%}
+<div class="container">
+  <div class="row justify-content-md-center">
+
+    <div class="col col-lg-6">
+      <h2>Авторизация</h2>
     <form action="{{url_for('users.process_login')}}" method="POST">
           {{form.hidden_tag() }}
           <div class="form-group">
@@ -27,9 +32,8 @@
         </div>
         <p>{{form.submit}}</p>
      </form>
-<div class  = "col-8">
+    </div>
 
-</div>
+  </div>
 
-</div>
 {%endblock%}

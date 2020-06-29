@@ -1,10 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{%extends "base.html"%}
 
-</body>
-</html>
+{%block content%}
+<title>Каталог товаров</title>
+
+<div class="row">
+    <div class="col-sm">
+        <img alt="Cinque Terre" class="img-thumbnail" src="{{product[0][image]}}" height=160px width=160px>
+        <p> Категория: {{ product[0]['category'] }} </p>
+        <p> Название: {{ product[0]['name'] }}</p>
+        <p> Бренд: {{ product[0]['brand'] }} </p>
+    </div>
+    <div class="col-sm">col-sm</div>
+    <div class="col-sm">col-sm</div>
+  </div>
+<div class = "col-4">
+    <form action="{{url_for('users.process_login')}}" method="POST"></form>
+<div class  = "col-8">
+
+</div>
+
+</div>
+{%endblock%}

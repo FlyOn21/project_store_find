@@ -1,6 +1,6 @@
 <html lang="ru">
     <!doctype html>
-    <html lang="ru">
+
       <head>
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -11,43 +11,29 @@
         <title>Главная страница</title>
       </head>
         <body>
-        <div>
         {% include "menu.html"%}
-                <div class = "col-4">
-            {%with messages = get_flashed_messages() %}
-            {%if messages%}
-            <div class="alert alert-warning" role="alert">
-                {%for message in messages%}
-                    {{message}}<br>
-                {%endfor%}
-            </div>
-            {%endif%}
-            {%endwith%}
-                </div></div>
-
             <div class="container">
                         <h2>Главная страница</h2>
                     </div>
-
-
-
                 <div class="container">
                     <h5> Вставь ссылку на товар из магазина Rendez-vous.ru/ Butik / Aliexpress </h5>
                     <form action="/" method="post">
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
+
                                     <label for="formGroupExampleInput"></label>
                                     <input class="form-control"  name="link" placeholder="Вставь ссылку" type="text">
+
                                     <label for="formGroupExampleInput"></label>
                                     <input class="form-control"  name="size" placeholder="Укажите необходимый размер" type="text">
                                     <label for="formGroupExampleInput"></label>
                                     <input class="form-control" id="formGroupExampleInput" name="email" placeholder="Укажите свой email" type="text">
                                     <p></p>
                                     {% if info!=None %}
-                                        {%for image in info.product_%}
-                                        <img alt="Cinque Terre" class="img-thumbnail" src="{{image}}" height=160px width=160px>
-                                        {% endfor %}
+                                    {%for image in info.product_image%}
+                                    <img alt="Cinque Terre" class="img-thumbnail" src="{{image}}" height=160px width=160px>
+                                    {% endfor %}
                                     <p> Цена товара: {{ info['price'] }} </p>
                                     <p> Доступные размеры: {{ info['size'] }} </p>
                                     <p> Бренд: {{ info['brand'] }} </p>
@@ -60,6 +46,19 @@
                             </div>
                         </div>
                     </form>
+                    <div>
+
+                <div class = "col-4">
+            {%with messages = get_flashed_messages() %}
+            {%if messages%}
+            <div class="alert alert-warning" role="alert">
+                {%for message in messages%}
+                    {{message}}<br>
+                {%endfor%}
+            </div>
+            {%endif%}
+            {%endwith%}
+                </div></div>
                 </div>
 
 
