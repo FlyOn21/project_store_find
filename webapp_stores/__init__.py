@@ -1,15 +1,15 @@
 from flask import Flask, render_template,request
 import locale
-from flask_login import LoginManager
+from flask_login import LoginManager,current_user
 from webapp_stores.user.model import User
 from webapp_stores.stores.model import db,Stores,Product
 from webapp_stores.stores.ali import Aliexpress
 from webapp_stores.user.views import blueprint as user_bp
 from webapp_stores.product.views import blueprint as prod_bp
+from webapp_stores.mail.views import blueprint as mail_bp
 from webapp_stores.db_functions import save_data_product, save_interesting_product
 from webapp_stores.stores.butik import get_butik_product
 from webapp_stores.stores.randevu import get_randevu_product
-
 
 def create_app():
     app = Flask(__name__)
@@ -22,7 +22,10 @@ def create_app():
 
     app.register_blueprint(user_bp)
     app.register_blueprint(prod_bp)
-    # celery = Celery(broker='redis://localhost:6379/0')
+    app.register_blueprint(mail_bp)
+
+
+
 
 
     @app.route('/', methods=['GET', 'POST'])
@@ -49,7 +52,11 @@ def create_app():
 
                 # Сохранение данных в клиентскую базу данных
                 size_interesting = request.form['size']
-                email = request.form['email']
+                # if User.is_anonymous:
+                #     email = request.form['email']
+                # else:
+                email = current_user_mail()
+
 
                 save_interesting_product(product_dict=info, email=email, price_interesting=None, color_interesting=None,
                                          size_interesting=size_interesting)
@@ -69,19 +76,6 @@ def create_app():
             info = None
         return render_template('index.html', info=info)
 
-    @app.route('/link', methods=['GET', 'POST'])
-    def link():
-        locale.setlocale(locale.LC_ALL, "ru_RU.utf-8")
-        try:
-            link = request.form['link']
-            print(link)
-            c = Aliexpress()
-            info = c.parser_product_result(link)
-            print(info)
-        except:
-            info = None
-        return render_template('base.html', info=info, title='Главная страница')
-
     @app.route('/store')
     def store():
         locale.setlocale(locale.LC_ALL, "ru_RU.utf-8")
@@ -97,7 +91,21 @@ def create_app():
     def lode_user(user_id):
         return User.query.get(user_id)
 
+
+
+
+    def current_user_mail():
+        user = current_user.get_id()
+        print('------',user.__dict__,'--------')
+        mail = User.query.filter_by(id = user).all()
+        print(mail)
+        return mail
+
+
+
     return app
+
+
 
 
 

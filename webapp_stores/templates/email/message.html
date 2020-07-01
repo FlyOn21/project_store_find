@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Товар найден</title>
+</head>
+<body>
+Привет друг мы нашли то что ты искал.
+
+{%for prod in dict%}
+<div>
+    ----------------------------------
+    <p>Название {{prod['name']}}</p>
+    <p>Бренд {{prod['brand']}}</p>
+    <p>Магазин {{prod['store']}}</p>
+    <p>Категория {{prod['category']}}</p>
+    ----------------------------------
+    </div>
+{%endfor%}
+</body>
+</html>

@@ -27,18 +27,11 @@
 
                                     <label for="formGroupExampleInput"></label>
                                     <input class="form-control"  name="size" placeholder="Укажите необходимый размер" type="text">
+                                    {%if current_user.is_anonymous%}
                                     <label for="formGroupExampleInput"></label>
                                     <input class="form-control" id="formGroupExampleInput" name="email" placeholder="Укажите свой email" type="text">
-                                    <p></p>
-                                    {% if info!=None %}
-                                    {%for image in info.product_image%}
-                                    <img alt="Cinque Terre" class="img-thumbnail" src="{{image}}" height=160px width=160px>
-                                    {% endfor %}
-                                    <p> Цена товара: {{ info['price'] }} </p>
-                                    <p> Доступные размеры: {{ info['size'] }} </p>
-                                    <p> Бренд: {{ info['brand'] }} </p>
-                                    <p> Категория: {{ info['category'] }} </p>
                                     {% endif %}
+
                                 </div>
                             </div>
                             <div class="col-2">
@@ -47,6 +40,27 @@
                         </div>
                     </form>
                     <div>
+                        <div class="container">
+                                    {% if info!=None %}
+                                    {%for image in info.product_image%}
+                                    <img alt="Cinque Terre" class="img-fluid" src="{{image}}" height=150px width=150px>
+                                    {% endfor %}
+                                    <p> Цена товара: {{ info['price'] }} </p>
+                                    <p> Доступные размеры: {{ info['size'] }} </p>
+                                    <p> Бренд: {{ info['brand'] }} </p>
+                                    <p> Категория: {{ info['category'] }} </p>
+                                     <div >
+                                        {%if current_user.is_authenticated%}
+                                          <span class="nav-link">Привет  {{current_user.username}},  мы сохранили твой товар в личном кабинете</span>
+                                         {%elif current_user.is_anonymous%}
+                                          <span class="nav-link">Привет друг, для удобства отслеживания твоих запросов предлагаем пройти регистрацию на сайте и получить доступ к личному кабинету <a class="nav-link" href="{{url_for('users.register')}}">Registration</a></span>
+
+                                         {%endif%}
+                                    </div>
+                                    {% endif %}
+
+                                        </div>
+
 
                 <div class = "col-4">
             {%with messages = get_flashed_messages() %}
@@ -56,8 +70,8 @@
                     {{message}}<br>
                 {%endfor%}
             </div>
-            {%endif%}
-            {%endwith%}
+                {%endif%}
+                {%endwith%}
                 </div></div>
                 </div>
 

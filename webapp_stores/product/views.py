@@ -12,30 +12,33 @@ blueprint = Blueprint('product', __name__,url_prefix='/p')
 
 @blueprint.route("/products")
 def products(start = 0):
-    app = current_app.config.from_pyfile('config.py')
-    with app.app_context():
+    #app = current_app.app_context() # .config.from_pyfile('config.py')
+    with current_app.app_context():
         all_product = Product.query.count()
         count_pages = int(all_product/12)
         product = Product.query.offset(start).limit(12).all()
-        all_product = []
-        for index in range(0,12):
-            f = (str(product[index])).split('|')
-            all_product.append(f)
-        result = dict_p(all_product)
+        result = step_1(product)
         print(result)
-        return render_template('product/all_product.html', dict = result)
+        return render_template('product/all_products.html', dict = result)
 
+def step_1(product,count = 12):
+    all_product = []
+    for index in range(0, count):
+        f = (str(product[index])).split('|')
+        all_product.append(f)
+    resalt = dict_p(all_product,count)
+    return resalt
 
-
-def dict_p(all_product):
+def dict_p(all_product,count):
     page = []
-    for product_ind in range(0,12):
+    for product_ind in range(0,count):
         dict_page = {}
         product_1 = all_product[product_ind]
         dict_page['name'] = product_1[1]
         dict_page['category'] = product_1[3]
         dict_page['image'] = clear_img(product_1)
         dict_page['brand'] = brand_name(product_1)
+        dict_page['store'] = product_1[6]
         page.append(dict_page)
     return page
 
@@ -47,7 +50,7 @@ def clear_img(product_1):
 
 def brand_name(product_1):
     brand = product_1[5]
-    print(type(brand))
+    # print(type(brand))
     if brand == 'Без рукавов' or 'Полная' is True:
        return 'Бренд неизвестен'
     else:

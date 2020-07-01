@@ -244,7 +244,7 @@ class Aliexpress():
             delivery = self.delivery_in_country(data_2)
             brand = self.product_brand(data_1)
             color = self.color_list(data_1)
-            category_detailed = self.category_detail(data_1)
+            category_detailed = self.product_category_p(data_1)
             category = self.product_category_p(data_1)
             image = self.product_image_p(data_1)
             sizes_available = self.product_size(data_1)
