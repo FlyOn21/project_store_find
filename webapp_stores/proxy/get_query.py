@@ -3,8 +3,10 @@ from requests.exceptions import Timeout
 import random
 import time
 
+#/home/pasha/PycharmProjects/project_store_find/
+
 def open_proxy_list():
-    with open(r'/home/pasha/PycharmProjects/project_store_find/webapp_stores/proxy/proxy.txt', 'r',
+    with open(r'webapp_stores/proxy/proxy.txt', 'r',
               encoding='utf-8') as file:
         m = [lins.strip() for lins in file]
         f = [clear_line for clear_line in m if clear_line != '']

@@ -10,6 +10,7 @@ from webapp_stores.mail.views import blueprint as mail_bp
 from webapp_stores.db_functions import save_data_product, save_interesting_product
 from webapp_stores.stores.butik import get_butik_product
 from webapp_stores.stores.randevu import get_randevu_product
+from webapp_stores.utils import get_info
 
 def create_app():
     app = Flask(__name__)
@@ -34,16 +35,7 @@ def create_app():
         locale.setlocale(locale.LC_ALL, "ru_RU.utf-8")
         try:
             link = request.form['link']
-            if 'butik' in link:
-                info=get_butik_product(link) #dictionary with info about product
-            elif 'rendez-vous' in link:
-                info=get_randevu_product(link) #dictionary with info about product
-            elif 'aliexpress' in link:
-                al = Aliexpress()
-                info = al.parser_product_result(link)
-
-            print(info)
-
+            info=get_info(link)
 
             with app.app_context():
 

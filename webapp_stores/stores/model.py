@@ -3,6 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class Stores(db.Model):
+    """
+    Класс описывает базу данных, содержащих информацию о магазинах
+    """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False, unique=True)
     online = db.Column(db.Boolean, nullable=False)
@@ -21,6 +24,9 @@ class Stores(db.Model):
                f'url: {self.url}, {store_online},{self.icon} '
 
 class Product(db.Model):
+    """
+    Класс описывает базу данных, содержащих информацию о товаре с подробной детализацией
+    """
     id = db.Column(db.Integer,primary_key=True)
     store = db.Column(db.Integer, db.ForeignKey('stores.id'))
     name = db.Column(db.String,nullable=False)
