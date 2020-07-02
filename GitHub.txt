@@ -1,0 +1,6 @@
+echo "# My_first_bot" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/FlyOn21/My_first_bot.git
+git push -u origin master

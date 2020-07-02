@@ -16,16 +16,26 @@ def defolt_page():
     return def_page
 
 
-
 @blueprint.route("/product")
 def products(start):
     with current_app.app_context():
-        all_product = Product.query.count()
-        count_pages = int(all_product / 12)
         product = Product.query.offset(start).limit(12).all()
         result = step_1(product)
-        print(result)
-        return render_template('product/all_products.html', dict=result)
+        page = page_count(start)
+        # print(result)
+        return render_template('product/all_products.html', dict=result, page=page)
+
+
+def page_count(start):
+    """Функция высчитывает страницу товаров в каталоге"""
+    with current_app.app_context():
+        all_product = Product.query.count()
+        count_pages = int(all_product / 12)
+        # print(count_pages)
+        start_product = all_product - start
+        count_pages_start = int(start_product / 12)
+        # print(count_pages_start)
+        return (count_pages - count_pages_start) + 1
 
 
 def step_1(product, count=12):
@@ -71,26 +81,30 @@ def brand_name(product_1):
 
 @blueprint.route("/next_page")
 def next_page():
-    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'r', encoding='utf-8') as file:
+    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'r',
+              encoding='utf-8') as file:
         data = file.read()
         index = int(data)
     if index == 0:
         index = 12
         next_res = products(index)
-        with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w', encoding='utf-8') as f:
+        with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
+                  encoding='utf-8') as f:
             f.write(str(index))
         return next_res
     else:
         index += 12
         next_resalt = products(index)
-        with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w', encoding='utf-8') as f:
+        with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
+                  encoding='utf-8') as f:
             f.write(str(index))
         return next_resalt
 
 
 @blueprint.route("/prev_page")
 def prev_page():
-    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'r', encoding='utf-8') as file:
+    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'r',
+              encoding='utf-8') as file:
         data = file.read()
         index = int(data)
     if index == 0:
@@ -99,16 +113,33 @@ def prev_page():
     else:
         index -= 12
         prev_resalt = products(index)
-        with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w', encoding='utf-8') as f:
+        with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
+                  encoding='utf-8') as f:
             f.write(str(index))
         return prev_resalt
 
 
 def default():
     index = 0
-    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w', encoding='utf-8') as file_clear:
+    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
+              encoding='utf-8') as file_clear:
         file_clear.write(str(index))
 
+
+# @blueprint.route("/product")
+# def products(start):
+#     with current_app.app_context():
+#         all_product = Product.query.count()
+#         count_pages = int(all_product / 12)
+#         product = Product.query.offset(start).limit(12).all()
+#         result = step_1(product)
+#         print(result)
+#         return render_template('product/all_products.html', dict=result)
+
+# @app.route('/post/<int:post_id>')
+# def show_post(post_id):
+#     # show the post with the given id, the id is an integer
+#     return 'Post %d' % post_id
 
 if __name__ == "__main__":
     prev_page()
