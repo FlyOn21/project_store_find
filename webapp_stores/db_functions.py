@@ -72,9 +72,12 @@ def save_interesting_product(product_dict, email=None, price_interesting=None, c
     Функция сохраняет данные о товаре в клиентскую базу данных InterestingProduct
     """
     # Defining user by email (if he has an account, we can connect User and InterestingProduct)
+    print(email)
     try:
         user = User.query.filter(User.email == email).first()
+        print(user)
         id = user.id
+        print(id)
     except:
         id = None
 

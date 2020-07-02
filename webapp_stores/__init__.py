@@ -1,5 +1,6 @@
 from flask import Flask, render_template,request
 import locale
+import ast
 from flask_login import LoginManager,current_user
 from webapp_stores.user.model import User
 from webapp_stores.stores.model import db,Stores,Product
@@ -36,6 +37,7 @@ def create_app():
         try:
             link = request.form['link']
             info=get_info(link)
+            print(info)
 
             with app.app_context():
 
@@ -44,26 +46,31 @@ def create_app():
 
                 # Сохранение данных в клиентскую базу данных
                 size_interesting = request.form['size']
-                # if User.is_anonymous:
-                #     email = request.form['email']
-                # else:
-                email = current_user_mail()
+                print('______________________________________')
+                if current_user.is_anonymous is True:
+                    email = request.form['email']
+                else:
+                    email = current_user_mail()
 
 
                 save_interesting_product(product_dict=info, email=email, price_interesting=None, color_interesting=None,
                                          size_interesting=size_interesting)
+                print('_______________________________________')
 
                 img_list = info['product_image']
-                if len(img_list)>60:
-                    img_clear_1 = (img_list.strip('[')).strip(']')
-                    img_clear_2 = img_clear_1.split(',')
-                    all_img = []
-                    for img in img_clear_2:
-                        img_clear = (img.strip("'")).strip(" '")
-                        print(img_clear)
-                        all_img.append(img_clear)
-                    print(all_img)
-                    info['product_image'] = all_img
+                print(img_list)
+                img_list_1 = ast.literal_eval(img_list)
+                print(img_list_1[0])
+                # if len(img_list)>60:
+                #     img_clear_1 = (img_list.strip('[')).strip(']')
+                #     img_clear_2 = img_clear_1.split(',')
+                #     all_img = []
+                #     for img in img_clear_2:
+                #         img_clear = (img.strip("'")).strip(" '")
+                #         print(img_clear)
+                #         all_img.append(img_clear)
+                #     print(all_img)
+                info['product_image'] = img_list_1[0]
         except:
             info = None
         return render_template('index.html', info=info)
@@ -87,9 +94,11 @@ def create_app():
 
 
     def current_user_mail():
+        """Функция получения електронной почты текушего активного пользователя"""
         user = current_user.get_id()
-        print('------',user.__dict__,'--------')
-        mail = User.query.filter_by(id = user).all()
+        print('------',user,'--------')
+        query = User.query.filter_by(id = user).first()
+        mail = query.email
         print(mail)
         return mail
 

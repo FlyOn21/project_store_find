@@ -11,9 +11,9 @@
         <title>Главная страница</title>
       </head>
         <body>
-        {% include "menu.html"%}
+            {% include "menu.html"%}
             <div class="container">
-                        <h2>Главная страница</h2>
+                       <h2>Главная страница</h2>
                     </div>
                 <div class="container">
                     <h5> Вставь ссылку на товар из магазина Rendez-vous.ru/ Butik / Aliexpress </h5>
@@ -49,15 +49,8 @@
                                     <p> Доступные размеры: {{ info['size'] }} </p>
                                     <p> Бренд: {{ info['brand'] }} </p>
                                     <p> Категория: {{ info['category'] }} </p>
-                                     <div >
-                                        {%if current_user.is_authenticated%}
-                                          <span class="nav-link">Привет  {{current_user.username}},  мы сохранили твой товар в личном кабинете</span>
-                                         {%elif current_user.is_anonymous%}
-                                          <span class="nav-link">Привет друг, для удобства отслеживания твоих запросов предлагаем пройти регистрацию на сайте и получить доступ к личному кабинету <a class="nav-link" href="{{url_for('users.register')}}">Registration</a></span>
+                                     {% endif %}
 
-                                         {%endif%}
-                                    </div>
-                                    {% endif %}
 
                                         </div>
 
