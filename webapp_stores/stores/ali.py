@@ -181,13 +181,13 @@ class Aliexpress():
         price_all = {}
         curs_usd = curs.get_curs_usd()
         sale_max_price = data_1['data']['priceInfo']['saleMaxPrice']['value']
-        price_all['sale_max_price'] = round((sale_max_price*curs_usd),3)
+        price_all['sale_max_price'] = round((sale_max_price*curs_usd),2)
         sale_min_price = data_1['data']['priceInfo']['saleMinPrice']['value']
-        price_all['sale_min_price'] = round((sale_min_price*curs_usd),3)
+        price_all['sale_min_price'] = round((sale_min_price*curs_usd),2)
         trade_max_price = data_1['data']['priceInfo']['tradeMaxPrice']['value']
-        price_all['trade_max_price'] = round((trade_max_price*curs_usd),3)
+        price_all['trade_max_price'] = round((trade_max_price*curs_usd),2)
         trade_min_price = data_1['data']['priceInfo']['tradeMinPrice']['value']
-        price_all['trade_min_price'] = round((trade_min_price*curs_usd),3)
+        price_all['trade_min_price'] = round((trade_min_price*curs_usd),2)
         return price_all
 
     def delivery_in_country(self, data_2):

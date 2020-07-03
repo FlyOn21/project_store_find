@@ -46,8 +46,7 @@ class Product(db.Model):
     stores = db.relationship('Stores') #backref='products'
 
     def __repr__(self):
-        return "%s|%s|%s|%s|%s|%s|%s" %(self.id,self.name,self.url,self.category,self.image,self.brand,self.stores.name)
-
+        return f"{self.id}|{self.name}|{self.url}|{self.category}|{self.image}|{self.brand}|{self.stores.name}"
 
 
 

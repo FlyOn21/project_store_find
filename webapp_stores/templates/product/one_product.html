@@ -5,9 +5,10 @@
 <div class = "col text-center"><h2>Каталог товаров</h2></div>
 <div class="row">
     {%for product in dict%}
-    <div class="col-md-4">
-        <a class="link" href="{{url_for('product.page_num')}}?page={{page_prev}}" tabindex="{{page_prev}}">
-        <img alt="Cinque Terre" class="img" src="{{product ['image']}}" height=160px width=160px></a>
+    <div class="col">
+        {%for image in product ['image']%}
+        <img alt="Cinque Terre" class="img" src="{{image}}" height=350px width=350px>
+        {%endfor%}
         <p> Категория: {{ product ['category'] }} </p>
         <p> Название: {{ product ['name'] }}</p>
         <p> Бренд: {{ product ['brand'] }} </p>

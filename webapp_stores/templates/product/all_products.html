@@ -6,11 +6,12 @@
 <div class="row">
     {%for product in dict%}
     <div class="col-md-4">
-        <a class="link" href="{{url_for('product.page_num')}}?page={{page_prev}}" tabindex="{{page_prev}}">
-        <img alt="Cinque Terre" class="img" src="{{product ['image']}}" height=160px width=160px></a>
+        <a class="link" href="{{url_for('product.current_product')}}?product_id={{product ['id'] }}">
+        <img alt="Cinque Terre" class="img" src="{{product ['image'][0]}}" height=160px width=160px></a>
         <p> Категория: {{ product ['category'] }} </p>
         <p> Название: {{ product ['name'] }}</p>
         <p> Бренд: {{ product ['brand'] }} </p>
+        <p> Магазин: {{ product ['store'] }} </p>
     </div>
     {%endfor%}
     <div class="col-4"></div>
