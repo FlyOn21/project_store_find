@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, url_for, current_app
+from flask import Blueprint, render_template, flash, url_for, current_app, request
 # from webapp_stores import config
 # from werkzeug.utils import redirect
 from webapp_stores.stores.model import Product
@@ -9,21 +9,35 @@ from webapp_stores.stores.model import Product
 blueprint = Blueprint('product', __name__, url_prefix='/p')
 
 
+
 @blueprint.route("/products")
-def defolt_page():
-    default()
-    def_page = products(start=0)
-    return def_page
-
-
-@blueprint.route("/product")
-def products(start):
+def products(start=0):
+    """Функция которая обращается в базу для получения товаров на страницу и определяет и определяет номера
+    и стартовые индексы страниц"""
     with current_app.app_context():
         product = Product.query.offset(start).limit(12).all()
         result = step_1(product)
-        page = page_count(start)
+        page_start = page_count(start)
+        if start == 0:
+            page_one = 1
+            query_index_one = (page_one * 12) - 12
+            page_two = page_one + 1
+            query_index_two = query_index_one + 12
+            page_therd = page_two + 1
+            query_index_therd = query_index_two + 12
+            next_p = page_one + 1
+        else:
+            page_one = page_start - 1
+            query_index_one = (page_one * 12) - 12
+            page_two = page_one + 1
+            query_index_two = query_index_one + 12
+            page_therd = page_two + 1
+            query_index_therd = query_index_two + 12
+            next_p = page_two + 1
         # print(result)
-        return render_template('product/all_products.html', dict=result, page=page)
+        return render_template('product/all_products.html', dict=result, page_prev=page_one, page=page_two,
+                               page_next=page_therd, query_index_one=query_index_one, query_index_two=query_index_two,
+                               query_index_therd=query_index_therd,next_p = next_p)
 
 
 def page_count(start):
@@ -52,12 +66,14 @@ def dict_p(all_product, count):
     for product_ind in range(0, count):
         dict_page = {}
         product_1 = all_product[product_ind]
+        dict_page['id'] = int(product_1[0])
         dict_page['name'] = product_1[1]
         dict_page['category'] = product_1[3]
         dict_page['image'] = (clear_img(product_1)).strip("'")
         dict_page['brand'] = brand_name(product_1)
         dict_page['store'] = product_1[6]
         page.append(dict_page)
+    # print(page)
     return page
 
 
@@ -79,51 +95,71 @@ def brand_name(product_1):
         return brand
 
 
-@blueprint.route("/next_page")
-def next_page():
-    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'r',
-              encoding='utf-8') as file:
-        data = file.read()
-        index = int(data)
-    if index == 0:
-        index = 12
-        next_res = products(index)
-        with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
-                  encoding='utf-8') as f:
-            f.write(str(index))
-        return next_res
-    else:
-        index += 12
-        next_resalt = products(index)
-        with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
-                  encoding='utf-8') as f:
-            f.write(str(index))
-        return next_resalt
+@blueprint.route('/page_num', methods=['GET'])
+def page_num():
+    """Функция обрабатывает гет запрос по номеру страницы и возвращает словарь товаров на данной странице"""
+    page = request.args.get('page')
+    start_index = ((int(page)) * 12) - 12
+    return products(start_index)
+
+@blueprint.route('/current_product',methods = ['GET'])
+def current_product():
+    id = request.args.get('product_id')
+    with current_app.app_context():
+        product = Product.query.filter_by(id = id).first()
+        result_current = step_1(product)
+        return render_template('product/one_product.html', dict = result_current)
 
 
-@blueprint.route("/prev_page")
-def prev_page():
-    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'r',
-              encoding='utf-8') as file:
-        data = file.read()
-        index = int(data)
-    if index == 0:
-        resalt = defolt_page()
-        return resalt
-    else:
-        index -= 12
-        prev_resalt = products(index)
-        with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
-                  encoding='utf-8') as f:
-            f.write(str(index))
-        return prev_resalt
 
 
-def default():
-    index = 0
-    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
-              encoding='utf-8') as file_clear:
-        file_clear.write(str(index))
+
+
+# @blueprint.route("/next_page")
+# def next_page():
+#     with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'r',
+#               encoding='utf-8') as file:
+#         data = file.read()
+#         index = int(data)
+#     if index == 0:
+#         index = 12
+#         next_res = products(index)
+#         with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
+#                   encoding='utf-8') as f:
+#             f.write(str(index))
+#         return next_res
+#     else:
+#         index += 12
+#         next_resalt = products(index)
+#         with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
+#                   encoding='utf-8') as f:
+#             f.write(str(index))
+#         return next_resalt
+#
+#
+# @blueprint.route("/prev_page")
+# def prev_page():
+#     with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'r',
+#               encoding='utf-8') as file:
+#         data = file.read()
+#         index = int(data)
+#     if index == 0:
+#         resalt = defolt_page()
+#         return resalt
+#     else:
+#         index -= 12
+#         prev_resalt = products(index)
+#         with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
+#                   encoding='utf-8') as f:
+#             f.write(str(index))
+#         return prev_resalt
+#
+#
+# def default():
+#     index = 0
+#     with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
+#               encoding='utf-8') as file_clear:
+#         file_clear.write(str(index))
 
 
 # @blueprint.route("/product")

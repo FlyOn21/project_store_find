@@ -6,8 +6,8 @@
 <div class="row">
     {%for product in dict%}
     <div class="col-md-4">
-
-        <img alt="Cinque Terre" class="img" src="{{product ['image']}}" height=160px width=160px>
+        <a class="link" href="{{url_for('product.page_num')}}?page={{page_prev}}" tabindex="{{page_prev}}">
+        <img alt="Cinque Terre" class="img" src="{{product ['image']}}" height=160px width=160px></a>
         <p> Категория: {{ product ['category'] }} </p>
         <p> Название: {{ product ['name'] }}</p>
         <p> Бренд: {{ product ['brand'] }} </p>
@@ -18,16 +18,22 @@
     <nav aria-label="Page navigation example">
   <ul class="pagination">
     <li class="page-item">
-      <a class="page-link" href="{{url_for('product.prev_page')}}" aria-label="Previous">
+      <a class="page-link" href="{{url_for('product.page_num')}}?page={{page_prev}}" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
         <span>Previous</span>
       </a>
     </li>
-      <li class="page-item disabled">
-      <a class="page-link" href="#" tabindex="-1">{{page}}</a>
+      <li class="page-item ">
+      <a class="page-link" href="{{url_for('product.page_num')}}?page={{page_prev}}" tabindex="{{page_prev}}">{{page_prev}}</a>
+    </li>
+      <li class="page-item ">
+      <a class="page-link" href="{{url_for('product.page_num')}}?page={{page}}" tabindex="{{page}}">{{page}}</a>
+    </li>
+      <li class="page-item">
+      <a class="page-link" href="{{url_for('product.page_num')}}?page={{page_next}}" tabindex="{{page_next}}">{{page_next}}</a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="{{url_for('product.next_page')}}" aria-label="Next">
+      <a class="page-link" href="{{url_for('product.page_num')}}?page={{next_p}}" aria-label="Next">
           <span>Next</span>
         <span aria-hidden="true">&raquo;</span>
 
