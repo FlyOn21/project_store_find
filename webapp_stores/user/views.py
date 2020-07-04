@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, url_for
 from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import redirect
-from webapp_stores.user.model import User, db
+from webapp_stores.user.model import User, db, InterestingProduct
 from webapp_stores.user.forms import Login_form, Registration_user
 
 blueprint = Blueprint('users', __name__, url_prefix='/users')
@@ -64,3 +64,18 @@ def logout():
     logout_user()
     flash('You logout')
     return redirect(url_for('index'))
+
+
+
+@blueprint.route("/my_products")
+def my_products():
+    title = 'My products'
+
+    user_id=current_user.get_id()
+    user = User.query.filter_by(id=user_id).first()
+    #print(user.name)
+    # mail = query.email
+
+    user_interesting_products=InterestingProduct.query.filter_by(client_id=user_id).all()
+    #print(user_interesting_products)
+    return render_template('user/my_products.html', title=title, products=user_interesting_products)
