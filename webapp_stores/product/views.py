@@ -151,10 +151,6 @@ def clear_img(product_1):
         image_p = [img]
         # print("-------------------------",image_p,"-------------------------")
     return image_p
-    # img = (product_1[4].strip("['")).strip("']")
-    # img_2 = img.split(',')
-    # img_fin = (img_2[0]).strip("'")
-    # return img_fin
 
 
 def brand_name(product_1):

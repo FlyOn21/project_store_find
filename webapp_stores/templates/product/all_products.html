@@ -4,6 +4,38 @@
 <title>Каталог товаров</title>
 <div class = "col text-center"><h2>Каталог товаров</h2></div>
 <div class="row">
+    <div class="col-4"></div>
+<div class="col col-centered">
+    <nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="{{url_for('product.page_num')}}?page={{page_prev}}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span>Previous</span>
+      </a>
+    </li>
+      <li class="page-item ">
+      <a class="page-link" href="{{url_for('product.page_num')}}?page={{page_prev}}" tabindex="{{page_prev}}">{{page_prev}}</a>
+    </li>
+      <li class="page-item ">
+      <a class="page-link" href="{{url_for('product.page_num')}}?page={{page}}" tabindex="{{page}}">{{page}}</a>
+    </li>
+      <li class="page-item">
+      <a class="page-link" href="{{url_for('product.page_num')}}?page={{page_next}}" tabindex="{{page_next}}">{{page_next}}</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="{{url_for('product.page_num')}}?page={{next_p}}" aria-label="Next">
+          <span>Next</span>
+        <span aria-hidden="true">&raquo;</span>
+
+      </a>
+    </li>
+  </ul>
+</nav>
+</div>
+</div>
+
+<div class="row">
     {%for product in dict%}
     <div class="col-md-4">
         <a class="link" href="{{url_for('product.current_product')}}?product_id={{product ['id'] }}">
