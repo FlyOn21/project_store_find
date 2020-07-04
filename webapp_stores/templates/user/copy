@@ -1,0 +1,11 @@
+ <div >
+
+          <span class="nav-link">Привет  {{current_user.username}},  мы сохранили твой товар в личном кабинете</span>
+         {%elif current_user.is_anonymous%}
+          <span class="nav-link">Привет друг, для удобства отслеживания твоих запросов предлагаем пройти регистрацию на сайте и получить доступ к личному кабинету <a class="nav-link" href="{{url_for('users.register')}}">Registration</a></span>
+
+         {%endif%}
+    </div>
+
+
+{% include "menu.html"%}

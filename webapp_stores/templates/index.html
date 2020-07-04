@@ -42,9 +42,9 @@
                     <div>
                         <div class="container">
                                     {% if info!=None %}
-                                    {%for image in info.product_image%}
+                                    {%for image in info['product_image'] %}
                                     <img alt="Cinque Terre" class="img-fluid" src="{{image}}" height=150px width=150px>
-                                    {% endfor %}
+                                    {%endfor%}
                                     <p> Цена товара: {{ info['price'] }} </p>
                                     <p> Доступные размеры: {{ info['size'] }} </p>
                                     <p> Бренд: {{ info['brand'] }} </p>

@@ -58,19 +58,28 @@ def create_app():
                 print('_______________________________________')
 
                 img_list = info['product_image']
-                print(img_list)
-                img_list_1 = ast.literal_eval(img_list)
-                print(img_list_1[0])
-                # if len(img_list)>60:
-                #     img_clear_1 = (img_list.strip('[')).strip(']')
-                #     img_clear_2 = img_clear_1.split(',')
-                #     all_img = []
-                #     for img in img_clear_2:
-                #         img_clear = (img.strip("'")).strip(" '")
-                #         print(img_clear)
-                #         all_img.append(img_clear)
-                #     print(all_img)
-                info['product_image'] = img_list_1[0]
+                # print(type(img_list))
+                # if len(img_list)>200:
+                #     img_list_all = ast.literal_eval(img_list)
+                # else:
+                #     img_list_all = info['product_image']
+                if len(img_list)>60:
+                    img_clear_1 = (img_list.strip('[')).strip(']')
+                    img_clear_2 = img_clear_1.split(',')
+                    all_img = []
+                    for img in img_clear_2:
+                        img_clear = (img.strip("'")).strip(" '")
+                        print(img_clear)
+                        all_img.append(img_clear)
+
+                    info['product_image'] = all_img
+                    print(info)
+
+                user = current_user.get_id()
+                query = User.query.filter_by(id=user).first()
+                name = query.username
+                print(name)
+
         except:
             info = None
         return render_template('index.html', info=info)
