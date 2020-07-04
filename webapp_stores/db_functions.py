@@ -72,12 +72,12 @@ def save_interesting_product(product_dict, email=None, price_interesting=None, c
     Функция сохраняет данные о товаре в клиентскую базу данных InterestingProduct
     """
     # Defining user by email (if he has an account, we can connect User and InterestingProduct)
-    print(email)
+    #print(email)
     try:
         user = User.query.filter(User.email == email).first()
-        print(user)
+        #print(user)
         id = user.id
-        print(id)
+        #print(id)
     except:
         id = None
 
@@ -102,6 +102,12 @@ def save_interesting_product(product_dict, email=None, price_interesting=None, c
             name=product_dict['name'],
 
             url=product_dict['product_url'],
+
+            brand=product_dict['brand'],
+            category = product_dict['category'],
+            category_detailed = product_dict['category_detailed'],
+            image = product_dict['product_image'],
+            gender = product_dict['gender'],
 
             prise_full=product_dict['price'],
             prise_discount=product_dict['product_discount'],
@@ -147,6 +153,16 @@ def check_product(info, id):
 
     # Informing clients about availability of interesting product
     if interesting_product.size_interesting in interesting_product.size_available:
+        if interesting_product.notification_sent==1:
+            print(f'Уведомление клиенту {interesting_product.user_email} о товаре уже отправлено {interesting_product.url}')
+        else:
+            print(
+                f'Для клиента {interesting_product.user_email} найден необходимый размер {interesting_product.size_interesting} товара: {interesting_product.url}')
         # Вставить функцию для отправления сообщений на почту + удаление строки ввобще
-        print(
-            f'Для клиента {interesting_product.user_email} найден необходимый размер {interesting_product.size_interesting} товара: {interesting_product.url}')
+            interesting_product.notification_sent = 1
+            db.session.add(interesting_product)
+            db.session.commit()
+
+
+
+

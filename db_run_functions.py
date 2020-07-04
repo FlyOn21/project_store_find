@@ -95,17 +95,18 @@ def add_interesting_product(url, email=None, price_interesting=None, color_inter
     app = create_app()
     with app.app_context():
         dict = get_info(url)
+        #print(dict)
         save_interesting_product(dict, email=email, price_interesting=price_interesting,
                                  color_interesting=color_interesting, size_interesting=size_interesting)
 
 
 if __name__ == '__main__':
     # c = run()
-    # insteresting_product_check()
+    #insteresting_product_check()
     # add_to_products_all_butik()
     # add_to_products_url_butik() # put url in brackets
     # add_to_products_all_randevu()
     # add_to_products_url_randevu() # put url in brackets
-    add_interesting_product('https://www.rendez-vous.ru/catalog/female/shlepantsy/calvin_klein_jaimee_zheltyy-2274485/', email='da@example.com',size_interesting='50')
-    ali='https://aliexpress.ru/item/4001040161418.html?spm=a2g0s.8937460.0.0.559e2e0eXwHzO1&_ga=2.10782772.1228535348.1593582717-1461091439.1591961209'
-    add_interesting_product(ali, email='da@example.com',size_interesting='50')
+    add_interesting_product('https://www.rendez-vous.ru/catalog/female/shlepantsy/calvin_klein_jaimee_zheltyy-2274485/', email='nat1@example.com',size_interesting='37')
+    #ali='https://aliexpress.ru/item/4001040161418.html?spm=a2g0s.8937460.0.0.559e2e0eXwHzO1&_ga=2.10782772.1228535348.1593582717-1461091439.1591961209'
+    #add_interesting_product(ali, email='da@example.com',size_interesting='50')

@@ -44,6 +44,12 @@ class InterestingProduct(db.Model):
     name = db.Column(db.String, nullable=False)
     id_store = db.Column(db.String, nullable=False)
 
+    brand = db.Column(db.String, nullable=True)
+    category = db.Column(db.String, nullable=True)
+    category_detailed = db.Column(db.Text, nullable=True)
+    image = db.Column(db.Text, nullable=True)
+    gender = db.Column(db.String, nullable=True)
+
     url = db.Column(db.Text, nullable=False)
 
     prise_full = db.Column(db.String, nullable=False)
@@ -60,6 +66,8 @@ class InterestingProduct(db.Model):
 
     user_email=db.Column(db.String, nullable=False)
     client_id=db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+
+    notification_sent=db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
         return f'Store : {self.store}, name: {self.name},' \
