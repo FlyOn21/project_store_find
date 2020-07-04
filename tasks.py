@@ -3,6 +3,8 @@ from webapp_stores import create_app
 from webapp_stores.parsing_run import butik, randevy, ali
 from celery.schedules import crontab
 from webapp_stores.proxy import proxy
+from webapp_stores.mail.views import email
+from db_run_functions import insteresting_product_check
 
 celery = Celery('tasks', broker='redis://localhost:6379/0')
 flask = create_app()
@@ -27,10 +29,20 @@ def alis():
     with flask.app_context():
         ali.ali()
 
+@celery.task
+def email_send(e_mail,find_size,product):
+    email(e_mail,find_size,product)
+
+@celery.task
+def insteresting_product_check_do():
+    insteresting_product_check()
+
+
 @celery.on_after_configure.connect
 def periodic_tasks(sender,**kwargs):
     sender.add_periodic_task(crontab(minute='*/1200'),randevys.s())
     sender.add_periodic_task(crontab(minute='*/1200'),butiks.s())
     sender.add_periodic_task(crontab(minute='*/1200'),alis.s())
     sender.add_periodic_task(crontab(minute='*/2'),proxy_1.s())
+    sender.add_periodic_task(crontab(minute='*/1'), insteresting_product_check_do.s())
 

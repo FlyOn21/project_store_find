@@ -180,20 +180,21 @@ class Aliexpress():
     def price_product_usd(self, data_1):
         price_all = {}
         curs_usd = curs.get_curs_usd()
+        sale_min_price = data_1['data']['priceInfo']['saleMinPrice']['value']
+        price_all['sale_min_price'] = round((sale_min_price * curs_usd), 2)
         sale_max_price = data_1['data']['priceInfo']['saleMaxPrice']['value']
         price_all['sale_max_price'] = round((sale_max_price*curs_usd),2)
-        sale_min_price = data_1['data']['priceInfo']['saleMinPrice']['value']
-        price_all['sale_min_price'] = round((sale_min_price*curs_usd),2)
+        trade_min_price = data_1['data']['priceInfo']['tradeMinPrice']['value']
+        price_all['trade_min_price'] = round((trade_min_price * curs_usd), 2)
         trade_max_price = data_1['data']['priceInfo']['tradeMaxPrice']['value']
         price_all['trade_max_price'] = round((trade_max_price*curs_usd),2)
-        trade_min_price = data_1['data']['priceInfo']['tradeMinPrice']['value']
-        price_all['trade_min_price'] = round((trade_min_price*curs_usd),2)
         return price_all
 
     def delivery_in_country(self, data_2):
         delivery_dict = {}
+        curs_usd = curs.get_curs_usd()
         for index_deliv in range(len(data_2['data']['freightResult'])):
-            delivery = data_2['data']['freightResult'][index_deliv]['freightAmount']['value']
+            delivery = (int(data_2['data']['freightResult'][index_deliv]['freightAmount']['value']))*curs_usd
             delivery_operator = \
                 ((data_2['data']['freightResult'][index_deliv]['freightLayout']['layout'][1]['text']).split('>'))[-1]
             delivery_dict[delivery_operator] = delivery

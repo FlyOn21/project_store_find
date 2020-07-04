@@ -64,6 +64,7 @@ def step_1(product, count=12):
 
 
 def dict_p(all_product, count):
+    """Словарь данных о товаре из базы для формирования каталога и страницы товара"""
     page = []
     for product_ind in range(0, count):
         dict_page = {}
@@ -80,6 +81,7 @@ def dict_p(all_product, count):
         dict_page['category_detailed'] = category_detailed(int(product_1[0]))
         dict_page['gender'] = gender(int(product_1[0]))
         dict_page['delivery'] = delivery(int(product_1[0]))
+        dict_page['url'] = url(int(product_1[0]))
 
         page.append(dict_page)
     print(page)
@@ -91,12 +93,24 @@ def product_query(id):
         query = Product.query.filter_by(id=id).first()
         return query
 
+def url(id):
+    query = product_query(id)
+    return query.url
 
 def delivery(id):
     query = product_query(id)
     delivery_p = str(query.delivery)
     delivery_res = ast.literal_eval(delivery_p)
-    return delivery_res
+    print(delivery_res)
+    print(type(delivery_res))
+    try:
+        delivery_res_list = []
+        for key,values in delivery_res.items():
+            resalt = key + ':' + str(values)
+            delivery_res_list.append(resalt)
+        return delivery_res_list
+    except AttributeError:
+        return None
 
 
 def gender(id):
@@ -138,7 +152,7 @@ def color(id):
     if color_all[0] == '[':
         color_p = ast.literal_eval(color_all)
     else:
-        color_p = str(query.color)
+        color_p = [str(query.color)]
     return color_p
 
 
