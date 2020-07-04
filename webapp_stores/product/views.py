@@ -81,21 +81,21 @@ def brand_name(product_1):
 
 @blueprint.route("/next_page")
 def next_page():
-    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'r',
+    with open('webapp_stores/product/count.txt', 'r',
               encoding='utf-8') as file:
         data = file.read()
         index = int(data)
     if index == 0:
         index = 12
         next_res = products(index)
-        with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
+        with open('webapp_stores/product/count.txt', 'w',
                   encoding='utf-8') as f:
             f.write(str(index))
         return next_res
     else:
         index += 12
         next_resalt = products(index)
-        with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
+        with open('webapp_stores/product/count.txt', 'w',
                   encoding='utf-8') as f:
             f.write(str(index))
         return next_resalt
@@ -103,7 +103,7 @@ def next_page():
 
 @blueprint.route("/prev_page")
 def prev_page():
-    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'r',
+    with open('webapp_stores/product/count.txt', 'r',
               encoding='utf-8') as file:
         data = file.read()
         index = int(data)
@@ -121,9 +121,10 @@ def prev_page():
 
 def default():
     index = 0
-    with open('/home/pasha/PycharmProjects/project_store_find/webapp_stores/product/count.txt', 'w',
+    with open('webapp_stores/product/count.txt', 'w',
               encoding='utf-8') as file_clear:
         file_clear.write(str(index))
+
 
 
 # @blueprint.route("/product")
