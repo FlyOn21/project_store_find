@@ -114,6 +114,8 @@ def get_randevu_product(url):
             ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])[
                 'price'] else None
         discount = float(ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])['priceFromCart']) if 'priceFromCart' in ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo']) else None
+        if discount==None:
+            discount=price
 
         brand = ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
             'brand']

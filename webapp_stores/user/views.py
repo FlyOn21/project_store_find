@@ -4,7 +4,8 @@ from werkzeug.utils import redirect
 from webapp_stores.user.model import User, db, InterestingProduct
 from webapp_stores.user.forms import Login_form, Registration_user
 
-from webapp_stores.db_functions import delete_interesting_product
+from webapp_stores.db_functions import delete_interesting_product, find_product, save_interesting_product
+from webapp_stores.utils import get_info
 
 blueprint = Blueprint('users', __name__, url_prefix='/users')
 
@@ -91,3 +92,34 @@ def delete_product():
         delete_interesting_product(id)
 
     return redirect(url_for('users.my_products'))
+
+@blueprint.route("/search", methods=['GET', 'POST'])
+def search():
+    search = request.form['search']
+    with current_app.app_context():
+        products=find_product(search)
+
+    return render_template('user/search_products.html', products=products, search=search)
+
+@blueprint.route('/add_product', methods=['GET', 'POST'])
+def add_product():
+    size_interesting = request.form['size']
+
+    link = request.form['link']
+
+    # Если ссылка более не работает
+    try:
+        info = get_info(link)
+    except:
+        flash('Данный товар не доступен в данный момент')
+        return redirect(url_for('index'))
+    # Если пользователь не зарегистрирован
+    if not current_user.is_authenticated:
+        flash('Зарегестрируйтесь, чтобы отслеживать товар в личном кабинете')
+        return redirect(url_for('users.register'))
+    else:
+        email=current_user.email
+        save_interesting_product(product_dict=info, email=email, size_interesting=size_interesting)
+        return redirect(url_for('users.my_products'))
+
+

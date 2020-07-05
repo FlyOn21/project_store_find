@@ -99,9 +99,6 @@ def create_app():
     def lode_user(user_id):
         return User.query.get(user_id)
 
-
-
-
     def current_user_mail():
         """Функция получения електронной почты текушего активного пользователя"""
         user = current_user.get_id()
@@ -110,7 +107,6 @@ def create_app():
         mail = query.email
         print(mail)
         return mail
-
 
 
     return app
