@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, flash, url_for
+from flask import Blueprint, render_template, flash, url_for, request, current_app
 from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import redirect
 from webapp_stores.user.model import User, db, InterestingProduct
 from webapp_stores.user.forms import Login_form, Registration_user
+
+from webapp_stores.db_functions import delete_interesting_product
 
 blueprint = Blueprint('users', __name__, url_prefix='/users')
 
@@ -69,13 +71,23 @@ def logout():
 
 @blueprint.route("/my_products")
 def my_products():
-    title = 'My products'
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
 
+    title = 'My products'
     user_id=current_user.get_id()
-    user = User.query.filter_by(id=user_id).first()
-    #print(user.name)
-    # mail = query.email
+    #user = User.query.filter_by(id=user_id).first()
 
     user_interesting_products=InterestingProduct.query.filter_by(client_id=user_id).all()
     #print(user_interesting_products)
     return render_template('user/my_products.html', title=title, products=user_interesting_products)
+
+
+@blueprint.route("/delete_product", methods=['POST'])
+def delete_product():
+    id=int(request.form['product_to_delete'])
+    print(type(id))
+    with current_app.app_context():
+        delete_interesting_product(id)
+
+    return redirect(url_for('users.my_products'))

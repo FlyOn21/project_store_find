@@ -164,5 +164,14 @@ def check_product(info, id):
             db.session.commit()
 
 
+def delete_interesting_product(id):
+    """
+    Функция удаляет товар из InterestingProduct по запросу клиента
+    """
+    interesting_product = InterestingProduct.query.filter(InterestingProduct.id == id).first()
+    db.session.delete(interesting_product)
+    db.session.commit()
+
+
 
 

@@ -49,6 +49,13 @@
                                     <p> Доступные размеры: {{ info['size'] }} </p>
                                     <p> Бренд: {{ info['brand'] }} </p>
                                     <p> Категория: {{ info['category'] }} </p>
+                                    {% else%}
+                                    <div class="col-10">
+                                        <div class="embed-responsive embed-responsive-16by9">
+                                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/dU6YcBkHYlQ "></iframe>
+                                        </div>
+                                    </div>
+
                                      {% endif %}
 
 
@@ -76,3 +83,6 @@
         <script crossorigin="anonymous" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
       </body>
     </html>
+
+
+
