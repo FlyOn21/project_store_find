@@ -13,12 +13,55 @@
     {%endwith%}
         <body>
             <div class = "container">
-        <h1>
-        </h1>
+        <h3>Пользователи</h3>
+                <form action="" method="post">
+        <table id="table" class="table table-hover">
+            <thead >
+                <th scope="col" style="width: 2%">ID</th>
+                <th scope="col" style="width: 8%">User</th>
+                <th scope="col" style="width: 8%">Mail</th>
+                <th scope="col" style="width: 8%">Name</th>
+                <th scope="col" style="width: 7%">Surname</th>
+                <th scope="col" style="width: 7%">Role</th>
+                <th scope="col" style="width: 8%">Active</th>
+                <th scope="col" style="width: 8%">Send mail</th>
+                <th scope="col" style="width: 6%"></th>
+            </thead>
+             <tbody id="myTable">
+            {% for user in users %}
+                <tr>
+                    <td class="text-center">{{user.id}}</td>
+                    <td >{{user.user}}</td>
+                    <td >{{user.mail}}</td>
+                    <td >{{user.name}}</td>
+                    <td >{{user.surname}}</td>
+
+                    <td ><select name="role">
+                              <option value="{{user.role}}" selected>{{user.role}}</option>
+                              <option value="{{user.role_alternative}}">{{user.role_alternative}}</option>
+                              </select></td>
+                    <td ><select name="active">
+                              <option value="{{user.active}}" selected>{{user.active}}</option>
+                              <option value="{{user.active_alternative}}">{{user.active_alternative}}</option>
+                              </select></td>
+                    <td ><select name="send_mail">
+                              <option value="{{user.send_mail}}" selected>{{user.send_mail}}</option>
+                              <option value="{{user.send_mail_alternative}}">{{user.send_mail_alternative}}</option>
+                              </select></td>
+                     <td class="text-center">
+                        <form action="" method="post">
+                            <input type=hidden value="{{user.id}}" name=product_to_delete />
+                            <input class="btn btn-secondary" type="submit" value="Удалить">
+                        </form>
+                    </td>
+                 </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+                    <input type="submit" value="Записать">
+                    </form>
             <div class = "row">
-                <div class="col-4">
-                    <h2>ADMIN PANEL</h2>
-                </div>
+
                 <div class="col-4">
 
                 </div>

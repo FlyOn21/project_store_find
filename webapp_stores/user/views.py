@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, flash, url_for
+from flask import Blueprint, render_template, flash, url_for, request, current_app
 from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import redirect
+
+from webapp_stores.db_functions import delete_interesting_product
 from webapp_stores.user.model import User, db, InterestingProduct
-from webapp_stores.user.forms import Login_form, Registration_user
+from webapp_stores.user.forms import Login_form, Registration_user,Mailsend_off,Mailsend_on
 
 blueprint = Blueprint('users', __name__, url_prefix='/users')
 
@@ -71,9 +73,7 @@ def logout():
 def my_products():
     if not current_user.is_authenticated:
         return redirect(url_for('index'))
-
     title = 'My products'
-
     user_id=current_user.get_id()
     user = User.query.filter_by(id=user_id).first()
     mail_send = user.send_mail
