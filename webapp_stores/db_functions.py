@@ -1,5 +1,7 @@
 from webapp_stores.stores.model import db, Stores, Product
 from webapp_stores.user.model import InterestingProduct, User
+from sqlalchemy import or_
+
 # from tasks import email_send
 
 def save_data(title, online, url, name, icon):
@@ -72,12 +74,12 @@ def save_interesting_product(product_dict, email=None, price_interesting=None, c
     Функция сохраняет данные о товаре в клиентскую базу данных InterestingProduct
     """
     # Defining user by email (if he has an account, we can connect User and InterestingProduct)
-    #print(email)
+    # print(email)
     try:
         user = User.query.filter(User.email == email).first()
-        #print(user)
+        # print(user)
         id = user.id
-        #print(id)
+        # print(id)
     except:
         id = None
 
@@ -104,10 +106,10 @@ def save_interesting_product(product_dict, email=None, price_interesting=None, c
             url=product_dict['product_url'],
 
             brand=product_dict['brand'],
-            category = product_dict['category'],
-            category_detailed = product_dict['category_detailed'],
-            image = product_dict['product_image'],
-            gender = product_dict['gender'],
+            category=product_dict['category'],
+            category_detailed=product_dict['category_detailed'],
+            image=product_dict['product_image'],
+            gender=product_dict['gender'],
 
             prise_full=product_dict['price'],
             prise_discount=product_dict['product_discount'],
@@ -183,5 +185,13 @@ def delete_interesting_product(id):
     db.session.commit()
 
 
-
-
+def find_product(keyword):
+    if keyword=='':
+        criteria_products = Product.query.all()
+    else:
+        criteria_products = Product.query.filter(
+            or_(Product.id_product.contains(keyword), Product.name.contains(keyword),
+                Product.brand.contains(keyword), Product.category_detailed.contains(keyword),
+                Product.category.contains(keyword), Product.color.contains(keyword),
+                Product.size.contains(keyword), Product.gender.contains(keyword))).all()
+    return criteria_products

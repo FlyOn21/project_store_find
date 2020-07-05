@@ -42,17 +42,17 @@
 
 
           </ul>
-    <form action="/link" method="POST" class="form-inline my-2 my-lg-0">
+    <form action="{{url_for('users.search')}}" method="post" class="form-inline my-2 my-lg-0">
 
             <div class="col-8">
                 <div class="form-group">
                     <label for="formGroupExampleInput"></label>
-                    <input class="form-control mr-sm-2" id="formGroupExampleInput" name="link" type="text">
+                    <input class="form-control mr-sm-2" id="formGroupExampleInput" name="search" type="text">
                 </div>
             </div>
             <div class="col-2">
                 <div class="form-group">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" >Поиск</button>
                 </div>
             </div>
 

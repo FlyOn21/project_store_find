@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template,request
 import locale
 import ast
 from flask_migrate import Migrate
@@ -42,20 +42,22 @@ def create_app():
             # print(info)
 
             with app.app_context():
+
                 # Сохранение данных в общую базу данных
                 save_data_product(info)
 
                 # Сохранение данных в клиентскую базу данных
                 size_interesting = request.form['size']
-                # print('______________________________________')
+                print('______________________________________')
                 if current_user.is_anonymous is True:
                     email = request.form['email']
                 else:
                     email = current_user_mail()
 
+
                 save_interesting_product(product_dict=info, email=email, price_interesting=None, color_interesting=None,
                                          size_interesting=size_interesting)
-                # print('_______________________________________')
+                print('_______________________________________')
 
                 img_list = info['product_image']
                 # print(type(img_list))
@@ -63,7 +65,7 @@ def create_app():
                 #     img_list_all = ast.literal_eval(img_list)
                 # else:
                 #     img_list_all = info['product_image']
-                if len(img_list) > 60:
+                if len(img_list)>60:
                     img_clear_1 = (img_list.strip('[')).strip(']')
                     img_clear_2 = img_clear_1.split(',')
                     all_img = []
@@ -117,4 +119,14 @@ def create_app():
             all_product = Product.query.count()
             return all_product
 
+
     return app
+
+
+
+
+
+
+
+
+
