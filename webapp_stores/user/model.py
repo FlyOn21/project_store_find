@@ -14,6 +14,7 @@ class User(db.Model,UserMixin):
     username = db.Column(db.String,index = True,unique = True)
     password = db.Column(db.String)
     is_active = db.Column(db.Boolean,nullable = False)
+    send_mail = db.Column(db.Boolean,default = True)
     role = db.Column(db.String,index = True)
     interesting_products=db.relationship('InterestingProduct', backref='client')
 
@@ -33,6 +34,8 @@ class User(db.Model,UserMixin):
     @property
     def is_user(self):
         return self.role =='user'
+
+
 
 class InterestingProduct(db.Model):
     """

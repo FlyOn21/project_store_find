@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, StringField, PasswordField, HiddenField, BooleanField
+from flask_login import current_user
+from wtforms import SubmitField, StringField, PasswordField, HiddenField, BooleanField, FormField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
 from webapp_stores.user.model import User
 
@@ -33,4 +34,17 @@ class Registration_user(FlaskForm):
     def validate_email(self, email):
         user_mail = User.query.filter_by(email=email.data).count()
         if user_mail > 0:
-            raise ValidationError('Пользователь с таким мылом сушествует')
+            raise ValidationError('Пользователь с таким e-mail сушествует')
+
+class Mailsend_off(FlaskForm):
+    """Форма для дизактивации отправки сообшений на email"""
+    # on = FormField('Включить', render_kw={"class": "btn btn-primary btn-lg disabled"})
+
+    off = SubmitField('Выключить', render_kw={"class": "btn btn-primary"})
+
+
+class Mailsend_on(FlaskForm):
+    """Форма для активации отправки сообшений на email"""
+    on = SubmitField('Включить', render_kw={"class": "btn btn-primary" })
+    # off = StringField('Выключить', render_kw={"class": "btn btn-primary btn-lg disabled"})
+

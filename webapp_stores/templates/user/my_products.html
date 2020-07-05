@@ -5,8 +5,11 @@
 <div class="container">
                         <h2>Мои товары</h2>
                     </div>
-<div class = "col-4"></div>
-<div class  = "col-8"></div>
+<div class = "col-8"><strong>{{send}}</strong><form action="{{url_for('users.on_off')}}" method="POST">
+          {{form.hidden_tag() }}
+          <p>{{form.on}}  {{form.off}}</p>
+     </form></div>
+<div class  = "col-4"></div>
 
 <div class="container" style="margin-top:35px">
 <!--    <h4>Товаров на странице</h4>-->

@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, flash, url_for
 from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import redirect
 from webapp_stores.user.model import User, db, InterestingProduct
-from webapp_stores.user.forms import Login_form, Registration_user
+from webapp_stores.user.forms import Login_form, Registration_user,Mailsend_off,Mailsend_on
 
 blueprint = Blueprint('users', __name__, url_prefix='/users')
 
@@ -44,7 +44,7 @@ def register_do():
     form = Registration_user()
     if form.validate_on_submit():
         new_user = User(name=form.name.data, email=form.email.data, surname=form.surname.data,
-                        username=form.username.data, is_active=True, role='user')
+                        username=form.username.data, is_active=True, role='user', send_mail = True)
         new_user.save_password(form.password.data)
         db.session.add(new_user)
         db.session.commit()
@@ -73,9 +73,48 @@ def my_products():
 
     user_id=current_user.get_id()
     user = User.query.filter_by(id=user_id).first()
+    mail_send = user.send_mail
+    user_interesting_products = InterestingProduct.query.filter_by(client_id=user_id).all()
+    if mail_send == True:
+        send = 'Оповищение на e-mail активно'
+        form = Mailsend_off()
+        return render_template('user/my_products.html', title=title, products=user_interesting_products, send=send,
+                               form=form)
+    else:
+        send = 'Оповищение на e-mail отключено'
+        form = Mailsend_on()
+        return render_template('user/my_products.html', title=title, products=user_interesting_products, send=send,
+                               form=form)
+
     #print(user.name)
     # mail = query.email
 
-    user_interesting_products=InterestingProduct.query.filter_by(client_id=user_id).all()
+
     #print(user_interesting_products)
-    return render_template('user/my_products.html', title=title, products=user_interesting_products)
+
+
+@blueprint.route("/on_off", methods=['POST'])
+def on_off():
+    user_id = current_user.get_id()
+    user = User.query.filter_by(id=user_id).first()
+    mail_send = user.send_mail
+    if mail_send == True:
+        form = Mailsend_off()
+        if form.validate_on_submit():
+            user_id = current_user.get_id()
+            user_off = User.query.filter_by(id=user_id).first()
+            user_off.send_mail = False
+            db.session.add(user_off)
+            db.session.commit()
+            return redirect(url_for('users.my_products'))
+    else:
+        form = Mailsend_on()
+        if form.validate_on_submit():
+            user_id = current_user.get_id()
+            user_off = User.query.filter_by(id=user_id).first()
+            user_off.send_mail = True
+            db.session.add(user_off)
+            db.session.commit()
+            return redirect(url_for('users.my_products'))
+
+

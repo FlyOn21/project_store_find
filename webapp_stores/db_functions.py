@@ -1,6 +1,5 @@
 from webapp_stores.stores.model import db, Stores, Product
 from webapp_stores.user.model import InterestingProduct, User
-# from webapp_stores.mail.views import email
 # from tasks import email_send
 
 def save_data(title, online, url, name, icon):
@@ -153,19 +152,26 @@ def check_product(info, id):
     db.session.commit()
 
     # Informing clients about availability of interesting product
-    if interesting_product.size_interesting in interesting_product.size_available:
-        if interesting_product.notification_sent==1:
-            print(f'Уведомление клиенту {interesting_product.user_email} о товаре уже отправлено'
-                  f' {interesting_product.url}')
-        else:
-            print(f'Для клиента {interesting_product.user_email} найден необходимый размер '
-                f'{interesting_product.size_interesting} товара: {interesting_product.url}')
-            # email_send.delay(e_mail=interesting_product.user_email, find_size=interesting_product.size_interesting,
-            #                  product=interesting_product.url)
-        # Вставить функцию для отправления сообщений на почту + удаление строки ввобще
-            interesting_product.notification_sent = 1
-            db.session.add(interesting_product)
-            db.session.commit()
+    mail_on_off = User.query.filter_by(id=interesting_product.client_id).first()
+    if mail_on_off.send_mail == True:
+        if interesting_product.size_interesting in interesting_product.size_available:
+            if interesting_product.notification_sent==1:
+                print(f'Уведомление клиенту {interesting_product.user_email} о товаре уже отправлено'
+                      f' {interesting_product.url}')
+            else:
+                print(f'Для клиента {interesting_product.user_email} найден необходимый размер '
+                    f'{interesting_product.size_interesting} товара: {interesting_product.url}')
+                # email_send.delay(e_mail=interesting_product.user_email, find_size=interesting_product.size_interesting,
+                #                  product=interesting_product.url)
+            # Вставить функцию для отправления сообщений на почту + удаление строки ввобще
+                interesting_product.notification_sent = 1
+                db.session.add(interesting_product)
+                db.session.commit()
+    else:
+        print('Клиент отключил оповищение о найденых товарах')
+        interesting_product.notification_sent = 1
+        db.session.add(interesting_product)
+        db.session.commit()
 
 
 
