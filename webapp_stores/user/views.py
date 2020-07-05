@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, flash, url_for
 from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import redirect
 from webapp_stores.user.model import User, db, InterestingProduct
-from webapp_stores.user.forms import Login_form, Registration_user,Mailsend_off,Mailsend_on
+from webapp_stores.user.forms import Login_form, Registration_user
 
 blueprint = Blueprint('users', __name__, url_prefix='/users')
 
@@ -44,7 +44,7 @@ def register_do():
     form = Registration_user()
     if form.validate_on_submit():
         new_user = User(name=form.name.data, email=form.email.data, surname=form.surname.data,
-                        username=form.username.data, is_active=True, role='user', send_mail = True)
+                        username=form.username.data, is_active=True, role='user')
         new_user.save_password(form.password.data)
         db.session.add(new_user)
         db.session.commit()
@@ -69,6 +69,9 @@ def logout():
 
 @blueprint.route("/my_products")
 def my_products():
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
+
     title = 'My products'
 
     user_id=current_user.get_id()
@@ -89,8 +92,13 @@ def my_products():
     #print(user.name)
     # mail = query.email
 
+    #print(user.name)
+    # mail = query.email
+
 
     #print(user_interesting_products)
+
+
 
 
 @blueprint.route("/on_off", methods=['POST'])
@@ -118,3 +126,13 @@ def on_off():
             return redirect(url_for('users.my_products'))
 
 
+
+
+@blueprint.route("/delete_product", methods=['POST'])
+def delete_product():
+    id=int(request.form['product_to_delete'])
+    print(type(id))
+    with current_app.app_context():
+        delete_interesting_product(id)
+
+    return redirect(url_for('users.my_products'))

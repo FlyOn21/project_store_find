@@ -4,8 +4,11 @@ from webapp_stores.stores.butik import get_full_butik, get_butik_product
 from webapp_stores.stores.randevu import get_full_randevu, get_randevu_product
 from webapp_stores.stores.stores import get_ali_data, get_butik_data, get_randevu_data
 from webapp_stores.db_functions import save_data_product, check_product, create_dict_interesting_products, \
-    save_interesting_product
+    save_interesting_product, delete_interesting_product
 from webapp_stores.utils import get_info
+
+
+from webapp_stores.user.model import InterestingProduct
 
 
 # def run():
@@ -95,18 +98,31 @@ def add_interesting_product(url, email=None, price_interesting=None, color_inter
     app = create_app()
     with app.app_context():
         dict = get_info(url)
-        #print(dict)
+        # print(dict)
         save_interesting_product(dict, email=email, price_interesting=price_interesting,
                                  color_interesting=color_interesting, size_interesting=size_interesting)
 
 
 if __name__ == '__main__':
-    # c = run()
-    #insteresting_product_check()
-    # add_to_products_all_butik()
-    # add_to_products_url_butik() # put url in brackets
-    # add_to_products_all_randevu()
-    # add_to_products_url_randevu() # put url in brackets
-    add_interesting_product('https://www.rendez-vous.ru/catalog/female/shlepantsy/calvin_klein_jaimee_zheltyy-2274485/', email='nat1@example.com',size_interesting='37')
-    #ali='https://aliexpress.ru/item/4001040161418.html?spm=a2g0s.8937460.0.0.559e2e0eXwHzO1&_ga=2.10782772.1228535348.1593582717-1461091439.1591961209'
-    #add_interesting_product(ali, email='da@example.com',size_interesting='50')
+# c = run()
+# insteresting_product_check()
+# add_to_products_all_butik()
+# add_to_products_url_butik() # put url in brackets
+# add_to_products_all_randevu()
+# add_to_products_url_randevu() # put url in brackets
+# add_interesting_product('https://www.rendez-vous.ru/catalog/female/shlepantsy/calvin_klein_jaimee_zheltyy-2274485/', email='nat1@example.com',size_interesting='37')
+# ali='https://aliexpress.ru/item/4001040161418.html?spm=a2g0s.8937460.0.0.559e2e0eXwHzO1&_ga=2.10782772.1228535348.1593582717-1461091439.1591961209'
+# add_interesting_product(ali, email='da@example.com',size_interesting='50')
+
+
+# app = create_app()
+# with app.app_context():
+#     delete_interesting_product(2)
+
+    app = create_app()
+    with app.app_context():
+        interesting_product = InterestingProduct.query.filter(InterestingProduct.id == 1).first()
+        a=interesting_product.image
+        print(a.replace('[','').split(',', 1)[0].strip("'"))
+
+
