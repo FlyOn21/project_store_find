@@ -163,8 +163,9 @@ def check_product(info, id):
             else:
                 print(f'Для клиента {interesting_product.user_email} найден необходимый размер '
                     f'{interesting_product.size_interesting} товара: {interesting_product.url}')
-                # email_send.delay(e_mail=interesting_product.user_email, find_size=interesting_product.size_interesting,
-                #                  product=interesting_product.url)
+                from tasks import email_send
+                email_send.delay(e_mail=interesting_product.user_email, find_size=interesting_product.size_interesting,
+                                 product=interesting_product.url)
             # Вставить функцию для отправления сообщений на почту + удаление строки ввобще
                 interesting_product.notification_sent = 1
                 db.session.add(interesting_product)
