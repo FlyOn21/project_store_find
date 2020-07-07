@@ -1,5 +1,6 @@
 from flask import Flask, render_template,request
 import locale
+
 import ast
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user
@@ -9,7 +10,7 @@ from webapp_stores.stores.ali import Aliexpress
 from webapp_stores.user.views import blueprint as user_bp
 from webapp_stores.product.views import blueprint as prod_bp
 from webapp_stores.admin.views import blueprint as admin_bp
-# from webapp_stores.mail.views import blueprint as mail_bp
+
 from webapp_stores.db_functions import save_data_product, save_interesting_product
 from webapp_stores.stores.butik import get_butik_product
 from webapp_stores.stores.randevu import get_randevu_product
@@ -42,7 +43,7 @@ def create_app():
             # print(info)
 
             with app.app_context():
-
+                print('______________________________________')
                 # Сохранение данных в общую базу данных
                 save_data_product(info)
 
@@ -53,6 +54,8 @@ def create_app():
                     email = request.form['email']
                 else:
                     email = current_user_mail()
+
+                print(email)
 
 
                 save_interesting_product(product_dict=info, email=email, price_interesting=None, color_interesting=None,
@@ -71,16 +74,17 @@ def create_app():
                     all_img = []
                     for img in img_clear_2:
                         img_clear = (img.strip("'")).strip(" '")
-                        print(img_clear)
+                        # print(img_clear)
                         all_img.append(img_clear)
 
                     info['product_image'] = all_img
                     print(info)
 
                 user = current_user.get_id()
-                query = User.query.filter_by(id=user).first()
-                name = query.username
-                print(name)
+                if user != None:
+                    query = User.query.filter_by(id=user).first()
+                    name = query.username
+                    print(name)
 
 
 

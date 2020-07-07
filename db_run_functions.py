@@ -92,7 +92,8 @@ def insteresting_product_check():
             check_product(info, id)  # нужно добавить в данную функцию отправления сообщения на почту в данной функции
 
 
-def add_interesting_product(url, email=None, price_interesting=None, color_interesting=None, size_interesting=None):
+def add_interesting_product(url, email=None, price_interesting=None, color_interesting=None,
+                            size_interesting=None):
     """
     Функция сохраняет товар, интересный клиенту, в базу InterestingProduct
     """
@@ -104,7 +105,7 @@ def add_interesting_product(url, email=None, price_interesting=None, color_inter
                                  color_interesting=color_interesting, size_interesting=size_interesting)
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 # c = run()
 # insteresting_product_check()
 # add_to_products_all_butik()

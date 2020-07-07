@@ -1,8 +1,4 @@
 Привет друг мы нашли то что ты искал.
 
-{%for prod in dict%}
-Название {{prod['name']}}
-Бренд {{prod['brand']}}
-Магазин {{prod['store']}}
-Категория {{prod['category']}}
-{%endfor%}
+<p>Искомый размер{{find_size}}</p>
+<p>Ссылка на товар в магазине {{product}}</p>
