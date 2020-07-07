@@ -14,12 +14,12 @@
         <body>
             <div class = "container">
         <h3>Пользователи</h3>
-                <form action="" method="post">
+
         <table id="table" class="table table-hover">
             <thead >
                 <th scope="col" style="width: 2%">ID</th>
                 <th scope="col" style="width: 8%">User</th>
-                <th scope="col" style="width: 8%">Mail</th>
+                <th scope="col" style="width: 20%">Mail</th>
                 <th scope="col" style="width: 8%">Name</th>
                 <th scope="col" style="width: 7%">Surname</th>
                 <th scope="col" style="width: 7%">Role</th>
@@ -30,11 +30,12 @@
              <tbody id="myTable">
             {% for user in users %}
                 <tr>
-                    <td class="text-center">{{user.id}}</td>
-                    <td >{{user.user}}</td>
-                    <td >{{user.mail}}</td>
-                    <td >{{user.name}}</td>
-                    <td >{{user.surname}}</td>
+                    <form action="{{url_for('admin.changes')}}" method="post">
+                    <td ><input type=hidden value="{{user.id}}"  name=id />{{user.id}}</td>
+                    <td ><input value="{{user.user}}" required placeholder = "{{user.user}}" name=username size="10px" /></td>
+                    <td ><input type=email value="{{user.mail}}" required placeholder = "{{user.mail}}" name = "mail" /></td>
+                    <td ><input value="{{user.name}}" required placeholder = "{{user.name}}" name=name size="10px" /></td>
+                    <td ><input value="{{user.surname}}" required placeholder = "{{user.surname}}" name=surname size="10px"/></td>
 
                     <td ><select name="role">
                               <option value="{{user.role}}" selected>{{user.role}}</option>
@@ -48,18 +49,22 @@
                               <option value="{{user.send_mail}}" selected>{{user.send_mail}}</option>
                               <option value="{{user.send_mail_alternative}}">{{user.send_mail_alternative}}</option>
                               </select></td>
-                     <td class="text-center">
-                        <form action="" method="post">
-                            <input type=hidden value="{{user.id}}" name=product_to_delete />
-                            <input class="btn btn-secondary" type="submit" value="Удалить">
+                        <td class="text-center">
+                        <input class="btn btn-secondary" type="submit" value="Записать">
+                        </td>
+                        </form>
+                        <td class="text-center">
+                        <form action="{{url_for('admin.delete_user')}}" method="POST">
+                            <input type=hidden value="{{user.id}}" name=user_to_delete />
+                            <input class="btn btn-danger" type="submit" value="Удалить">
                         </form>
                     </td>
+
                  </tr>
             {% endfor %}
             </tbody>
         </table>
-                    <input type="submit" value="Записать">
-                    </form>
+
             <div class = "row">
 
                 <div class="col-4">

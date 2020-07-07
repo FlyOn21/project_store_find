@@ -16,11 +16,11 @@ class User(db.Model,UserMixin):
     is_active = db.Column(db.Boolean,nullable = False)
     send_mail = db.Column(db.Boolean,default = True)
     role = db.Column(db.String,index = True)
-    interesting_products=db.relationship('InterestingProduct', backref='client')
+    interesting_products= db.relationship('InterestingProduct', backref='client')
 
     def __repr__(self):
-        return f'User:{self.username},role:{self.role},id:{self.id}, active:{self.is_active},mail:{self.email},' \
-               f'send_mail:{self.send_mail},name:{self.name},surname{self.surname}'
+        return f'id:{self.id}, User:{self.username},role:{self.role}, active:{self.is_active},mail:{self.email},' \
+               f'send_mail:{self.send_mail},name:{self.name},surname:{self.surname}'
 
     def save_password(self,password):
         self.password = generate_password_hash(password)
