@@ -1,5 +1,5 @@
 import requests as req
-from webapp_stores import db_functions
+from webapp_stores.db_functions import save_data_product
 from webapp_stores.proxy import get_query,curs
 from bs4 import BeautifulSoup
 import time
@@ -293,7 +293,7 @@ class Aliexpress():
                         print('------------------------------------------------')
                         print(ali_product_dict)
                         print('------------------------------------------------')
-                        db_functions.save_data_product(product_dict=ali_product_dict)
+                        save_data_product(product_dict=ali_product_dict)
                         # return ali_product_dict
                     except(KeyError, TypeError):
                         pass

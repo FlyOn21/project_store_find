@@ -1,14 +1,15 @@
 from flask import Blueprint, render_template, flash, url_for, request, current_app
 from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import redirect
+# from webapp_stores.user.model import User, db, InterestingProduct
+# from webapp_stores.user.forms import Login_form, Registration_user
+#
+# from webapp_stores.db_functions import delete_interesting_product
 from webapp_stores.user.model import User, db, InterestingProduct
-from webapp_stores.user.forms import Login_form, Registration_user
-
-from webapp_stores.db_functions import delete_interesting_product
-from webapp_stores.user.model import User, db, InterestingProduct
-from webapp_stores.user.forms import Login_form, Registration_user,Mailsend_off,Mailsend_on
+from webapp_stores.user.forms import Login_form, Registration_user,Mailsend_off,Mailsend_on,Password_reset,Reset_pass_process
 from webapp_stores.db_functions import delete_interesting_product, find_product, save_interesting_product
 from webapp_stores.utils import get_info
+
 
 blueprint = Blueprint('users', __name__, url_prefix='/users')
 
@@ -63,6 +64,35 @@ def register_do():
                 redirect(url_for('users.register'))
     flash('Пожалуйста исправте ошибки в форме')
     return redirect(url_for('users.register'))
+
+
+@blueprint.route('/reset_pass')
+def reset_pass():
+    title = 'Смена пароля'
+    form = Password_reset()
+    return render_template('user/reset_pass.html',title = title,form = form)
+
+@blueprint.route('/process_reset_pass',methods=['POST'])
+def process_reset_pass():
+    from tasks import email_reset_pass
+    form = Password_reset()
+    if form.validate_on_submit():
+        print('-------')
+        email = form.email.data
+        user = User.query.filter_by(email = email).first()
+        print(user)
+        print('-------')
+        if user:
+            url = 'http://127.0.0.1:5000' + str(url_for('users.form_reset_pass')) + '?' + 'mail=' + str(email)
+            print(url)
+
+            # email_reset_pass.delay(e_mail,url)
+
+@blueprint.route('/form_reset_pass',methods=['GET'])
+def form_reset_pass():
+    title = 'Форма смены пароля'
+    form = Reset_pass_process()
+    return render_template('user/reset_pass_process.html',title = title,form = form)
 
 
 @blueprint.route('/logout')

@@ -12,6 +12,17 @@ class Login_form(FlaskForm):
     remember_me = BooleanField('Запомни меня', default=True, render_kw={'class': "form-check-input"})
     submit = SubmitField('SEND', render_kw={"class": "btn btn-primary"})
 
+class Password_reset(FlaskForm):
+    email = StringField('E-mail', validators=[DataRequired(), Email()], render_kw={'class': "form-control"})
+    hidden_f = HiddenField()
+    submit = SubmitField('Отправить', render_kw={"class": "btn btn-primary"})
+
+class Reset_pass_process(FlaskForm):
+    password = PasswordField('Password', [DataRequired(), EqualTo('confirm', message='Passwords must match')
+                                          ], render_kw={'class': "form-control"})
+    confirm = PasswordField('Repeat Password', render_kw={'class': "form-control"})
+    submit = SubmitField('Сменить пароль', render_kw={"class": "btn btn-primary"})
+
 
 class Registration_user(FlaskForm):
     name = StringField('Name', [Length(min=1, max=25), DataRequired()], render_kw={'class': 'form-control'})

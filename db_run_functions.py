@@ -3,9 +3,10 @@ from webapp_stores.stores.ali import Aliexpress
 from webapp_stores.stores.butik import get_full_butik, get_butik_product
 from webapp_stores.stores.randevu import get_full_randevu, get_randevu_product
 from webapp_stores.stores.stores import get_ali_data, get_butik_data, get_randevu_data
-from webapp_stores.db_functions import save_data_product, check_product, create_dict_interesting_products, \
+from webapp_stores.db_functions import save_data_product, \
     save_interesting_product, delete_interesting_product,find_product
-from webapp_stores.utils import get_info
+# from webapp_stores.utils import get_info
+# from webapp_stores.check.check_product import check_product
 
 
 
@@ -79,17 +80,17 @@ def add_to_products_all_randevu():
         get_full_randevu()
 
 
-def insteresting_product_check():
-    """
-    Функция проверяет наличие товров для клиента (база InterestingProduct) и отрпавляет уведомление
-    """
-    app = create_app()
-    with app.app_context():
-        all_interesting_products = create_dict_interesting_products()
-        for id, url in all_interesting_products.items():
-            all_interesting_products[id] = get_info(url)
-        for id, info in all_interesting_products.items():
-            check_product(info, id)  # нужно добавить в данную функцию отправления сообщения на почту в данной функции
+# def insteresting_product_check():
+#     """
+#     Функция проверяет наличие товров для клиента (база InterestingProduct) и отрпавляет уведомление
+#     """
+#     app = create_app()
+#     with app.app_context():
+#         all_interesting_products = create_dict_interesting_products()
+#         for id, url in all_interesting_products.items():
+#             all_interesting_products[id] = get_info(url)
+#         for id, info in all_interesting_products.items():
+#             check_product(info, id)  # нужно добавить в данную функцию отправления сообщения на почту в данной функции
 
 
 def add_interesting_product(url, email=None, price_interesting=None, color_interesting=None,

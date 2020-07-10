@@ -196,5 +196,5 @@ def current_product():
         return render_template('product/one_product.html', dict=result_current)
 
 
-if __name__ == "__main__":
-    prev_page()
+# if __name__ == "__main__":
+#     prev_page()

@@ -35,3 +35,14 @@ def email(e_mail,find_size=None,product=None):
 #     return prod_clear
 # if __name__ =="__main__":
 #     zapros()
+def reset_pass_mail(e_mail,url):
+    app = create_app()
+    mail = Mail(app)
+    with app.app_context():
+        # dict = zapros()
+        msg = Message("Перейдите по ссылке для смены вашего пароля",sender="zhogolevpv@gmail.com",
+                      recipients=[e_mail])
+        msg.body = render_template('email/reset_mail.txt',url = url )
+        msg.html = render_template('email/reset_mail.html',url = url)
+        mail.send(msg)
+        print("__________Сообщение отправлено____________")

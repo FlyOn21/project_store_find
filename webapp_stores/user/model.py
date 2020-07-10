@@ -3,6 +3,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash,check_password_hash
 
 
+
 class User(db.Model,UserMixin):
     """
     Класс описывает базу данных, содержащих информацию о пользователях сервиса
@@ -21,6 +22,7 @@ class User(db.Model,UserMixin):
     def __repr__(self):
         return f'id:{self.id}, User:{self.username},role:{self.role}, active:{self.is_active},mail:{self.email},' \
                f'send_mail:{self.send_mail},name:{self.name},surname:{self.surname}'
+
 
     def save_password(self,password):
         self.password = generate_password_hash(password)
