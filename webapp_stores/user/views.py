@@ -1,15 +1,13 @@
 from flask import Blueprint, render_template, flash, url_for, request, current_app
 from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import redirect
-# from webapp_stores.user.model import User, db, InterestingProduct
-# from webapp_stores.user.forms import Login_form, Registration_user
-#
-# from webapp_stores.db_functions import delete_interesting_product
 from webapp_stores.user.model import User, db, InterestingProduct
 from webapp_stores.user.forms import Login_form, Registration_user,Mailsend_off,Mailsend_on,Password_reset,Reset_pass_process
 from webapp_stores.db_functions import delete_interesting_product, find_product, save_interesting_product
 from webapp_stores.utils import get_info
-
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from datetime import timedelta,datetime
+from webapp_stores.config import SECRET_KEY
 
 blueprint = Blueprint('users', __name__, url_prefix='/users')
 
@@ -83,13 +81,43 @@ def process_reset_pass():
         print(user)
         print('-------')
         if user:
-            url = 'http://127.0.0.1:5000' + str(url_for('users.form_reset_pass')) + '?' + 'mail=' + str(email)
+            time = str(datetime.now())
+            print(time)
+            info = serializer(email,time)
+            print(info)
+            url = 'http://127.0.0.1:5000' + str(url_for('users.form_reset_pass')) + '?' +'data='+info
             print(url)
+            # email_reset_pass.delay(email,url)
+            return render_template('user/reset_pass.html', title = f'Ссылка на смену пароля отправлена на email:{email}',form = None)
+
+def deltatime():
+    """Функция определения активности ссылки на смену пароля"""
+    pass
+
+def serializer(email,time):
+    """Функция кодирования данных о мыле пользователя и времени активности ссылки"""
+    ser = Serializer(SECRET_KEY,10)
+    s_mail = ser.dumps({'email':email,'time':time}).decode('utf-8')
+    print(s_mail)
+    return s_mail
+
+def deserializer(data):
+    """Декадирования данных из ссылки на смену пароля"""
+    ser = Serializer(SECRET_KEY, 10)
+    resalt = ser.loads(data)
+    return resalt
+
 
             # email_reset_pass.delay(e_mail,url)
 
 @blueprint.route('/form_reset_pass',methods=['GET'])
 def form_reset_pass():
+    data = request.args.get('data')
+    info = deserializer(data)
+    time = datetime.strptime(info['time'],'%Y-%m-%d %H:%M:%S.%f')
+    print(time)
+    print(type(time))
+    print(info)
     title = 'Форма смены пароля'
     form = Reset_pass_process()
     return render_template('user/reset_pass_process.html',title = title,form = form)

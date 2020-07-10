@@ -14,9 +14,15 @@
 <div class="container">
   <div class="row justify-content-md-center">
 
-    <div class="col col-lg-6">
-      <h2>{{title}}</h2>
-    <form action="{{url_for('users.process_reset_pass')}}" method="POST">
+    <div class="col col-lg-12">
+
+        {%if form == None %}
+        <div class="container">
+        <h4>{{title}}</h4>
+            </div>
+        {%elif form!= None%}
+        <h2>{{title}}</h2>
+      <form action="{{url_for('users.process_reset_pass')}}" method="POST">
           {{form.hidden_tag() }}
           <div class="form-group">
               {{form.email.label}}
@@ -24,7 +30,7 @@
           </div>
              <p>{{form.submit}}</p>
      </form>
-
+      {%endif%}
     </div>
 
   </div>
