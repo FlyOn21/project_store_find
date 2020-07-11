@@ -26,6 +26,7 @@ class User(db.Model,UserMixin):
 
     def save_password(self,password):
         self.password = generate_password_hash(password)
+        return self.password
 
     def check_password(self,password):
         return check_password_hash(self.password,password)

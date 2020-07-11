@@ -16,7 +16,7 @@
                     </div>
 <div class = "col-4">
 
-    <form action="" method="POST">
+    <form action="{{url_for('users.change_password')}}" method="POST">
           {{form.hidden_tag() }}
 
         <div class="form-group">
@@ -27,7 +27,7 @@
             {{form.confirm.label}}
             {{form.confirm()}}
         </div>
-
+        <input type=hidden value="{{user}}" name=user />
         <p>{{form.submit}}</p>
      </form>
 <div class  = "col-8">

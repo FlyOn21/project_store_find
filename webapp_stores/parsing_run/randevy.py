@@ -10,7 +10,7 @@ def rand():
         randezvous_status = get_randevu_data()
         if randezvous_status is not False:
             get_full_randevu()
-            save_data_product(get_full_randevu())
+            # save_data_product(get_full_randevu())
         else:
             print('Рандеву был недоступен, обновление базы не выполнено')
             pass

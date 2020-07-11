@@ -48,5 +48,10 @@ def periodic_tasks(sender,**kwargs):
     sender.add_periodic_task(crontab(minute='*/1200'),butiks.s())
     sender.add_periodic_task(crontab(minute='*/1200'),alis.s())
     sender.add_periodic_task(crontab(minute='*/2'),proxy_1.s())
-    sender.add_periodic_task(crontab(minute='*/1'), insteresting_product_check_do.s())
+    # sender.add_periodic_task(crontab(minute='*/20'), insteresting_product_check_do.s())
+
+if __name__ == '__main__':
+    # alis()
+    randevys()
+    # butiks()
 

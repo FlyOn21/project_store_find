@@ -3,16 +3,17 @@ from bs4 import BeautifulSoup
 from pprint import PrettyPrinter  # красиво выводит результат из словарей и списков
 import requests
 from webapp_stores.db_functions import save_data_product
+from webapp_stores.proxy.get_query import get_html_all
 
 
-def get_html(url):
-    try:
-        result = requests.get(url)
-        result.raise_for_status()
-        return result.text
-    except(requests.RequestException, ValueError):
-        print('Сетевая ошибка')
-        return False
+# def get_html(url):
+#     try:
+#         result = requests.get(url)
+#         result.raise_for_status()
+#         return result.text
+#     except(requests.RequestException, ValueError):
+#         print('Сетевая ошибка')
+#         return False
 
 
 def get_items(url):
@@ -20,7 +21,7 @@ def get_items(url):
     Функция получает все ссылки товары со страницы url (список urls органичен и
     указан в get_full_butik) и сохраняет их в csv файл
     """
-    html = get_html(url)
+    html = get_html_all(url)
     if html:
         soup = BeautifulSoup(html, 'html.parser')
 
@@ -37,20 +38,6 @@ def get_items(url):
                 pass
 
         return links
-
-
-def pages_in_category(url):
-    """
-    Функция высчитывает количество страниц в категории (список urls органичен и
-    указан в get_full_butik)
-    """
-    html = get_html(url)
-    if html:
-        soup = BeautifulSoup(html, 'html.parser')
-
-        number_of_pages = int(soup.find('ul', class_='pagination').find_all('li', class_='page')[-1].get_text())
-
-        return number_of_pages
 
 
 # Парсинг всех ссылок на товары
@@ -73,8 +60,8 @@ def get_full_randevu():
                     'https://www.rendez-vous.ru/catalog/boys/']
 
     for category in full_randevu:
-        pages = pages_in_category(category)
-        # links=[]
+        pages = pages_in_category(url=category)
+        print(pages)
         for p in range(1, pages + 1):
             final_link = category + 'page/' + str(p) + '/'
             print('\nCategory :' + final_link + ' ' + str(p) + '/' + str(pages))
@@ -87,18 +74,33 @@ def get_full_randevu():
                     print('I cant get data from ' + link)
 
 
+def pages_in_category(url):
+    """
+    Функция высчитывает количество страниц в категории (список urls органичен и
+    указан в get_full_butik)
+    """
+    k = 0
+    while k<100:
+        html = get_html_all(url)
+        if html:
+            soup = BeautifulSoup(html, 'html.parser')
+            number_of_pages = int(soup.find('ul', class_='pagination').find_all('li', class_='page')[-1].get_text())
+            print("-----------", number_of_pages)
+            return number_of_pages
+        k=k+1
+
+
+
 # Парсинг данных об одном товаре по ссылке на него
 def get_randevu_product(url):
     """
     Функция парсит данные о товаре (url) в словарь.
     """
-    html = get_html(url)
+    html = get_html_all(url)
     if html:
         soup = BeautifulSoup(html, 'html.parser')
-
         pp = PrettyPrinter(indent=2)
-        #pp.pprint(soup)
-
+        # pp.pprint(soup)
 
         # if product is available
         store = 'Randevu'
@@ -106,16 +108,18 @@ def get_randevu_product(url):
         image = soup.find('div', class_='item-info').find('div', class_='carousel-image-list').find('img')[
             'data-src']
 
-        name= ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])['name']
+        name = ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])['name']
         id = soup.find('section', id='catalog-item')['data-model']
 
         price = float(
             ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])['price']) if \
             ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])[
                 'price'] else None
-        discount = float(ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])['priceFromCart']) if 'priceFromCart' in ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo']) else None
-        if discount==None:
-            discount=price
+        discount = float(ast.literal_eval(soup.find('div', class_='item-checkout').find('button')['data-productinfo'])[
+                             'priceFromCart']) if 'priceFromCart' in ast.literal_eval(
+            soup.find('div', class_='item-checkout').find('button')['data-productinfo']) else None
+        if discount == None:
+            discount = price
 
         brand = ast.literal_eval(soup.find('button', class_='btn-block btn-primary btn')['data-productinfo'])[
             'brand']
@@ -152,6 +156,7 @@ def get_randevu_product(url):
         # print(dict)
 
         return dict
+
 
 if __name__ == '__main__':
     c = get_full_randevu()

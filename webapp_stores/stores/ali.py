@@ -264,7 +264,7 @@ class Aliexpress():
             return ali_dict
 
     def ali_product_collection(self, final_link):
-        html = get_query.get_html(url=final_link)
+        html = get_query.get_html_all(url=final_link)
         if html:
             soup = BeautifulSoup(html, 'html.parser')
             try:

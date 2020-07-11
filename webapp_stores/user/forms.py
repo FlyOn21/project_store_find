@@ -18,9 +18,11 @@ class Password_reset(FlaskForm):
     submit = SubmitField('Отправить', render_kw={"class": "btn btn-primary"})
 
 class Reset_pass_process(FlaskForm):
+
     password = PasswordField('Password', [DataRequired(), EqualTo('confirm', message='Passwords must match')
                                           ], render_kw={'class': "form-control"})
     confirm = PasswordField('Repeat Password', render_kw={'class': "form-control"})
+    user_current = HiddenField()
     submit = SubmitField('Сменить пароль', render_kw={"class": "btn btn-primary"})
 
 
