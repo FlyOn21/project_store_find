@@ -51,7 +51,7 @@ def periodic_tasks(sender,**kwargs):
     # sender.add_periodic_task(crontab(minute='*/20'), insteresting_product_check_do.s())
 
 if __name__ == '__main__':
-    # alis()
-    randevys()
+    alis()
+    # randevys()
     # butiks()
 
