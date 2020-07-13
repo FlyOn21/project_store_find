@@ -2,7 +2,7 @@ from celery import Celery
 from webapp_stores import create_app
 from webapp_stores.parsing_run import butik, randevy, ali
 from celery.schedules import crontab
-from webapp_stores.proxy import proxy
+from webapp_stores.proxy import proxy,curs
 from webapp_stores.mail.views import email,reset_pass_mail
 from webapp_stores.check.check_product import insteresting_product_check
 
@@ -13,6 +13,11 @@ flask = create_app()
 def proxy_1():
     with flask.app_context():
         proxy.proxy()
+
+@celery.task
+def curs_today():
+    with flask.app_context():
+        curs.get_curs_usd()
 
 @celery.task
 def randevys():
@@ -46,12 +51,13 @@ def insteresting_product_check_do():
 def periodic_tasks(sender,**kwargs):
     sender.add_periodic_task(crontab(minute='*/1200'),randevys.s())
     sender.add_periodic_task(crontab(minute='*/1200'),butiks.s())
-    sender.add_periodic_task(crontab(minute='*/1200'),alis.s())
-    sender.add_periodic_task(crontab(minute='*/2'),proxy_1.s())
+    sender.add_periodic_task(crontab(minute='*/5000'),alis.s())
+    sender.add_periodic_task(crontab(minute='*/20'),proxy_1.s())
+    sender.add_periodic_task(crontab(minute='*/500'), curs_today.s())
     # sender.add_periodic_task(crontab(minute='*/20'), insteresting_product_check_do.s())
 
 if __name__ == '__main__':
-    alis()
-    # randevys()
-    # butiks()
+    alis.delay()
+    randevys.delay()
+    butiks.delay()
 

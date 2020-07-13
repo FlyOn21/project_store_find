@@ -4,7 +4,7 @@ from pprint import PrettyPrinter  # красиво выводит результ
 import requests
 from webapp_stores.db_functions import save_data_product
 from webapp_stores.proxy.get_query import get_html_all
-
+from decarator import log_decorator
 
 # def get_html(url):
 #     try:
@@ -70,6 +70,7 @@ def get_full_randevu():
                 try:
                     dict = get_randevu_product(link)
                     save_data_product(dict)
+                    print(f" ++++++Сохранено {link}")
                 except:
                     print('I cant get data from ' + link)
 

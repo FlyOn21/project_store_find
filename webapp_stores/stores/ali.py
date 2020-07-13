@@ -27,8 +27,7 @@ category_dir = {'202005148': 'Платья', '202003912': 'Блузки,руба
                 '202032005': 'Брюки', '202003388': 'Рубашки', '202001897': 'Джинсы', '202003404': 'Свитера',
                 '202003398': 'Костюмы',
                 '202001898': 'Шорты', '202060623': 'Спортивные костюмы', '202003411': 'Пляжные плавки'}
-full_ali_woman = ['https://aliexpress.ru/af/category/202005148.html',
-                  'https://aliexpress.ru/af/category/202003912.html',
+full_ali_woman = ['https://aliexpress.ru/af/category/202003912.html',
                   'https://aliexpress.ru/af/category/202001904.html',
                   'https://aliexpress.ru/af/category/202003500.html',
                   'https://aliexpress.ru/af/category/202003502.html',
@@ -38,6 +37,7 @@ full_ali_woman = ['https://aliexpress.ru/af/category/202005148.html',
                   'https://aliexpress.ru/af/category/202005126.html',
                   'https://aliexpress.ru/af/category/202005127.html',
                   'https://aliexpress.ru/af/category/202005128.html',
+                  'https://aliexpress.ru/af/category/202005148.html',
                   'https://aliexpress.ru/af/category/202005129.html',
                   'https://aliexpress.ru/af/category/202001903.html',
                   'https://aliexpress.ru/af/category/202005130.html',
@@ -79,24 +79,32 @@ full_ali_man = ['https://aliexpress.ru/af/category/202001895.html',
                 'https://aliexpress.ru/af/category/202001898.html',
                 'https://aliexpress.ru/af/category/202060623.html',
                 'https://aliexpress.ru/af/category/202003411.html']
-count = 0
+count_1 = 0
+# count_2 = 0
+
+curs_now = curs.curs_open()
 
 
 class Aliexpress():
 
+
     def __init__(self):
+        self.curs = curs_now
         self.category_dir = category_dir
         self.full_ali_woman = full_ali_woman
         self.full_ali_man = full_ali_man
-        self.count = count
+        self.count_one = count_1
+        # self.count_two = count_2
 
     def page_ali(self):
         full_ali = self.full_ali_man + self.full_ali_woman
         for category in full_ali:
             for page_ali in range(1, 61):
                 final_link = category + '?page=' + str(page_ali)
-                self.ali_product_collection(final_link)
                 print(final_link)
+                self.ali_product_collection(final_link)
+                print(f'-------- Страница {page_ali} обработана')
+                time.sleep(150.0)
             else:
                 print(f'Оброботка катигории {category} сайта Aliexpress окончена')
 
@@ -133,6 +141,7 @@ class Aliexpress():
 
     def ali(self, link=None):  # Получение словарей параметров товара с Алиеспресс
         try:
+            time.sleep(5)
             id_doc = self.take_id(link)
             if id_doc:
                 url_1 = f'https://m.aliexpress.ru/api/products/{id_doc}/fetch'
@@ -179,22 +188,22 @@ class Aliexpress():
 
     def price_product_usd(self, data_1):
         price_all = {}
-        curs_usd = curs.get_curs_usd()
+        # curs_usd = curs.get_curs_usd()
         sale_min_price = data_1['data']['priceInfo']['saleMinPrice']['value']
-        price_all['sale_min_price'] = round((sale_min_price * curs_usd), 2)
+        price_all['sale_min_price'] = round((sale_min_price * self.curs), 2)
         sale_max_price = data_1['data']['priceInfo']['saleMaxPrice']['value']
-        price_all['sale_max_price'] = round((sale_max_price*curs_usd),2)
+        price_all['sale_max_price'] = round((sale_max_price*self.curs),2)
         trade_min_price = data_1['data']['priceInfo']['tradeMinPrice']['value']
-        price_all['trade_min_price'] = round((trade_min_price * curs_usd), 2)
+        price_all['trade_min_price'] = round((trade_min_price * self.curs), 2)
         trade_max_price = data_1['data']['priceInfo']['tradeMaxPrice']['value']
-        price_all['trade_max_price'] = round((trade_max_price*curs_usd),2)
+        price_all['trade_max_price'] = round((trade_max_price*self.curs),2)
         return price_all
 
     def delivery_in_country(self, data_2):
         delivery_dict = {}
-        curs_usd = curs.get_curs_usd()
+
         for index_deliv in range(len(data_2['data']['freightResult'])):
-            delivery = (int(data_2['data']['freightResult'][index_deliv]['freightAmount']['value']))*curs_usd
+            delivery = round(((int(data_2['data']['freightResult'][index_deliv]['freightAmount']['value']))*self.curs),2)
             delivery_operator = \
                 ((data_2['data']['freightResult'][index_deliv]['freightLayout']['layout'][1]['text']).split('>'))[-1]
             delivery_dict[delivery_operator] = delivery
@@ -264,10 +273,10 @@ class Aliexpress():
             return ali_dict
 
     def ali_product_collection(self, final_link):
-        time.sleep(5.0)
         html = get_query.get_html_all(url=final_link)
         if html:
             soup = BeautifulSoup(html, 'html.parser')
+            print(soup)
             try:
                 raw_data_1 = soup.find_all('script', type="text/javascript")[-2].contents[0]
                 data_all = self.preparation_json(raw_data_1)
@@ -277,7 +286,6 @@ class Aliexpress():
                         ali_product_dict['product_store'] = 'Aliexpress'
                         ali_product_dict['product_url'] = self.product_url(item)
                         current_product = self.parser_product_result(ali_product_dict['product_url'])
-
                         ali_product_dict['name'] = self.product_name(item)
                         ali_product_dict['id'] = self.product_id_store(item)
                         ali_product_dict['price'] = str(current_product['price'])
@@ -295,14 +303,15 @@ class Aliexpress():
                         print(ali_product_dict)
                         print('------------------------------------------------')
                         save_data_product(product_dict=ali_product_dict)
-                        # return ali_product_dict
+                        # time.sleep(2)
                     except(KeyError, TypeError):
-                        pass
-            except(IndexError):
+                        continue
+            except IndexError:   #()
                 time.sleep(120)
-                self.count += 1
-                if self.count > 30:
+                self.count_one += 1
+                if self.count_one > 100:
                     print('Ошибка парсинга, парсинг остановлен')
+                    return
         else:
             print("повтоная попытка получить страницу")
             self.ali_product_collection(final_link)

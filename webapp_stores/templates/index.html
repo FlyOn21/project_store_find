@@ -9,70 +9,73 @@
         <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" rel="stylesheet">
 
         <title>Главная страница</title>
+
       </head>
         <body>
             {% include "menu.html"%}
             <div class="container">
                        <h2>Главная страница</h2>
                     </div>
-                <div class="container">
-                    <h5> Вставь ссылку на товар из магазина Rendez-vous.ru/ Butik / Aliexpress </h5>
-                    <form action="/" method="post">
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
+            <div class="container">
+                <h5> Вставь ссылку на товар из магазина Rendez-vous.ru/ Butik / Aliexpress </h5>
+                <form action="/" method="post">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
 
-                                    <label for="formGroupExampleInput"></label>
-                                    <input class="form-control"  name="link" placeholder="Вставь ссылку" type="text">
+                                <label for="formGroupExampleInput"></label>
+                                <input class="form-control"  name="link" placeholder="Вставь ссылку" type="text">
 
-                                    <label for="formGroupExampleInput"></label>
-                                    <input class="form-control"  name="size" placeholder="Укажите необходимый размер" type="text">
-                                    {%if current_user.is_anonymous%}
-                                    <label for="formGroupExampleInput"></label>
-                                    <input class="form-control" id="formGroupExampleInput" name="email" placeholder="Укажите свой email" type="text">
-                                    {% endif %}
+                                <label for="formGroupExampleInput"></label>
+                                <input class="form-control"  name="size" placeholder="Укажите необходимый размер" type="text">
+                                {%if current_user.is_anonymous%}
+                                <label for="formGroupExampleInput"></label>
+                                <input class="form-control" id="formGroupExampleInput" name="email" placeholder="Укажите свой email" type="text">
+                                {% endif %}
 
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <button class="btn btn-primary" type="submit">Отследить</button>
                             </div>
                         </div>
-                    </form>
-                    <div>
-                        <div class="container">
-                                    {% if info!=None %}
-                                    {%for image in info['product_image'] %}
-                                    <img alt="Cinque Terre" class="img-fluid" src="{{image}}" height=150px width=150px>
-                                    {%endfor%}
-                                    <p> Цена товара: {{ info['price'] }} </p>
-                                    <p> Доступные размеры: {{ info['size'] }} </p>
-                                    <p> Бренд: {{ info['brand'] }} </p>
-                                    <p> Категория: {{ info['category'] }} </p>
-                                    {% else%}
-                                    <div class="col-10">
-                                        <div class="embed-responsive embed-responsive-16by9">
-                                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/dU6YcBkHYlQ "></iframe>
-                                        </div>
-                                    </div>
-                                    {% endif %}
+                        <div class="col-2">
+                            <button class="btn btn-primary" type="submit">Отследить</button>
+                        </div>
+                    </div>
+                </form>
 
+                        {% if info!=None %}
+                        {%if current_user.is_anonymous%}
+                         <p class="text-sm-left"><i><strong>Данный товар добавлен в поиск нужного вам размера</strong></i></p>
+                         <p>Для удобства отслеживания ваших товаров предлагаем вам пройти<a class="nav-link" href="{{url_for('users.register')}}"> регистрацию</a></p>
 
-                                        </div>
+                         {%endif%}
+                        {%for image in info['product_image'] %}
+                        <img alt="Cinque Terre" class="img-fluid" src="{{image}}" height=150px width=150px>
+                        {%endfor%}
+                        <p> Цена товара: {{ info['price'] }} </p>
+                        <p> Доступные размеры: {{ info['size'] }} </p>
+                        <p> Бренд: {{ info['brand'] }} </p>
+                        <p> Категория: {{ info['category'] }} </p>
+                        {% else%}
+                        <div class="col-10">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/dU6YcBkHYlQ "></iframe>
+                            </div>
+                        </div>
+                        {% endif %}
 
-                        <div class = "col"><h1>Товаров в базе: {{count_product_all}}</h1></div>
-                <div class = "col-4">
-            {%with messages = get_flashed_messages() %}
-            {%if messages%}
-            <div class="alert alert-warning" role="alert">
-                {%for message in messages%}
-                    {{message}}<br>
-                {%endfor%}
+                    <div class = "col"><h1>Товаров в базе: {{count_product_all}}</h1></div>
+                    </div>
+            <div class = "col-4">
+        {%with messages = get_flashed_messages() %}
+        {%if messages%}
+        <div class="alert alert-warning" role="alert">
+            {%for message in messages%}
+                {{message}}<br>
+            {%endfor%}
+        </div>
+            {%endif%}
+            {%endwith%}
             </div>
-                {%endif%}
-                {%endwith%}
-                </div></div>
-                </div>
+
 
 
 

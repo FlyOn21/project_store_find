@@ -45,7 +45,15 @@
             {%endif%}
         </p>
             <p> <strong>Ссылка на товар</strong>: <a href = "{{ product ['url']}}"> {{ product ['url']}} </a></p>
-
+        <form action="{{url_for('users.add_product')}}" method="post">
+                    <td class="text-center">
+                        <input type="text" placeholder="Размер" name="size" style="width: 80%;">
+                    </td>
+                    <td class="text-center">
+                         <input type=hidden value="{{ product ['url']}}" name="link" />
+                        <input class="btn btn-secondary" type="submit" value="Добавить">
+                    </td>
+                </form>
             </div>
 
     {%endfor%}

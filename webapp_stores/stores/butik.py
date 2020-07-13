@@ -81,6 +81,7 @@ def get_full_butik():
                 try:
                     dict = get_butik_product(link)
                     save_data_product(dict)
+                    print(f" !!!!!!!!!!!!!!!!!!Сохранено {link}")
                 except:
                     print('I cant get data from '+link)
 

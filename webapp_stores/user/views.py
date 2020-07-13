@@ -9,6 +9,8 @@ from webapp_stores.utils import get_info
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 from datetime import datetime
 from webapp_stores.config import SECRET_KEY
+from utils import get_redirect_target
+from werkzeug.exceptions import BadRequestKeyError
 
 blueprint = Blueprint('users', __name__, url_prefix='/users')
 
@@ -57,7 +59,7 @@ def register_do():
         db.session.add(new_user)
         db.session.commit()
         flash('You registred')
-        return redirect(url_for('index'))
+        return redirect(url_for('users.login'))
     else:
         for field, errors in form.errors.items():
             for error in errors:
@@ -231,11 +233,23 @@ def delete_product():
 
 @blueprint.route("/search", methods=['GET', 'POST'])
 def search():
-    search = request.form['search']
-    with current_app.app_context():
+    try:
+        search = request.form['search']
+        with current_app.app_context():
+            user_id = current_user.get_id()
+            new_search = User.query.filter_by(id=user_id).first()
+            new_search.search = request.form['search']
+            db.session.add(new_search)
+            db.session.commit()
+            products = find_product(search)
+            return render_template('user/search_products.html', products=products, search=search)
+    except (BadRequestKeyError):
+        user_id = current_user.get_id()
+        new_search = User.query.filter_by(id=user_id).first()
+        search = new_search.search
         products = find_product(search)
+        return render_template('user/search_products.html', products=products, search=search)
 
-    return render_template('user/search_products.html', products=products, search=search)
 
 
 @blueprint.route('/add_product', methods=['GET', 'POST'])
@@ -257,4 +271,5 @@ def add_product():
     else:
         email = current_user.email
         save_interesting_product(product_dict=info, email=email, size_interesting=size_interesting)
-        return redirect(url_for('users.my_products'))
+        flash("товар добавлен")
+        return redirect(get_redirect_target())

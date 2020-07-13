@@ -17,6 +17,7 @@ class User(db.Model,UserMixin):
     is_active = db.Column(db.Boolean,nullable = False)
     send_mail = db.Column(db.Boolean,default = True)
     role = db.Column(db.String,index = True)
+    search = db.Column(db.String, index = True)
     interesting_products= db.relationship('InterestingProduct', backref='client')
 
     def __repr__(self):

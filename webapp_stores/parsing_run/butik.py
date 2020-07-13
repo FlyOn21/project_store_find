@@ -10,7 +10,7 @@ def butik():
         butik_status = get_butik_data()
         if butik_status is not False:
             get_full_butik()
-            # save_data_product(get_full_butik())
+            save_data_product(get_full_butik())
         else:
             print('Бутик был недоступен, обновление базы не выполнено')
             pass

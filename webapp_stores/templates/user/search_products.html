@@ -1,7 +1,15 @@
 {%extends "base.html"%}
 
 {%block content%}
-
+{%with messages = get_flashed_messages() %}
+    {%if messages%}
+    <div class="alert alert-warning" role="alert">
+        {%for message in messages%}
+            {{message}}<br>
+        {%endfor%}
+    </div>
+    {%endif%}
+    {%endwith%}
 <div class="container">
                     </div>
 <div class = "col-4"></div>
@@ -45,7 +53,7 @@
                         {% endif %}
                     </td>
                     <td><img alt="Cinque Terre" class="img-fluid" src="{{product.image.replace('[','').split(',', 1)[0].strip("'")}}" height=100px width=100px></td>
-                    <td class="text-center"><a href="{{product.url}}" class="card-link">{{product.name}}</a></td>
+                    <td class="text-center"><a href="{{url_for('product.current_product')}}?product_id={{product ['id'] }}" class="card-link">{{product.name}}</a></td>
                     <td class="text-center">{{product.brand}}</td>
                     <td class="text-center">{{product.category}}</td>
                     <td class="text-center">{{product.prise_discount.replace('[','').replace(']','').replace("'","")}}</td>

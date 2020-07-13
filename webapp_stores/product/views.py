@@ -14,11 +14,12 @@ blueprint = Blueprint('product', __name__, url_prefix='/p')
 def products(start=0):
     """Функция которая обращается в базу для получения товаров на страницу и определяет и определяет номера
     и стартовые индексы страниц"""
+
     with current_app.app_context():
         product = Product.query.offset(start).limit(12).all()
-        # print(product)
         result = step_1(product)
-        page_start = page_count(start)
+        page_start, last_page = page_count(start)
+
         if start == 0:
             page_one = 1
             query_index_one = (page_one * 12) - 12
@@ -27,6 +28,14 @@ def products(start=0):
             page_therd = page_two + 1
             query_index_therd = query_index_two + 12
             next_p = page_one + 1
+        elif page_start == last_page:
+            page_one = page_start - 1
+            query_index_one = (page_one * 12) - 12
+            page_two = page_one + 1
+            query_index_two = query_index_one + 12
+            page_therd = page_two + 1
+            query_index_therd = query_index_two + 12
+            next_p = page_start
         else:
             page_one = page_start - 1
             query_index_one = (page_one * 12) - 12
@@ -35,6 +44,7 @@ def products(start=0):
             page_therd = page_two + 1
             query_index_therd = query_index_two + 12
             next_p = page_two + 1
+
         # print(result)
         return render_template('product/all_products.html', dict=result, page_prev=page_one, page=page_two,
                                page_next=page_therd, query_index_one=query_index_one, query_index_two=query_index_two,
@@ -48,9 +58,15 @@ def page_count(start):
         count_pages = int(all_product / 12)
         # print(count_pages)
         start_product = all_product - start
-        count_pages_start = int(start_product / 12)
-        # print(count_pages_start)
-        return (count_pages - count_pages_start) + 1
+        if start_product != 0:
+            count_pages_start = int(start_product / 12)
+            start_page = (count_pages - count_pages_start) + 1
+            return (start_page,count_pages)
+        else:
+            count_pages_start = int(start_product / 12)
+            start_page = count_pages - count_pages_start
+            return (start_page, count_pages)
+
 
 
 def step_1(product, count=12):

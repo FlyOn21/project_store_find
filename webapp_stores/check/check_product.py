@@ -27,7 +27,7 @@ def insteresting_product_check():
             check_product(info, id)
 
 def check_product(info, id):
-    print(info)
+    # print(info)
     """
     Функция проверяет наличие товара, необходимого клиенту, и, в случае наличия, отправляет уведомление клиенту по email
     """
