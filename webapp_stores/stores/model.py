@@ -23,6 +23,8 @@ class Stores(db.Model):
         return f'Store ID: {self.id}, title: {self.title}, ' \
                f'url: {self.url}, {store_online},{self.icon} '
 
+
+
 class Product(db.Model):
     """
     Класс описывает базу данных, содержащих информацию о товаре с подробной детализацией

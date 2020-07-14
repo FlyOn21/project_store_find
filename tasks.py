@@ -6,8 +6,10 @@ from webapp_stores.proxy import proxy,curs
 from webapp_stores.mail.views import email,reset_pass_mail
 from webapp_stores.check.check_product import insteresting_product_check
 from webapp_stores.config import CELERY_BROKER_URL
+import celeryconfig
 
 celery = Celery('tasks', broker= CELERY_BROKER_URL)
+celery.config_from_object(celeryconfig)
 flask = create_app()
 
 @celery.task

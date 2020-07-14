@@ -39,15 +39,15 @@ class User(db.Model, UserMixin):
         return self.role == 'user'
 
 
-class Check_product_all(db.Model):
-    """Модель для временного хранения дайнных проверки"""
-    id = db.Column(db.Integer, primery_key=True)
-    int_product = db.Column(db.String)
-    email = db.Column(db.String)
-    url = db.Column(db.Text)
-
-    def __repr__(self):
-        print(f'id: {self.id}, id_int_product: {self.id_int_product}, email: {self.email}, url: {self.url}')
+# class Product_all_check(db.Model):
+#     """Модель для временного хранения дайнных проверки"""
+#     id = db.Column(db.Integer)
+#     int_product = db.Column(db.String)
+#     email = db.Column(db.String)
+#     url = db.Column(db.Text)
+#
+#     def __repr__(self):
+#         print(f'id: {self.id}, id_int_product: {self.id_int_product}, email: {self.email}, url: {self.url}')
 
 
 class InterestingProduct(db.Model):
