@@ -45,7 +45,9 @@
                         {%if current_user.is_anonymous%}
                          <p class="text-sm-left"><i><strong>Данный товар добавлен в поиск нужного вам размера</strong></i></p>
                          <p>Для удобства отслеживания ваших товаров предлагаем вам пройти<a class="nav-link" href="{{url_for('users.register')}}"> регистрацию</a></p>
-
+                         {%else%}
+                        <p class="text-sm-left"><i><strong>Данный товар добавлен в поиск нужного вам размера</strong></i></p>
+                        <p class="text-sm-left"><i><small>Все ваши заявки можно просмотреть в личном кабинете</small></i></p>
                          {%endif%}
                         {%for image in info['product_image'] %}
                         <img alt="Cinque Terre" class="img-fluid" src="{{image}}" height=150px width=150px>

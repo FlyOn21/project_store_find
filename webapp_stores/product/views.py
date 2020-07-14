@@ -48,8 +48,14 @@ def products(start=0):
         # print(result)
         return render_template('product/all_products.html', dict=result, page_prev=page_one, page=page_two,
                                page_next=page_therd, query_index_one=query_index_one, query_index_two=query_index_two,
-                               query_index_therd=query_index_therd, next_p=next_p)
+                               query_index_therd=query_index_therd, next_p=next_p,page_start = start)
 
+@blueprint.route('/page_back', methods=['GET'])
+def page_back():
+    """возврат при нажатии кнопки назад на странице товара"""
+    page = int(request.args.get('page'))
+    print("_______________________",page)
+    return products(start = page)
 
 def page_count(start):
     """Функция высчитывает страницу товаров в каталоге"""
@@ -85,6 +91,7 @@ def dict_p(all_product, count):
     for product_ind in range(0, count):
         dict_page = {}
         product_1 = all_product[product_ind]
+        print(product_1)
         dict_page['id'] = int(product_1[0])
         dict_page['name'] = product_1[1]
         dict_page['category'] = product_1[3]
@@ -100,7 +107,7 @@ def dict_p(all_product, count):
         dict_page['url'] = url(int(product_1[0]))
 
         page.append(dict_page)
-    print(page)
+    # print(page)
     return page
 
 
@@ -117,8 +124,8 @@ def delivery(id):
     query = product_query(id)
     delivery_p = str(query.delivery)
     delivery_res = ast.literal_eval(delivery_p)
-    print(delivery_res)
-    print(type(delivery_res))
+    # print(delivery_res)
+    # print(type(delivery_res))
     try:
         delivery_res_list = []
         for key,values in delivery_res.items():
@@ -205,11 +212,15 @@ def page_num():
 @blueprint.route('/current_product', methods=['GET'])
 def current_product():
     id = request.args.get('product_id')
+    print(id)
+    page = request.args.get('page')
+    print(page)
     with current_app.app_context():
         # product = Product.query.filter_by(id = id).first()
         prod_current = [Product.query.filter_by(id=id).first()]
+        print(prod_current)
         result_current = step_1(prod_current, count=1)
-        return render_template('product/one_product.html', dict=result_current)
+        return render_template('product/one_product.html', dict=result_current,page = page)
 
 
 # if __name__ == "__main__":

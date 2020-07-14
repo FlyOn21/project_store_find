@@ -4,6 +4,7 @@
 <title>Каталог товаров</title>
 <div class = "col text-center"><h2>Каталог товаров</h2></div>
 <div class="row">
+<p> <a href = "{{url_for('product.page_back')}}?page={{page}}"> Назад </a></p>
     {%for product in dict%}
     <div class="col-12">
         {%for image in product ['image']%}

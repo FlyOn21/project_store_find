@@ -38,7 +38,7 @@
 <div class="row">
     {%for product in dict%}
     <div class="col-md-4">
-        <a class="link" href="{{url_for('product.current_product')}}?product_id={{product ['id'] }}">
+        <a class="link" href="{{url_for('product.current_product')}}?product_id={{product['id']}}&page={{page_start}}">
         <img alt="Cinque Terre" class="img" src="{{product ['image'][0]}}" height=160px width=160px></a>
         <p> <strong>Категория</strong>: {{ product ['category'] }} </p>
         <p> <strong>Название</strong>: {{ product ['name'] }}</p>

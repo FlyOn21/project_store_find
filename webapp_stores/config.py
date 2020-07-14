@@ -21,3 +21,6 @@ MAIL_PASSWORD = 'Gfdtk2105'
 
 # administrator list
 ADMINS = ['zhogolevpv@gmail.com']
+
+#Celery
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
