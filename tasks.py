@@ -5,8 +5,9 @@ from celery.schedules import crontab
 from webapp_stores.proxy import proxy,curs
 from webapp_stores.mail.views import email,reset_pass_mail
 from webapp_stores.check.check_product import insteresting_product_check
+from webapp_stores.config import CELERY_BROKER_URL
 
-celery = Celery('tasks', broker='redis://localhost:6379/0')
+celery = Celery('tasks', broker= CELERY_BROKER_URL)
 flask = create_app()
 
 @celery.task
@@ -49,15 +50,15 @@ def insteresting_product_check_do():
 
 @celery.on_after_configure.connect
 def periodic_tasks(sender,**kwargs):
-    sender.add_periodic_task(crontab(minute='*/1200'),randevys.s())
-    sender.add_periodic_task(crontab(minute='*/1200'),butiks.s())
-    sender.add_periodic_task(crontab(minute='*/5000'),alis.s())
+    sender.add_periodic_task(crontab(minute = 0, hour='*/48'),randevys.s())
+    sender.add_periodic_task(crontab(minute = 0, hour='*/48'),butiks.s())
+    # sender.add_periodic_task(crontab(minute = 0, hour='*/72,3-22'),alis.s())
     sender.add_periodic_task(crontab(minute='*/20'),proxy_1.s())
-    sender.add_periodic_task(crontab(minute='*/500'), curs_today.s())
-    # sender.add_periodic_task(crontab(minute='*/20'), insteresting_product_check_do.s())
+    sender.add_periodic_task(crontab(minute='*/60'), curs_today.s())
+    sender.add_periodic_task(crontab(minute='*/20'), insteresting_product_check_do.s())
 
 if __name__ == '__main__':
     alis.delay()
-    randevys.delay()
-    butiks.delay()
+    # randevys.delay()
+    # butiks.delay()
 

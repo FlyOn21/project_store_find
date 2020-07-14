@@ -12,6 +12,9 @@ def create_dict_interesting_products():
     dict_id_url = {}
     for i in InterestingProduct.query.all():
         dict_id_url[i.id] = i.url
+        # dict_id_url['url'] = i.url
+        # dict_id_url['user_id'] = i.client_id
+    print(dict_id_url)
     return dict_id_url
 
 def insteresting_product_check():
@@ -61,10 +64,16 @@ def check_send(interesting_product):
         else:
             print(f'Для клиента {interesting_product.user_email} найден необходимый размер '
                   f'{interesting_product.size_interesting} товара: {interesting_product.url}')
-            from tasks import email_send
-            email_send.delay(e_mail=interesting_product.user_email, find_size=interesting_product.size_interesting,
-                             product=interesting_product.url)
+            find_product = {'email':interesting_product.user_email, 'intersting_size':interesting_product.size_interesting,
+                            'url':interesting_product.url}
+            # from tasks import email_send
+            # email_send.delay(e_mail=interesting_product.user_email, find_size=interesting_product.size_interesting,
+            #                  product=interesting_product.url)
             # Вставить функцию для отправления сообщений на почту + удаление строки ввобще
             interesting_product.notification_sent = 1
             db.session.add(interesting_product)
             db.session.commit()
+            return find_product
+
+if __name__ =="__main__":
+    insteresting_product_check()
