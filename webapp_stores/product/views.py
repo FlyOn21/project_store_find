@@ -1,10 +1,8 @@
 from flask import Blueprint, render_template, flash, url_for, current_app, request
 import ast
-# from webapp_stores import config
-# from werkzeug.utils import redirect
 from webapp_stores.stores.model import Product
+from webapp_stores.user.views import search_two
 
-# from webapp_stores import create_app
 
 
 blueprint = Blueprint('product', __name__, url_prefix='/p')
@@ -48,14 +46,24 @@ def products(start=0):
         # print(result)
         return render_template('product/all_products.html', dict=result, page_prev=page_one, page=page_two,
                                page_next=page_therd, query_index_one=query_index_one, query_index_two=query_index_two,
-                               query_index_therd=query_index_therd, next_p=next_p,page_start = start)
+                               query_index_therd=query_index_therd, next_p=next_p, page_start=start)
+
 
 @blueprint.route('/page_back', methods=['GET'])
 def page_back():
-    """возврат при нажатии кнопки назад на странице товара"""
+    """возврат при нажатии кнопки назад на странице товара в каталоге"""
     page = int(request.args.get('page'))
-    print("_______________________",page)
-    return products(start = page)
+    print("_______________________", page)
+    return products(start=page)
+
+
+@blueprint.route('/page_back_search', methods=['GET'])
+def page_back_search():
+    """возврат при нажатии кнопки назад на странице товара  при поиске"""
+    search_n = request.args.get('search')
+    print("_______________________", search_n)
+    return search_two(search_n)
+
 
 def page_count(start):
     """Функция высчитывает страницу товаров в каталоге"""
@@ -67,12 +75,11 @@ def page_count(start):
         if start_product != 0:
             count_pages_start = int(start_product / 12)
             start_page = (count_pages - count_pages_start) + 1
-            return (start_page,count_pages)
+            return (start_page, count_pages)
         else:
             count_pages_start = int(start_product / 12)
             start_page = count_pages - count_pages_start
             return (start_page, count_pages)
-
 
 
 def step_1(product, count=12):
@@ -116,9 +123,11 @@ def product_query(id):
         query = Product.query.filter_by(id=id).first()
         return query
 
+
 def url(id):
     query = product_query(id)
     return query.url
+
 
 def delivery(id):
     query = product_query(id)
@@ -128,7 +137,7 @@ def delivery(id):
     # print(type(delivery_res))
     try:
         delivery_res_list = []
-        for key,values in delivery_res.items():
+        for key, values in delivery_res.items():
             resalt = key + ':' + str(values)
             delivery_res_list.append(resalt)
         return delivery_res_list
@@ -220,8 +229,21 @@ def current_product():
         prod_current = [Product.query.filter_by(id=id).first()]
         print(prod_current)
         result_current = step_1(prod_current, count=1)
-        return render_template('product/one_product.html', dict=result_current,page = page)
+        return render_template('product/one_product.html', dict=result_current, page=page)
 
+
+@blueprint.route('/current_product_search', methods=['GET'])
+def current_product_search():
+    id = request.args.get('product_id')
+    print(id)
+    search = request.args.get('search')
+    print(search)
+    with current_app.app_context():
+        # product = Product.query.filter_by(id = id).first()
+        prod_current = [Product.query.filter_by(id=id).first()]
+        print(prod_current)
+        result_current = step_1(prod_current, count=1)
+        return render_template('product/one_product_search.html', dict=result_current, search=search)
 
 # if __name__ == "__main__":
 #     prev_page()

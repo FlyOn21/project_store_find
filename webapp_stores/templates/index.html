@@ -6,6 +6,7 @@
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
         <!-- Bootstrap CSS -->
+
         <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" rel="stylesheet">
 
         <title>Главная страница</title>
@@ -44,7 +45,7 @@
                         {% if info!=None %}
                         {%if current_user.is_anonymous%}
                          <p class="text-sm-left"><i><strong>Данный товар добавлен в поиск нужного вам размера</strong></i></p>
-                         <p>Для удобства отслеживания ваших товаров предлагаем вам пройти<a class="nav-link" href="{{url_for('users.register')}}"> регистрацию</a></p>
+                         <p>Для удобства отслеживания ваших товаров предлагаем вам пройти<a href="{{url_for('users.register')}}"> регистрацию</a></p>
                          {%else%}
                         <p class="text-sm-left"><i><strong>Данный товар добавлен в поиск нужного вам размера</strong></i></p>
                         <p class="text-sm-left"><i><small>Все ваши заявки можно просмотреть в личном кабинете</small></i></p>

@@ -1,5 +1,5 @@
-from webapp_stores.stores.model import db, Stores, Product
-from webapp_stores.user.model import InterestingProduct, User
+from webapp_stores.stores.model import db
+from webapp_stores.user.model import InterestingProduct, User,Product_all_check
 from webapp_stores.utils import get_info
 from webapp_stores import create_app
 
@@ -64,16 +64,14 @@ def check_send(interesting_product):
         else:
             print(f'Для клиента {interesting_product.user_email} найден необходимый размер '
                   f'{interesting_product.size_interesting} товара: {interesting_product.url}')
-            find_product = {'email':interesting_product.user_email, 'intersting_size':interesting_product.size_interesting,
-                            'url':interesting_product.url}
-            # from tasks import email_send
-            # email_send.delay(e_mail=interesting_product.user_email, find_size=interesting_product.size_interesting,
-            #                  product=interesting_product.url)
-            # Вставить функцию для отправления сообщений на почту + удаление строки ввобще
+            new_check= Product_all_check(email = interesting_product.user_email, int_product = interesting_product.size_interesting,
+                            url = interesting_product.url)
+            db.session.add(new_check)
+            db.session.commit()
             interesting_product.notification_sent = 1
             db.session.add(interesting_product)
             db.session.commit()
-            return find_product
+            # return find_product
 
 if __name__ =="__main__":
     insteresting_product_check()

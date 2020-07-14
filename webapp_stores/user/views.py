@@ -78,8 +78,11 @@ def reset_pass():
 
 @blueprint.route('/process_reset_pass', methods=['POST'])
 def process_reset_pass():
+    """Форма формирования и отправки ссылки на смену пароля"""
     from tasks import email_reset_pass
     form = Password_reset()
+    host = request.host_url
+    print(host)
     if form.validate_on_submit():
         email = form.email.data
         # email_s = email
@@ -88,9 +91,9 @@ def process_reset_pass():
         if user:
             time = str(datetime.now())
             info = serializer(email, time)
-            url = 'http://127.0.0.1:5000' + str(url_for('users.form_reset_pass')) + '?' + 'data=' + info
+            url = host + (str(url_for('users.form_reset_pass'))).strip('/') + '?' + 'data=' + info
             print(url)
-            email_reset_pass.delay(email,url)
+            email_reset_pass.delay(email, url)
             return render_template('user/reset_pass.html', title=f'Ссылка на смену пароля отправлена на email:{email}',
                                    form=None)
 
@@ -187,17 +190,10 @@ def my_products():
         return render_template('user/my_products.html', title=title, products=user_interesting_products, send=send,
                                form=form)
 
-    # print(user.name)
-    # mail = query.email
-
-    # print(user.name)
-    # mail = query.email
-
-    # print(user_interesting_products)
-
 
 @blueprint.route("/on_off", methods=['POST'])
 def on_off():
+    """Функция включения выключения отправки писем на мыло"""
     user_id = current_user.get_id()
     user = User.query.filter_by(id=user_id).first()
     mail_send = user.send_mail
@@ -236,9 +232,13 @@ def search():
     try:
         search = request.form['search']
         with current_app.app_context():
+            if current_user.is_anonymous == True:
+                products = find_product(search)
+                return render_template('user/search_products.html', products=products, search=search)
             user_id = current_user.get_id()
             new_search = User.query.filter_by(id=user_id).first()
-            new_search.search = request.form['search']
+            print(request.form)
+            new_search.search = search
             db.session.add(new_search)
             db.session.commit()
             products = find_product(search)
@@ -251,6 +251,29 @@ def search():
         return render_template('user/search_products.html', products=products, search=search)
 
 
+
+# @blueprint.route("/search_two", methods=['GET', 'POST'])
+def search_two(search_n = None):
+    try:
+        search = search_n
+        with current_app.app_context():
+            if current_user.is_anonymous == True:
+                products = find_product(search)
+                return render_template('user/search_products.html', products=products, search=search)
+            user_id = current_user.get_id()
+            new_search = User.query.filter_by(id=user_id).first()
+            print(request.form)
+            new_search.search = search
+            db.session.add(new_search)
+            db.session.commit()
+            products = find_product(search)
+            return render_template('user/search_products.html', products=products, search=search)
+    except (BadRequestKeyError):
+        user_id = current_user.get_id()
+        new_search = User.query.filter_by(id=user_id).first()
+        search = new_search.search
+        products = find_product(search)
+        return render_template('user/search_products.html', products=products, search=search)
 
 @blueprint.route('/add_product', methods=['GET', 'POST'])
 def add_product():
@@ -266,7 +289,7 @@ def add_product():
         return redirect(url_for('index'))
     # Если пользователь не зарегистрирован
     if not current_user.is_authenticated:
-        flash('Зарегестрируйтесь, чтобы отслеживать товар в личном кабинете')
+        flash('Чтобы добавить товар из каталога вам нужно заригистрироваться')
         return redirect(url_for('users.register'))
     else:
         email = current_user.email
@@ -285,7 +308,6 @@ def my_settings():
     return render_template('user/my_settings.html', user=user)
 
 
-
 @blueprint.route("/change_name", methods=['GET', 'POST'])
 def change_name():
     name = request.form['name']
@@ -294,7 +316,7 @@ def change_name():
     user = User.query.filter_by(id=user_id).first()
 
     with current_app.app_context():
-        user.name=name
+        user.name = name
         db.session.add(user)
         db.session.commit()
         flash('Имя успешно изменено!')
@@ -309,11 +331,12 @@ def change_surname():
     user = User.query.filter_by(id=user_id).first()
 
     with current_app.app_context():
-        user.surname=surname
+        user.surname = surname
         db.session.add(user)
         db.session.commit()
         flash('Фамилия успешно изменена!')
     return redirect(url_for('users.my_settings'))
+
 
 @blueprint.route("/change_email", methods=['GET', 'POST'])
 def change_email():
@@ -355,7 +378,7 @@ def change_username():
 
     if username not in usernames:
         with current_app.app_context():
-            user_to_change.username= username
+            user_to_change.username = username
             db.session.add(user_to_change)
             db.session.commit()
             flash('Username успешно изменен!')
@@ -363,5 +386,3 @@ def change_username():
     else:
         flash('Этот username уже используется! Попробуйте другой!')
         return redirect(url_for('users.my_settings'))
-
-

@@ -1,0 +1,63 @@
+{%extends "base.html"%}
+
+{%block content%}
+<title>Каталог товаров</title>
+<div class = "col text-center"><h2>Каталог товаров</h2></div>
+<div class="row">
+<p> <a href = "{{url_for('product.page_back_search')}}?search={{search}}"> Назад </a></p>
+    {%for product in dict%}
+    <div class="col-12">
+        {%for image in product ['image']%}
+        <img alt="Cinque Terre" class="img" src="{{image}}" height=350px width=350px>
+        {%endfor%}
+        <br>
+        <br>
+        </div>
+        <div class="col-12">  </div>
+        <div class="col-6">
+            <p> <strong>Категория</strong>: {{ product ['category'] }} </p>
+        <p> <strong>Название</strong>: {{ product ['name'] }}</p>
+        <p> <strong>Бренд</strong>: {{ product ['brand'] }} </p>
+        <p> <strong>Магазин</strong>: {{ product ['store'] }} </p>
+        <p > <strong>Доступные цвета</strong>:
+             {%for color in product ['color'] %}
+         {{ color }}
+            {%endfor%}
+
+            </p>
+            </div>
+        <div class="col-6">
+            <p> <strong>Цена</strong>:
+            {%for price in product ['price_full'] %}
+              - {{ price }} RUR
+            {%endfor%}</p>
+        <p> <strong>Цена со скидкой</strong>:
+            {%for price in product ['prise_discount'] %}
+              - {{ price }} RUR
+            {%endfor%}</p>
+        <p> <strong>{{ product ['gender'] }}</strong> </p>
+        <p> <strong>Доставка</strong>:
+            {%if product ['delivery']%}
+            {%for deliver in product['delivery'] %}
+
+            {{deliver}} RUR <br>
+
+            {%endfor%}
+            {%endif%}
+        </p>
+            <p> <strong>Ссылка на товар</strong>: <a href = "{{ product ['url']}}"> {{ product ['url']}} </a></p>
+        <form action="{{url_for('users.add_product')}}" method="post">
+                    <td class="text-center">
+                        <input type="text" placeholder="Размер" name="size" style="width: 80%;">
+                    </td>
+                    <td class="text-center">
+                         <input type=hidden value="{{ product ['url']}}" name="link" />
+                        <input class="btn btn-secondary" type="submit" value="Добавить">
+                    </td>
+                </form>
+            </div>
+
+    {%endfor%}
+</div>
+
+{%endblock%}

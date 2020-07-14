@@ -8,7 +8,7 @@ from webapp_stores.check.check_product import insteresting_product_check
 from webapp_stores.config import CELERY_BROKER_URL
 import celeryconfig
 
-celery = Celery('tasks', broker= CELERY_BROKER_URL)
+celery = Celery() #'tasks', broker= CELERY_BROKER_URL
 celery.config_from_object(celeryconfig)
 flask = create_app()
 
@@ -38,8 +38,8 @@ def alis():
         ali.ali()
 
 @celery.task
-def email_send(e_mail,find_size,product):
-    email(e_mail,find_size,product)
+def email_send():
+    email()
 
 @celery.task
 def email_reset_pass(e_mail,url):
@@ -58,6 +58,7 @@ def periodic_tasks(sender,**kwargs):
     sender.add_periodic_task(crontab(minute='*/20'),proxy_1.s())
     sender.add_periodic_task(crontab(minute='*/60'), curs_today.s())
     sender.add_periodic_task(crontab(minute='*/20'), insteresting_product_check_do.s())
+    sender.add_periodic_task(crontab(minute='*/20'), email_send.s())
 
 if __name__ == '__main__':
     alis.delay()

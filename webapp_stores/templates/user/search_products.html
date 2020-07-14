@@ -54,7 +54,7 @@
                         {% endif %}
                     </td>
                     <td><img alt="Cinque Terre" class="img-fluid" src="{{product.image.replace('[','').split(',', 1)[0].strip("'")}}" height=100px width=100px></td>
-                    <td class="text-center"><a href="{{url_for('product.current_product')}}?product_id={{product ['id'] }}" class="card-link">{{product.name}}</a></td>
+                    <td class="text-center"><a href="{{url_for('product.current_product_search')}}?product_id={{product ['id'] }}&search={{search}}" class="card-link">{{product.name}}</a></td>
                     <td class="text-center">{{product.brand}}</td>
                     <td class="text-center">{{product.category}}</td>
                     <td class="text-center">{{product.prise_discount.replace('[','').replace(']','').replace("'","")}}</td>

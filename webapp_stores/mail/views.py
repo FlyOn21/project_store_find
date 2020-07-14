@@ -1,48 +1,80 @@
-from flask_mail import Message,Mail
-
-from flask import Blueprint, render_template,current_app
+from flask_mail import Message, Mail
+from webapp_stores.stores.model import db
+from flask import render_template
 from webapp_stores import create_app
-# from werkzeug.utils import redirect
-# from webapp_stores.user.model import User, db
-# from webapp_stores.stores.model import Product
-# from webapp_stores.product.views import step_1
+from webapp_stores.user.model import Product_all_check
 
 
-
-
-# blueprint = Blueprint('mail', __name__, url_prefix='/mail')
-
-# @blueprint.route('/email',methods=['GET', 'POST'])
-def email(e_mail,find_size=None,product=None):
+def email():
     app = create_app()
     mail = Mail(app)
     with app.app_context():
-        # dict = zapros()
-        msg = Message("Ура мы возможно нашли что вы искали",sender="123@gmail.com",
-                      recipients=[e_mail])
-        msg.body = render_template('email/message.txt',find_size = find_size,product = product )
-        msg.html = render_template('email/message.html',find_size = find_size,product = product)
-        mail.send(msg)
-        print("__________Сообщение отправлено____________")
-        # return redirect(url_for('index'))
+        dict = zapros()
+        print(dict)
+        if dict is False:
+            print('Сообшений для отправки нет')
+        else:
+            for email, list in dict.items():
+                # print(email)
+                # print(list)
+                msg = Message("Ура мы возможно нашли что вы искали", sender="zhogolevpv@gmail.com",
+                              recipients=[email])
+                msg.body = render_template('email/message.txt', list=list)
+                msg.html = render_template('email/message.html', list=list)
+                mail.send(msg)
+                print("__________Сообщение отправлено____________")
 
-# def zapros():
-#     """Отладачаня функция"""
-#     product = Product.query.filter_by(brand = "MELISSA").all()
-#     print(product)
-#     count = Product.query.filter_by(brand = "MELISSA").count()
-#     prod_clear = step_1(product,count=count)
-#     return prod_clear
-# if __name__ =="__main__":
-#     zapros()
-def reset_pass_mail(e_mail,url):
+
+def zapros():
+    """Собирает найденые товар из таблицы для найденого и чистит ее"""
+    app = create_app()
+    with app.app_context():
+        products = Product_all_check.query.all()
+        if products == []:
+            return False
+        else:
+            all_mail = []
+            for product in products:
+                all_mail.append(product.email)
+            set_list_mail = (set(all_mail))
+            dict_for_mail = {}
+            for mail in set_list_mail:
+                info = Product_all_check.query.filter_by(email=mail).all()
+                list_one_check = {}
+                for one_check in info:
+                    if one_check.int_product == '':
+                        size = 'б/р'
+                        url = one_check.url
+                        list_one_check[size] = url
+                    else:
+                        size = one_check.int_product
+                        url = one_check.url
+                        list_one_check[size] = url
+                dict_for_mail[mail] = list_one_check
+                clear_table_mail(dict=dict_for_mail)
+                print(dict_for_mail)
+            return dict_for_mail
+
+
+def clear_table_mail(dict):
+    app = create_app()
+    with app.app_context():
+        for mail, list in dict.items():
+            Product_all_check.query.filter_by(email=mail).delete()
+            db.session.commit()
+
+
+def reset_pass_mail(e_mail, url):
     app = create_app()
     mail = Mail(app)
     with app.app_context():
-        # dict = zapros()
-        msg = Message("Перейдите по ссылке для смены вашего пароля",sender="zhogolevpv@gmail.com",
+        msg = Message("Перейдите по ссылке для смены вашего пароля", sender="zhogolevpv@gmail.com",
                       recipients=[e_mail])
-        msg.body = render_template('email/reset_mail.txt',url = url )
-        msg.html = render_template('email/reset_mail.html',url = url)
+        msg.body = render_template('email/reset_mail.txt', url=url)
+        msg.html = render_template('email/reset_mail.html', url=url)
         mail.send(msg)
         print("__________Сообщение отправлено____________")
+
+
+if __name__ == "__main__":
+    email()
