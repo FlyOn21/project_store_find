@@ -4,7 +4,7 @@ from webapp_stores.stores.butik import get_full_butik, get_butik_product
 from webapp_stores.stores.randevu import get_full_randevu, get_randevu_product
 from webapp_stores.stores.stores import get_ali_data, get_butik_data, get_randevu_data
 from webapp_stores.db_functions import save_data_product, \
-    save_interesting_product, delete_interesting_product,find_product
+    save_interesting_product, delete_interesting_product,find_product, hello_user
 # from webapp_stores.utils import get_info
 # from webapp_stores.check.check_product import check_product
 
@@ -118,16 +118,13 @@ def add_interesting_product(url, email=None, price_interesting=None, color_inter
 # add_interesting_product(ali, email='da@example.com',size_interesting='50')
 
 
-    # app = create_app()
-    # with app.app_context():
-    #     delete_interesting_product(2)
+# app = create_app()
+# with app.app_context():
+#
 
-    # app = create_app()
-    # with app.app_context():
-    #     interesting_product = InterestingProduct.query.filter(InterestingProduct.id == 1).first()
-    #     a=interesting_product.image
-    #     print(a.replace('[','').split(',', 1)[0].strip("'"))
-    #     find_product('all')
+
+
+
 
 
 

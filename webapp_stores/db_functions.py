@@ -96,6 +96,7 @@ def save_interesting_product(product_dict, email=None, price_interesting=None, c
         interesting_product.price_discount = product_dict['product_discount']
         interesting_product.color = product_dict['color']
         interesting_product.client_id = id if isinstance(id, int) else None
+        interesting_product.notification_sent = 0
 
     else:
 
@@ -125,6 +126,7 @@ def save_interesting_product(product_dict, email=None, price_interesting=None, c
             color_interesting=color_interesting,
 
             user_email=email,
+            notification_sent=0,
 
             client_id=(id if isinstance(id, int) else None))
 
@@ -206,3 +208,11 @@ def find_product(keyword):
                 Product.category.contains(keyword), Product.color.contains(keyword),
                 Product.size.contains(keyword), Product.gender.contains(keyword))).all()
     return criteria_products
+
+
+def hello_user():
+    users=User.query.all()
+    usernames=[]
+    for user in users:
+        usernames.append(user.username)
+    print(usernames)

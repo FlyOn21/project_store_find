@@ -273,3 +273,95 @@ def add_product():
         save_interesting_product(product_dict=info, email=email, size_interesting=size_interesting)
         flash("товар добавлен")
         return redirect(get_redirect_target())
+
+
+@blueprint.route("/my_settings", methods=['GET', 'POST'])
+def my_settings():
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
+
+    user_id = current_user.get_id()
+    user = User.query.filter_by(id=user_id).first()
+    return render_template('user/my_settings.html', user=user)
+
+
+
+@blueprint.route("/change_name", methods=['GET', 'POST'])
+def change_name():
+    name = request.form['name']
+
+    user_id = current_user.get_id()
+    user = User.query.filter_by(id=user_id).first()
+
+    with current_app.app_context():
+        user.name=name
+        db.session.add(user)
+        db.session.commit()
+        flash('Имя успешно изменено!')
+    return redirect(url_for('users.my_settings'))
+
+
+@blueprint.route("/change_surname", methods=['GET', 'POST'])
+def change_surname():
+    surname = request.form['surname']
+
+    user_id = current_user.get_id()
+    user = User.query.filter_by(id=user_id).first()
+
+    with current_app.app_context():
+        user.surname=surname
+        db.session.add(user)
+        db.session.commit()
+        flash('Фамилия успешно изменена!')
+    return redirect(url_for('users.my_settings'))
+
+@blueprint.route("/change_email", methods=['GET', 'POST'])
+def change_email():
+    email = request.form['mail']
+    print(email)
+
+    user_id = current_user.get_id()
+    user_to_change = User.query.filter_by(id=user_id).first()
+
+    all_users = User.query.all()
+    emails = []
+    for user in all_users:
+        emails.append(user.email)
+
+    if email not in emails:
+        with current_app.app_context():
+            user_to_change.email = email
+            db.session.add(user_to_change)
+            db.session.commit()
+            flash('Email успешно изменен!')
+            return redirect(url_for('users.my_settings'))
+    else:
+        flash('Этот email уже используется! Попробуйте другой!')
+        return redirect(url_for('users.my_settings'))
+
+
+@blueprint.route("/change_username", methods=['GET', 'POST'])
+def change_username():
+    username = request.form['username']
+    print(username)
+
+    user_id = current_user.get_id()
+    user_to_change = User.query.filter_by(id=user_id).first()
+
+    all_users = User.query.all()
+    usernames = []
+    for user in all_users:
+        usernames.append(user.username)
+
+    if username not in usernames:
+        with current_app.app_context():
+            user_to_change.username= username
+            db.session.add(user_to_change)
+            db.session.commit()
+            flash('Username успешно изменен!')
+            return redirect(url_for('users.my_settings'))
+    else:
+        flash('Этот username уже используется! Попробуйте другой!')
+        return redirect(url_for('users.my_settings'))
+
+

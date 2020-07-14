@@ -1,0 +1,70 @@
+{%extends "base.html"%}
+
+{%block content%}
+
+{%with messages = get_flashed_messages() %}
+    {%if messages%}
+    <div class="alert alert-warning" role="alert">
+        {%for message in messages%}
+            {{message}}<br>
+        {%endfor%}
+    </div>
+    {%endif%}
+    {%endwith%}
+<div class="container">
+    <h3></h3>
+</div>
+<div class = "col-8">
+        <h4>Личная информация</h4>
+        <h6></h6>
+
+        <table class="table">
+  <thead>
+  </thead>
+  <tbody>
+    <tr>
+        <form action="{{url_for('users.change_name')}}" method="post">
+            <th scope="row">Имя</th>
+            <td scope="row"><input value="{{user.name}}" required placeholder = "{{user.name}}" name=name size="10px" /></td>
+            <td scope="row"><input class="btn btn-secondary" type="submit" value="Изменить"></td>
+        </form>
+    </tr>
+    <tr>
+        <form action="{{url_for('users.change_surname')}}" method="post">
+            <th scope="row">Фамилия</th>
+            <td scope="row"><input value="{{user.surname}}" required placeholder = "{{user.surname}}" name=surname size="10px" /></td>
+            <td scope="row"><input class="btn btn-secondary" type="submit" value="Изменить"></td>
+        </form>
+    </tr>
+    <tr>
+        <form action="{{url_for('users.change_username')}}" method="post">
+            <th scope="row">Username</th>
+            <td scope="row"><input value="{{user.username}}" required placeholder = "{{user.username}}" name=username size="10px" /></td>
+            <td scope="row"><input class="btn btn-secondary" type="submit" value="Изменить"></td>
+        </form>
+    </tr>
+    <tr>
+        <form action="{{url_for('users.change_email')}}" method="post">
+            <th scope="row">Email</th>
+            <td scope="row"><input type=email value="{{user.email}}" required placeholder = "{{user.email}}" name = "mail" /></td>
+            <td scope="row"><input class="btn btn-secondary" type="submit" value="Изменить"></td>
+        </form>
+    </tr>
+
+  <tbody>
+        <form action="{{url_for('users.change_password')}}" method="post">
+            <tr>
+                <th scope="row">Пароль</th>
+                <td></td>
+                <td scope="row"><a href="{{url_for('users.reset_pass')}}" class="btn btn-secondary" >Изменить</a></td>
+            </tr>
+        </form>
+  </tbody>
+        </table>
+</div>
+<div class  = "col-4"></div>
+
+
+
+{%endblock%}
+

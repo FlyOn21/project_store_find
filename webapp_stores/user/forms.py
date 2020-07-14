@@ -53,11 +53,11 @@ class Mailsend_off(FlaskForm):
     """Форма для дизактивации отправки сообшений на email"""
     # on = FormField('Включить', render_kw={"class": "btn btn-primary btn-lg disabled"})
 
-    off = SubmitField('Выключить', render_kw={"class": "btn btn-primary"})
+    off = SubmitField('Выключить', render_kw={"class": "btn btn-secondary"})
 
 
 class Mailsend_on(FlaskForm):
     """Форма для активации отправки сообшений на email"""
-    on = SubmitField('Включить', render_kw={"class": "btn btn-primary" })
+    on = SubmitField('Включить', render_kw={"class": "btn btn-secondary" })
     # off = StringField('Выключить', render_kw={"class": "btn btn-primary btn-lg disabled"})
 
