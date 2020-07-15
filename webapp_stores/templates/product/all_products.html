@@ -9,7 +9,7 @@
   {% if page_start != last_page %}
     <nav aria-label="Page navigation example">
   <ul class="pagination">
-      {%if page  == 1 %}
+      {%if next_p == 2%}
     <li class="page-item disabled">
       <a class="page-link" href="{{url_for('product.page_num')}}?page={{page_prev}}" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
