@@ -85,8 +85,7 @@ def process_reset_pass():
     print(host)
     if form.validate_on_submit():
         email = form.email.data
-        # email_s = email
-        # bytes('bytes', encoding = 'utf-8')
+        # user_id = current_user.get_id()
         user = User.query.filter_by(email=email).first()
         if user:
             time = str(datetime.now())
@@ -96,6 +95,9 @@ def process_reset_pass():
             email_reset_pass.delay(email, url)
             return render_template('user/reset_pass.html', title=f'Ссылка на смену пароля отправлена на email:{email}',
                                    form=None)
+        else:
+            flash("Вы ввели неправыльный адрес вашей почты, повторите")
+            return redirect(url_for('users.reset_pass'))
 
 
 def deltatime(time_url):
