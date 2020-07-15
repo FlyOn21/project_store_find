@@ -185,12 +185,12 @@ def my_products():
         send = 'Оповищение на e-mail активно'
         form = Mailsend_off()
         return render_template('user/my_products.html', title=title, products=user_interesting_products, send=send,
-                               form=form)
+                               form=form , mail_send = True)
     else:
         send = 'Оповищение на e-mail отключено'
         form = Mailsend_on()
         return render_template('user/my_products.html', title=title, products=user_interesting_products, send=send,
-                               form=form)
+                               form=form, mail_send = False)
 
 
 @blueprint.route("/on_off", methods=['POST'])

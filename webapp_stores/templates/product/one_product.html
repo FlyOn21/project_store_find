@@ -2,11 +2,13 @@
 
 {%block content%}
 <title>Каталог товаров</title>
-<div class = "col text-center"><h2>Каталог товаров</h2></div>
+<p></p>
+<div> <button type="button" class="btn btn-link"><a href = "{{url_for('product.page_back')}}?page={{page}}"> Вернуться к каталогу </a></button></div>
+<p></p>
 <div class="row">
-<p> <a href = "{{url_for('product.page_back')}}?page={{page}}"> Назад </a></p>
+
     {%for product in dict%}
-    <div class="col-12">
+    <div class="container">
         {%for image in product ['image']%}
         <img alt="Cinque Terre" class="img" src="{{image}}" height=350px width=350px>
         {%endfor%}
