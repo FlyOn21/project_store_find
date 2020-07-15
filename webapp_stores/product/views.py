@@ -17,6 +17,7 @@ def products(start=0):
         product = Product.query.offset(start).limit(12).all()
         result = step_1(product)
         page_start, last_page = page_count(start)
+        print(page_start,last_page)
 
         if start == 0:
             page_one = 1
@@ -26,14 +27,24 @@ def products(start=0):
             page_therd = page_two + 1
             query_index_therd = query_index_two + 12
             next_p = page_one + 1
-        elif page_start == last_page:
-            page_one = page_start - 1
+
+        elif page_start == last_page - 1:
+            page_one = page_start-1
             query_index_one = (page_one * 12) - 12
-            page_two = page_one + 1
+            page_two = page_start
             query_index_two = query_index_one + 12
-            page_therd = page_two + 1
+            page_therd = page_two +1
             query_index_therd = query_index_two + 12
-            next_p = page_start
+            next_p = last_page
+
+        elif page_start == last_page:
+            page_one = page_start - 2
+            query_index_one = (page_one * 12) - 12
+            page_two = page_start -1
+            query_index_two = query_index_one + 12
+            page_therd = last_page
+            query_index_therd = query_index_two + 12
+            next_p = last_page
         else:
             page_one = page_start - 1
             query_index_one = (page_one * 12) - 12
@@ -46,7 +57,7 @@ def products(start=0):
         # print(result)
         return render_template('product/all_products.html', dict=result, page_prev=page_one, page=page_two,
                                page_next=page_therd, query_index_one=query_index_one, query_index_two=query_index_two,
-                               query_index_therd=query_index_therd, next_p=next_p, page_start=start)
+                               query_index_therd=query_index_therd, next_p=next_p, page_start_1=start, last_page = last_page, page_start = page_start)
 
 
 @blueprint.route('/page_back', methods=['GET'])
