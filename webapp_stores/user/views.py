@@ -231,6 +231,7 @@ def delete_product():
 
 @blueprint.route("/search", methods=['GET', 'POST'])
 def search():
+
     try:
         search = request.form['search']
         with current_app.app_context():
