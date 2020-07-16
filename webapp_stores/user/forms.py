@@ -12,13 +12,14 @@ class Login_form(FlaskForm):
     remember_me = BooleanField('Запомни меня', default=True, render_kw={'class': "form-check-input"})
     submit = SubmitField('SEND', render_kw={"class": "btn btn-primary"})
 
+
 class Password_reset(FlaskForm):
     email = StringField('E-mail', validators=[DataRequired(), Email()], render_kw={'class': "form-control"})
     hidden_f = HiddenField()
     submit = SubmitField('Отправить', render_kw={"class": "btn btn-primary"})
 
-class Reset_pass_process(FlaskForm):
 
+class Reset_pass_process(FlaskForm):
     password = PasswordField('Password', [DataRequired(), EqualTo('confirm', message='Passwords must match')
                                           ], render_kw={'class': "form-control"})
     confirm = PasswordField('Repeat Password', render_kw={'class': "form-control"})
@@ -49,15 +50,20 @@ class Registration_user(FlaskForm):
         if user_mail > 0:
             raise ValidationError('Пользователь с таким e-mail сушествует')
 
+
+class Search_product(FlaskForm):
+    search = StringField('Поиск по сайту', [DataRequired()], render_kw={'class': 'form-control'})
+    search_button = SubmitField('Поиск', render_kw={"class": "btn btn-primary"})
+
+
 class Mailsend_off(FlaskForm):
     """Форма для дизактивации отправки сообшений на email"""
     # on = FormField('Включить', render_kw={"class": "btn btn-primary btn-lg disabled"})
 
-    off = SubmitField('OFF', render_kw={'style':"color:#B22222"})
+    off = SubmitField('OFF', render_kw={'style': "color:#B22222"})
 
 
 class Mailsend_on(FlaskForm):
     """Форма для активации отправки сообшений на email"""
-    on = SubmitField('ON', render_kw={'style':"color:#008000" })
+    on = SubmitField('ON', render_kw={'style': "color:#008000"})
     # off = StringField('Выключить', render_kw={"class": "btn btn-primary btn-lg disabled"})
-

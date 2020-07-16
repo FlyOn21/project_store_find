@@ -3,7 +3,7 @@ from flask_login import login_user, current_user, logout_user
 from werkzeug.utils import redirect
 from webapp_stores.user.model import User, db, InterestingProduct
 from webapp_stores.user.forms import Login_form, Registration_user, Mailsend_off, Mailsend_on, Password_reset, \
-    Reset_pass_process
+    Reset_pass_process, Search_product
 from webapp_stores.db_functions import delete_interesting_product, find_product, save_interesting_product
 from webapp_stores.utils import get_info
 from itsdangerous import JSONWebSignatureSerializer as Serializer
@@ -228,36 +228,32 @@ def delete_product():
 
     return redirect(url_for('users.my_products'))
 
+@blueprint.route('/search_form',methods=['GET', 'POST'])
+def search_form():
+    form = Search_product()
+    return render_template("search_form.html", form = form)
 
 @blueprint.route("/search", methods=['GET', 'POST'])
 def search():
-    try:
-        search = request.form['search']
-        with current_app.app_context():
-            if current_user.is_anonymous == True:
-                products = find_product(search)
-                return render_template('user/search_products.html', products=products, search=search)
-            user_id = current_user.get_id()
-            new_search = User.query.filter_by(id=user_id).first()
-            print(request.form)
-            new_search.search = search
-            db.session.add(new_search)
-            db.session.commit()
-            products = find_product(search)
-            return render_template('user/search_products.html', products=products, search=search)
-    except (BadRequestKeyError):
-        user_id = current_user.get_id()
-        new_search = User.query.filter_by(id=user_id).first()
-        search = new_search.search
-        products = find_product(search)
-        return render_template('user/search_products.html', products=products, search=search)
+    """Поиск по запросу из поля поиск"""
+    form = Search_product()
+    search = form.search.data
+    print("!!!!!!!!!!!!!!1",search)
+    if len (search)<=2:
+        flash('Запрос поиска слишком короткий, уточните запрос')
+        return redirect(get_redirect_target())
+    else:
+        return search_do(search)
 
 
-
-# @blueprint.route("/search_two", methods=['GET', 'POST'])
 def search_two(search_n = None):
+    """Функция возврата результатов поиска при нажатии кнопки вернуться к результатам поиска"""
+    return search_do(search_n)
+
+
+def search_do(search):
+    """функция поиска товаров в базе и рендеринга результата"""
     try:
-        search = search_n
         with current_app.app_context():
             if current_user.is_anonymous == True:
                 products = find_product(search)
