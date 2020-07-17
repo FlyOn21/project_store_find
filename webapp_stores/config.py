@@ -16,8 +16,8 @@ MAIL_SERVER = 'smtp.sendgrid.net'
 MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
-MAIL_USERNAME = 'flyon21'
-MAIL_PASSWORD = 'GSG.xFI-EcotTi-VzJ5EqzYshw.P5lWKje-OLBLN1_jRPbBUFv-UeuP4sY0iQlg5RB4UX0'
+MAIL_USERNAME = 'apikey'
+MAIL_PASSWORD = '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'
 
 # administrator list
 ADMINS = ['zhogolevpv@gmail.com']
