@@ -182,12 +182,12 @@ def my_products():
     mail_send = user.send_mail
     user_interesting_products = InterestingProduct.query.filter_by(client_id=user_id).all()
     if mail_send == True:
-        send = 'Оповищение на e-mail активно'
+        send = 'Оповещение на e-mail активно'
         form = Mailsend_off()
         return render_template('user/my_products.html', title=title, products=user_interesting_products, send=send,
                                form=form , mail_send = True)
     else:
-        send = 'Оповищение на e-mail отключено'
+        send = 'Оповещение на e-mail отключено'
         form = Mailsend_on()
         return render_template('user/my_products.html', title=title, products=user_interesting_products, send=send,
                                form=form, mail_send = False)

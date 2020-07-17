@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.7
 RUN mkdir /code
 WORKDIR /code
 ADD webapp_stores /code/
