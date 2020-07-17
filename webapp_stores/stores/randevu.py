@@ -6,14 +6,16 @@ from webapp_stores.db_functions import save_data_product
 from webapp_stores.proxy.get_query import get_html_all
 from decarator import log_decorator
 
-# def get_html(url):
-#     try:
-#         result = requests.get(url)
-#         result.raise_for_status()
-#         return result.text
-#     except(requests.RequestException, ValueError):
-#         print('Сетевая ошибка')
-#         return False
+def get_html(url):
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                             'snap Chromium/83.0.4103.116 Chrome/83.0.4103.116 Safari/537.36'}
+    try:
+        result = requests.get(url,headers = headers)
+        result.raise_for_status()
+        return result.text
+    except(requests.RequestException, ValueError):
+        print('Сетевая ошибка')
+        return False
 
 
 def get_items(url):
@@ -21,7 +23,7 @@ def get_items(url):
     Функция получает все ссылки товары со страницы url (список urls органичен и
     указан в get_full_butik) и сохраняет их в csv файл
     """
-    html = get_html_all(url)
+    html = get_html(url)
     if html:
         soup = BeautifulSoup(html, 'html.parser')
 
@@ -82,7 +84,7 @@ def pages_in_category(url):
     """
     k = 0
     while k<100:
-        html = get_html_all(url)
+        html = get_html(url)
         if html:
             soup = BeautifulSoup(html, 'html.parser')
             number_of_pages = int(soup.find('ul', class_='pagination').find_all('li', class_='page')[-1].get_text())
@@ -97,7 +99,7 @@ def get_randevu_product(url):
     """
     Функция парсит данные о товаре (url) в словарь.
     """
-    html = get_html_all(url)
+    html = get_html(url)
     if html:
         soup = BeautifulSoup(html, 'html.parser')
         pp = PrettyPrinter(indent=2)
