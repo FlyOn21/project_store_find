@@ -15,6 +15,7 @@ from webapp_stores.db_functions import save_data_product, save_interesting_produ
 from webapp_stores.stores.butik import get_butik_product
 from webapp_stores.stores.randevu import get_randevu_product
 from webapp_stores.utils import get_info
+from webapp_stores.proxy.get_query import get_html_all
 
 
 def create_app():
@@ -40,7 +41,7 @@ def create_app():
         try:
             link = request.form['link']
             info = get_info(link)
-            # print(info)
+            print(info)
 
             with app.app_context():
                 print('______________________________________')

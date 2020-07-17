@@ -236,42 +236,56 @@ def search_form():
 @blueprint.route("/search", methods=['GET', 'POST'])
 def search():
     """Поиск по запросу из поля поиск"""
-    form = Search_product()
-    search = form.search.data
-    print("!!!!!!!!!!!!!!1",search)
-    if len (search)<=2:
-        flash('Запрос поиска слишком короткий, уточните запрос')
-        return redirect(get_redirect_target())
-    else:
+    try:
+        search = request.form['search']
         return search_do(search)
+    except (BadRequestKeyError):
+        return search_do_except()
+        # user_id = current_user.get_id()
+        # new_search = User.query.filter_by(id=user_id).first()
+        # search = new_search.search
+        # products = find_product(search)
+        # return render_template('user/search_products.html', products=products, search=search)
+    # print("!!!!!!!!!!!!!!1",search)
+    # if len (search)<=2:
+    #     flash('Запрос поиска слишком короткий, уточните запрос')
+    #     return redirect(get_redirect_target())
+    # else:
+    # return search_do(request.form['search'])
 
 
 def search_two(search_n = None):
     """Функция возврата результатов поиска при нажатии кнопки вернуться к результатам поиска"""
-    return search_do(search_n)
+    try:
+        return search_do(search_n)
+    except(BadRequestKeyError):
+        return search_do_except()
+
 
 
 def search_do(search):
     """функция поиска товаров в базе и рендеринга результата"""
-    try:
-        with current_app.app_context():
-            if current_user.is_anonymous == True:
-                products = find_product(search)
-                return render_template('user/search_products.html', products=products, search=search)
-            user_id = current_user.get_id()
-            new_search = User.query.filter_by(id=user_id).first()
-            print(request.form)
-            new_search.search = search
-            db.session.add(new_search)
-            db.session.commit()
+    with current_app.app_context():
+        if current_user.is_anonymous == True:
             products = find_product(search)
             return render_template('user/search_products.html', products=products, search=search)
-    except (BadRequestKeyError):
         user_id = current_user.get_id()
         new_search = User.query.filter_by(id=user_id).first()
-        search = new_search.search
+        print(request.form)
+        new_search.search = search
+        db.session.add(new_search)
+        db.session.commit()
         products = find_product(search)
         return render_template('user/search_products.html', products=products, search=search)
+
+
+def search_do_except():
+    """функция которая отрабатывает при перехвате BadRequestKeyError при поиске"""
+    user_id = current_user.get_id()
+    new_search = User.query.filter_by(id=user_id).first()
+    search = new_search.search
+    products = find_product(search)
+    return render_template('user/search_products.html', products=products, search=search)
 
 @blueprint.route('/add_product', methods=['GET', 'POST'])
 def add_product():
