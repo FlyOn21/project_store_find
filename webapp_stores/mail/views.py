@@ -17,7 +17,7 @@ def email():
             for email, list in dict.items():
                 # print(email)
                 # print(list)
-                msg = Message("Ура мы возможно нашли что вы искали", sender="zhogolevpv@gmail.com",
+                msg = Message("Ура мы возможно нашли что вы искали", sender="zhogolev@ukr.net",
                               recipients=[email])
                 msg.body = render_template('email/message.txt', list=list)
                 msg.html = render_template('email/message.html', list=list)
@@ -68,7 +68,7 @@ def reset_pass_mail(e_mail, url):
     app = create_app()
     mail = Mail(app)
     with app.app_context():
-        msg = Message("Перейдите по ссылке для смены вашего пароля", sender="zhogolevpv@gmail.com",
+        msg = Message("Перейдите по ссылке для смены вашего пароля", sender="zhogolev@ukr.net",
                       recipients=[e_mail])
         msg.body = render_template('email/reset_mail.txt', url=url)
         msg.html = render_template('email/reset_mail.html', url=url)
