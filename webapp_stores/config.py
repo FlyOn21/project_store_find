@@ -12,12 +12,12 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 SECRET_KEY = "k;lkl;wkermw;emr.,wmerl;k;lm/.ml;';l';lm/.m,;lk;lk;lkm,m"
 
 # email server
-MAIL_SERVER = 'smtp.googlemail.com'
+MAIL_SERVER = 'smtp.sendgrid.net'
 MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
-MAIL_USERNAME = 'zhogolevpv@gmail.com'
-MAIL_PASSWORD = 'Gfdtk2105'
+MAIL_USERNAME = 'flyon21'
+MAIL_PASSWORD = 'GSG.xFI-EcotTi-VzJ5EqzYshw.P5lWKje-OLBLN1_jRPbBUFv-UeuP4sY0iQlg5RB4UX0'
 
 # administrator list
 ADMINS = ['zhogolevpv@gmail.com']
