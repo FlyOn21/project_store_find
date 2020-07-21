@@ -1,4 +1,36 @@
-version: '3.6'
+version: '3'
 services:
-  webapp:
-    beald: ./project_store_find
+
+  celery:
+    build:
+      context: ./
+    container_name: celery
+    restart: unless-stopped
+    entrypoint:
+      - CELERY_BROKER_URL=redis://redis:6379/
+      - FLASK_APP=webapp_stores
+    command:
+      - celery -A tasks beat
+      - celery -A tasks worker
+  flower:
+    image: mher/flower:latest
+    command: celery flower -A tasks
+    ports:
+      - "5555:5555"
+  redis:
+    image: "redis:alpine"
+  webapp_stores:
+    build:
+      context: ./
+    container_name: stores
+    restart: unless-stopped
+    volumes:
+      - .:/code
+    environment:
+      FLASK_ENV: development
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+      - celery
+      - flower
