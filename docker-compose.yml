@@ -1,36 +1,40 @@
-version: '3'
+version: '3.8'
 services:
-
+  webapp_stores:
+      build: ./webapp_stores
+      container_name: stores
+      restart: unless-stopped
+      volumes:
+        - ./test_app ./app
+      environment:
+          FLASK_ENV: development
+      ports:
+        - "5000:5000"
+      command: flask run
+      depends_on:
+        - redis
+        - celery
+        - flower
   celery:
-    build:
-      context: ./
+    build: ./
     container_name: celery
+#    networks: my_network
     restart: unless-stopped
-    entrypoint:
+    environment:
       - CELERY_BROKER_URL=redis://redis:6379/
       - FLASK_APP=webapp_stores
-    command:
-      - celery -A tasks beat
-      - celery -A tasks worker
+    command: celery -A tasks worker --loglevel=INFO && celery -A tasks beat
+
   flower:
     image: mher/flower:latest
-    command: celery flower -A tasks
+#    networks: my_network
+    command: flower
     ports:
       - "5555:5555"
+    depends_on:
+      - celery
   redis:
     image: "redis:alpine"
-  webapp_stores:
-    build:
-      context: ./
-    container_name: stores
-    restart: unless-stopped
-    volumes:
-      - .:/code
-    environment:
-      FLASK_ENV: development
-    ports:
-      - "5000:5000"
-    depends_on:
-      - redis
-      - celery
-      - flower
+#    ports:
+#      - "6379:6379"
+#    networks: my_network
