@@ -1,6 +1,5 @@
 from webapp_stores.proxy import get_query
 from bs4 import BeautifulSoup
-from decarator import log_decorator
 
 
 def get_curs_usd():

@@ -3,8 +3,7 @@ from bs4 import BeautifulSoup
 from pprint import PrettyPrinter  # красиво выводит результат из словарей и списков
 import requests
 from webapp_stores.db_functions import save_data_product
-from webapp_stores.proxy.get_query import get_html_all
-from decarator import log_decorator
+
 
 def get_html(url):
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) '

@@ -5,11 +5,11 @@ from webapp_stores.user.model import User, db, InterestingProduct
 from webapp_stores.user.forms import Login_form, Registration_user, Mailsend_off, Mailsend_on, Password_reset, \
     Reset_pass_process, Search_product
 from webapp_stores.db_functions import delete_interesting_product, find_product, save_interesting_product
-from webapp_stores.utils import get_info
+# from webapp_stores.utils.utils import get_info
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 from datetime import datetime
 from webapp_stores.config import SECRET_KEY
-from utils import get_redirect_target
+from webapp_stores.utils.utils import get_redirect_target,get_info
 from werkzeug.exceptions import BadRequestKeyError
 
 blueprint = Blueprint('users', __name__, url_prefix='/users')
