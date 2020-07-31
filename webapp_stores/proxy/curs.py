@@ -1,5 +1,6 @@
 from webapp_stores.proxy import get_query
 from bs4 import BeautifulSoup
+import os
 
 
 def get_curs_usd():
@@ -14,7 +15,7 @@ def get_curs_usd():
 
 
 def curs_open():
-    with open('curs_today.txt', 'r', encoding='utf-8') as file_two:
+    with open(os.path.abspath('webapp_stores/proxy/curs_today.txt'), 'r', encoding='utf-8') as file_two:
         curs = file_two.read()
     return float(curs)
 

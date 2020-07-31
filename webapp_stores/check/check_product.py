@@ -1,6 +1,6 @@
 from webapp_stores.stores.model import db
 from webapp_stores.user.model import InterestingProduct, User,Product_all_check
-from webapp_stores.utils import get_info
+from webapp_stores.utils.utils import get_info
 from webapp_stores import create_app
 
 

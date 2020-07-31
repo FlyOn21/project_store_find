@@ -12,16 +12,16 @@ services:
 #        - "5000:5000"
       expose:
         - 5000
-      command: gunicorn --bind 0.0.0.0:5000 manage:app #python manage.py run -h 0.0.0.0
+      command: gunicorn --bind 0.0.0.0:5000 manage:app #&& celery -A tasks worker --loglevel=INFO && celery -A tasks beat
+      links:
+        - redis
       env_file:
         - ./.env
       networks:
         - my-network
-
 #      depends_on:
 #        - redis
-#        - celery
-#        - flower
+
   nginx:
     build:
       context: ./
@@ -34,28 +34,39 @@ services:
       - webapp_stores
     depends_on:
       - webapp_stores
-#  celery:
-#    build: ./
-#    container_name: celery
-##    networks: my_network
-#    restart: unless-stopped
-#    environment:
-#      - CELERY_BROKER_URL=redis://redis:6379/
-#      - FLASK_APP=webapp_stores
-#    command: celery -A tasks worker --loglevel=INFO && celery -A tasks beat
-#
+
+  celery:
+    build:
+        context: .
+        target: celery
+    container_name: celery
+    restart: always
+    environment:
+#                - CELERY_BROKER_URL=redis://redis:6379/
+        - FLASK_APP=webapp_stores
+    networks:
+        - my-network
+    links:
+        - redis
+    depends_on:
+        - redis
+        - webapp_stores
+
 #  flower:
 #    image: mher/flower:latest
 ##    networks: my_network
 #    command: flower
 #    ports:
 #      - "5555:5555"
+#    links:
+#      - webapp_stores
 #    depends_on:
-#      - celery
-#  redis:
-#    image: "redis:alpine"
-##    ports:
-##      - "6379:6379"
-##    networks: my_network
+#      - webapp_stores
+#    networks:
+#      - my-network
+  redis:
+    image: "redis:alpine"
+    networks:
+      - my-network
 networks:
     my-network:
