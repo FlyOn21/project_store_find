@@ -1,4 +1,4 @@
-from getpass import getpass # ВВод пароля из командной строки
+from getpass import getpass  # ВВод пароля из командной строки
 import sys
 from webapp_stores import create_app
 from webapp_stores.stores.model import db
@@ -10,18 +10,24 @@ with app.app_context():
     surname = input('input surname: ')
     username = input('input login: ')
     email = input('Input e-mail: ')
-    if User.query.filter(User.username == username, User.name==name,User.surname==surname).count():
+    if User.query.filter(User.username == username, User.name == name, User.surname == surname).count():
         print('User is exist')
         sys.exit(0)
-    password_1 = getpass('Input password: ')
-    password_2 = getpass('Confirm password: ')
-
-    if not password_1 == password_2:
-        print('password is not confirm')
-        sys.exit(0)
-    new_user = User(username = username, role = 'admin',is_active=True,name = name, surname = surname, email = email)
+    i = 3
+    while i!=0:
+        password_1 = getpass('Input password: ')
+        password_2 = getpass('Confirm password: ')
+        if not password_1 == password_2:
+            print('password is not confirm. Try agene')
+            i-=1
+            print(f'You have {i} attempt')
+            continue
+        else:
+            sys.exit(0)
+    new_user = User(username=username, role='admin', is_active=True, name=name, surname=surname, email=email)
     new_user.save_password(password_1)
 
     db.session.add(new_user)
     db.session.commit()
     print(f'Creature new user {username}')
+    sys.exit(0)

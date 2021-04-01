@@ -10,7 +10,6 @@ from webapp_stores.stores.ali import Aliexpress
 from webapp_stores.user.views import blueprint as user_bp
 from webapp_stores.product.views import blueprint as prod_bp
 from webapp_stores.admin.views import blueprint as admin_bp
-
 from webapp_stores.db_functions import save_data_product, save_interesting_product
 from webapp_stores.stores.butik import get_butik_product
 from webapp_stores.stores.randevu import get_randevu_product

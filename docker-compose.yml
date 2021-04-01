@@ -1,24 +1,27 @@
 version: '3'
 services:
 
-  celery:
-    build:
-      context: ./
-    container_name: celery
+  celery: celery:latest
+    container_name: celeryd
     restart: unless-stopped
-    entrypoint:
-      - CELERY_BROKER_URL=redis://redis:6379/
-      - FLASK_APP=webapp_stores
+    environment:
+      - CELERY_BROKER_URL: redis://redis:6379/
+      - FLASK_APP: webapp_stores
     command:
       - celery -A tasks beat
       - celery -A tasks worker
   flower:
     image: mher/flower:latest
+    container_name: flower
     command: celery flower -A tasks
     ports:
       - "5555:5555"
   redis:
-    image: "redis:alpine"
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
   webapp_stores:
     build:
       context: ./
