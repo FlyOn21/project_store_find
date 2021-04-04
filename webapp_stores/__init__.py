@@ -36,7 +36,7 @@ def create_app():
     @app.route('/', methods=['GET', 'POST'])
     def index():
         #
-        locale.setlocale(locale.LC_ALL, "ru_RU.utf-8")
+        # locale.setlocale(locale.LC_ALL, "ru_RU.utf8")
         try:
             link = request.form['link']
             info = get_info(link)
@@ -85,9 +85,6 @@ def create_app():
                     query = User.query.filter_by(id=user).first()
                     name = query.username
                     print(name)
-
-
-
         except:
             info = None
         all_product_count = page_count()
@@ -95,13 +92,13 @@ def create_app():
 
     @app.route('/store')
     def store():
-        locale.setlocale(locale.LC_ALL, "ru_RU.utf-8")
+        # locale.setlocale(locale.LC_ALL, "ru_RU.utf8")
         store_all = Stores.query.all()
         return render_template('store/store_page.html', store_all=store_all)
 
     @app.route('/admin')
     def admin_panel():
-        locale.setlocale(locale.LC_ALL, "ru_RU.utf-8")
+        # locale.setlocale(locale.LC_ALL, "ru_RU.utf8")
         return render_template('admin/admin_panel.html')
 
     @login_manager.user_loader

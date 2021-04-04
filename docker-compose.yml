@@ -1,39 +1,66 @@
 version: '3'
 services:
-
-  celery: celery:latest
-    container_name: celeryd
-    restart: unless-stopped
-    environment:
-      - CELERY_BROKER_URL: redis://redis:6379/
-      - FLASK_APP: webapp_stores
-    command:
-      - celery -A tasks beat
-      - celery -A tasks worker
-  flower:
-    image: mher/flower:latest
-    container_name: flower
-    command: celery flower -A tasks
-    ports:
-      - "5555:5555"
-  redis:
-    image: redis:alpine
-    container_name: redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
   webapp_stores:
     build:
       context: ./
     container_name: stores
     restart: unless-stopped
-    volumes:
-      - .:/code
+    #    volumes:
+    #      - "./: ./"
     environment:
       FLASK_ENV: development
+    networks:
+      - my_network
     ports:
       - "5000:5000"
+    links:
+      - redis
+      - celery
+      - flower
     depends_on:
       - redis
       - celery
       - flower
+  celery:
+#    image: celery:latest
+    build:
+      context: .
+      target: celery
+    container_name: celerytm
+    restart: unless-stopped
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/
+      FLASK_APP: webapp_stores
+    networks:
+      - my_network
+    links:
+      - redis
+    volumes:
+      - "./scripts/entrypoint.sh:/script/entrypoint.sh"
+    working_dir: /script
+    entrypoint: /script/entrypoint.sh
+    depends_on:
+      - redis
+
+  flower:
+    image: mher/flower:latest
+    container_name: flower
+    networks:
+      - my_network
+    command:
+      - celery flower -A tasks
+    ports:
+      - "5555:5555"
+    depends_on:
+      - celery
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    networks:
+      - my_network
+    ports:
+      - "6379:6379"
+
+networks:
+  my_network:
